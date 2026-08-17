@@ -17,3 +17,8 @@
 - [x] 將目前專案程式碼提交並推送至已更正的 zendog98-ai/mark-six-ai-prediction main 分支（改由可寫入的新儲存庫完成）
 - [x] 確認使用者再次提供的 zendog98-ai/mark-six-ai-predicton 遠端網址並於可存取時推送 main 分支（原網址無存取權限）
 - [x] 將目前專案程式碼提交並推送至 zendog968-ai/mark-six-ai-prediction 的 main 分支
+- [x] 在 Streamlit 側邊欄加入真實歷史資料 CSV 上傳元件與欄位格式檢查
+- [x] 驗證 Draw、Date、6 個正選與特別號欄位，拒絕範圍外、重複或格式錯誤資料
+- [x] 有效上傳後以真實資料取代 generate_mock_data，重跑特徵工程與模型訓練
+- [ ] 為 CSV 驗證與資料來源切換新增測試並提交至 GitHub main 分支
+- [x] 優化 Streamlit 首次模型訓練負荷並驗證側邊欄上傳介面不會長時間阻塞
