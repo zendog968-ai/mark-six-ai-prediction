@@ -33,4 +33,6 @@
 - [x] 檢閱 README 與目前程式設定一致，並推送至 GitHub main 分支
 - [x] 將 README 匯出為可下載 PDF，並一併交付 Markdown 原檔
 - [x] 在本機啟動 Streamlit 應用程式並確認可正常提供介面
+- [x] 提供 Windows 本機 Streamlit 虛擬環境、套件、連接埠與重啟排錯指令
+- [x] 提供 Streamlit Community Cloud 部署與公開網址故障排除指南
 - [x] 優化 Streamlit 首次模型訓練負荷並驗證側邊欄上傳介面不會長時間阻塞
