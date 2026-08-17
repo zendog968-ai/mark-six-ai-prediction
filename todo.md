@@ -29,4 +29,6 @@
 - [x] 新增更新後重訓分析、Top 5 組合及權重輸出的 latest_prediction.json
 - [x] 建立香港時間每週二、四、六 22:30 執行並自動提交 CSV／JSON 的 GitHub Actions 工作流程
 - [x] 為更新與排程設定新增測試、文件並推送至 GitHub main 分支
+- [x] 撰寫完整繁體中文 README，說明架構、安裝執行、自動化更新與負責任使用免責聲明
+- [x] 檢閱 README 與目前程式設定一致，並推送至 GitHub main 分支
 - [x] 優化 Streamlit 首次模型訓練負荷並驗證側邊欄上傳介面不會長時間阻塞
