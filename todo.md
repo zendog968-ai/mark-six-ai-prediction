@@ -13,3 +13,7 @@
 - [x] 為 Python 模擬資料生成流程新增可重現性、1,000 期數量與號碼合法性測試
 - [x] 補充三個功能頁面的免責聲明捲動狀態驗證
 - [x] 新增共用免責聲明黏附式版型測試，驗證三個頁面共用的橫幅具有安全的 sticky、top 與層級設定
+- [ ] 將目前專案程式碼提交並推送至使用者指定的 GitHub main 分支
+- [ ] 將目前專案程式碼提交並推送至已更正的 zendog98-ai/mark-six-ai-prediction main 分支
+- [ ] 確認使用者再次提供的 zendog98-ai/mark-six-ai-predicton 遠端網址並於可存取時推送 main 分支
+- [ ] 將目前專案程式碼提交並推送至 zendog968-ai/mark-six-ai-prediction 的 main 分支
