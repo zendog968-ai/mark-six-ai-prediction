@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Iterable
 
 import numpy as np
@@ -15,6 +16,8 @@ NUMBER_COLUMNS = ("N1", "N2", "N3", "N4", "N5", "N6", "Special")
 MAIN_COLUMNS = ("N1", "N2", "N3", "N4", "N5", "N6")
 NUMBER_MIN = 1
 NUMBER_MAX = 49
+PROJECT_ROOT = Path(__file__).resolve().parent
+DEFAULT_REAL_HISTORY_PATH = PROJECT_ROOT / "data" / "lotto_history_real.csv"
 
 
 @dataclass(frozen=True)
@@ -103,11 +106,27 @@ def generate_mock_data(count: int = 1000, seed: int = 20260817) -> pd.DataFrame:
     return pd.DataFrame(rows, columns=REQUIRED_COLUMNS)
 
 
-def select_data_source(validated_upload: pd.DataFrame | None) -> tuple[pd.DataFrame, str]:
-    """有效上傳一律優先，只有沒有有效上傳時才回退至模擬資料。"""
+def load_real_history(path: Path = DEFAULT_REAL_HISTORY_PATH) -> ValidationResult:
+    """讀取專案內受版本控制的真實歷史 CSV，並沿用相同驗證邏輯。"""
+    if not path.exists():
+        return ValidationResult(None, (f"找不到真實歷史 CSV：{path.name}。",))
+    try:
+        return validate_lotto_dataframe(pd.read_csv(path))
+    except (OSError, pd.errors.ParserError) as error:
+        return ValidationResult(None, (f"無法讀取真實歷史 CSV：{error}",))
+
+
+def select_data_source(
+    validated_upload: pd.DataFrame | None,
+    real_history_path: Path = DEFAULT_REAL_HISTORY_PATH,
+) -> tuple[pd.DataFrame, str]:
+    """有效上傳優先；否則預設使用真實 CSV，只在檔案有問題時回退至模擬資料。"""
     if validated_upload is not None:
         return validated_upload.copy(), "真實 CSV 資料"
-    return generate_mock_data(), "模擬資料"
+    real_history = load_real_history(real_history_path)
+    if real_history.is_valid:
+        return real_history.data.copy(), "專案真實歷史 CSV"
+    return generate_mock_data(), "模擬資料（真實歷史 CSV 不可用）"
 
 
 def number_features(draws: pd.DataFrame, cutoff: int, number: int, window: int = 50) -> tuple[int, int, int]:

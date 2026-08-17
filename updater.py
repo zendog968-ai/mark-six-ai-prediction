@@ -31,7 +31,7 @@ from lotto_data import (
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent
-DEFAULT_HISTORY_PATH = PROJECT_ROOT / "data" / "lotto_simulated_1000.csv"
+DEFAULT_HISTORY_PATH = PROJECT_ROOT / "data" / "lotto_history_real.csv"
 DEFAULT_PREDICTION_PATH = PROJECT_ROOT / "data" / "latest_prediction.json"
 OFFICIAL_RESULTS_URL = "https://bet.hkjc.com/en/marksix/results"
 FALLBACK_RESULTS_URL = "https://www.lotteryextreme.com/marksix/results"
@@ -215,14 +215,26 @@ def build_prediction_payload(history: pd.DataFrame, latest: DrawResult, appended
     }
 
 
+def cached_prediction_matches(history: pd.DataFrame, latest: DrawResult, payload: dict[str, object]) -> bool:
+    """只在快取確實對應目前歷史資料與最新期號時才避免重訓。"""
+    cached_draw = payload.get("latest_draw")
+    if not isinstance(cached_draw, dict):
+        return False
+    try:
+        return int(payload.get("history_records", -1)) == len(history) and int(cached_draw.get("draw", -1)) == latest.draw
+    except (TypeError, ValueError):
+        return False
+
+
 def update(history_path: Path, output_path: Path, fetcher: Callable[[str], str] = fetch_html, dry_run: bool = False) -> dict[str, object]:
     history = load_history(history_path)
     latest = get_latest_draw(fetcher)
     updated_history, appended = append_if_new(history, latest)
     if not appended and output_path.exists() and not dry_run:
         cached_payload = json.loads(output_path.read_text(encoding="utf-8"))
-        cached_payload["run_appended_to_history"] = False
-        return cached_payload
+        if cached_prediction_matches(updated_history, latest, cached_payload):
+            cached_payload["run_appended_to_history"] = False
+            return cached_payload
     payload = build_prediction_payload(updated_history, latest, appended)
     payload["run_appended_to_history"] = appended
     if not dry_run:

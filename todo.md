@@ -37,4 +37,9 @@
 - [x] 提供 Streamlit Community Cloud 部署與公開網址故障排除指南
 - [x] 檢查 26/090 期當晚 GitHub Actions 自動更新、歷史 CSV 與 latest_prediction.json 的同步狀態
 - [x] 展示 GitHub main 分支目前 latest_prediction.json 摘要、相對權重與五組實驗性組合
+- [x] 核對公開結果來源與現有爬取器，建立可驗證至 2026 年 8 月的真實歷史資料 CSV
+- [x] 修改 app.py 令 Streamlit 預設載入真實歷史 CSV，並在檔案不可用時提供安全回退說明
+- [x] 驗證真實資料格式、應用程式資料來源與自動更新流程後推送至 GitHub main 分支
+- [x] 更新既有 Streamlit 測試預期，以驗證預設真實歷史 CSV 與模擬資料安全回退行為
+- [x] 修正預測 JSON 快取判斷，切換至真實歷史 CSV 時強制更新與資料期數一致的輸出
 - [x] 優化 Streamlit 首次模型訓練負荷並驗證側邊欄上傳介面不會長時間阻塞

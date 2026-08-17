@@ -37,12 +37,12 @@ jobs:
 
       - name: Commit generated data when changed
         run: |
-          if [ -z "$(git status --porcelain -- data/lotto_simulated_1000.csv data/latest_prediction.json)" ]; then
+          if [ -z "$(git status --porcelain -- data/lotto_history_real.csv data/latest_prediction.json)" ]; then
             echo "No generated data changes to commit."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/lotto_simulated_1000.csv data/latest_prediction.json
+          git add data/lotto_history_real.csv data/latest_prediction.json
           git commit -m "chore(data): update Mark Six results and analysis"
           git push origin main

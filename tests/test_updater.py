@@ -67,6 +67,14 @@ class UpdaterTests(unittest.TestCase):
             self.assertEqual(len(load_history(history_path)), 61)
             self.assertEqual(output_path.read_text(encoding="utf-8"), first_json)
 
+            stale = json.loads(first_json)
+            stale["history_records"] = 1_000
+            output_path.write_text(json.dumps(stale), encoding="utf-8")
+            refreshed = update(history_path, output_path, fetcher=fake_fetcher)
+            self.assertFalse(refreshed["run_appended_to_history"])
+            self.assertEqual(refreshed["history_records"], 61)
+            self.assertEqual(json.loads(output_path.read_text(encoding="utf-8"))["history_records"], 61)
+
 
 if __name__ == "__main__":
     unittest.main()

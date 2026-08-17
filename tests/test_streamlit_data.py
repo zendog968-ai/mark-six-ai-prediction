@@ -1,5 +1,6 @@
 import io
 import unittest
+from pathlib import Path
 
 import pandas as pd
 
@@ -53,13 +54,18 @@ class UploadedCsvValidationTests(unittest.TestCase):
         self.assertFalse(result.is_valid)
         self.assertIn("不可重複", result.errors[0])
 
-    def test_valid_upload_replaces_mock_data_source(self):
+    def test_valid_upload_precedes_default_real_history_and_missing_file_falls_back_to_mock(self):
         uploaded = validate_lotto_dataframe(valid_frame()).data
         data, source = select_data_source(uploaded)
         self.assertEqual(source, "真實 CSV 資料")
         self.assertEqual(len(data), 2)
-        mock, source = select_data_source(None)
-        self.assertEqual(source, "模擬資料")
+
+        real_history, source = select_data_source(None)
+        self.assertEqual(source, "專案真實歷史 CSV")
+        self.assertGreaterEqual(len(real_history), 51)
+
+        mock, source = select_data_source(None, Path("missing-real-history.csv"))
+        self.assertEqual(source, "模擬資料（真實歷史 CSV 不可用）")
         self.assertEqual(len(mock), 1000)
 
     def test_mock_data_is_itself_valid(self):

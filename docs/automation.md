@@ -15,7 +15,7 @@ python updater.py
 python updater.py --dry-run
 ```
 
-成功新增一期結果後，程式會更新 `data/lotto_simulated_1000.csv`，並產生 `data/latest_prediction.json`。若期號或日期已存在，程式不會重複寫入，也不會重建 JSON，因此排程重跑不會產生無意義的提交。
+成功新增一期結果後，程式會更新 `data/lotto_history_real.csv`，並產生 `data/latest_prediction.json`。若期號或日期已存在，程式不會重複寫入；只有 JSON 已對應同一歷史期數及最新期號時才會跳過重訓，避免排程重跑產生無意義的提交。
 
 ## 排程
 

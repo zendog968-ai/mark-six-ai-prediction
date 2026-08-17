@@ -1,6 +1,7 @@
 import streamlit as st
 
 from lotto_data import (
+    DEFAULT_REAL_HISTORY_PATH,
     REQUIRED_COLUMNS,
     filter_history,
     generate_filtered_combinations,
@@ -22,7 +23,8 @@ with st.sidebar:
         type=["csv"],
         help="必要欄位：Draw、Date、N1、N2、N3、N4、N5、N6、Special。",
     )
-    st.caption("有效 CSV 會自動取代模擬資料，用於特徵工程、模型訓練與回測。")
+    st.caption("有效 CSV 會優先取代專案內真實歷史資料，用於特徵工程、模型訓練與回測。")
+    st.caption(f"預設真實資料檔：`{DEFAULT_REAL_HISTORY_PATH.name}`")
 
 validated_upload = None
 if uploaded_file is not None:
@@ -35,9 +37,9 @@ if uploaded_file is not None:
         for error in validation.errors:
             st.sidebar.error(error)
 
-draws, source_label = select_data_source(validated_upload)
+draws, source_label = select_data_source(validated_upload, DEFAULT_REAL_HISTORY_PATH)
 if validated_upload is None and uploaded_file is not None:
-    st.error("上傳檔案未通過驗證，因此系統不會用它訓練模型；目前仍顯示模擬資料。")
+    st.error("上傳檔案未通過驗證，因此系統不會用它訓練模型；目前會使用專案內真實歷史資料（如不可用才回退模擬資料）。")
 
 st.info(f"目前資料來源：**{source_label}**；共 {len(draws):,} 期紀錄。")
 overview_tab, model_tab, backtest_tab, data_tab = st.tabs(["資料概覽", "模型實驗", "模型回測", "歷史資料預覽"])

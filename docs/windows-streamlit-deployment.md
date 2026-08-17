@@ -145,7 +145,7 @@ Streamlit Community Cloud 會從 GitHub 選取儲存庫、分支與入口檔部�
 app.py
 lotto_data.py
 requirements.txt
-data/lotto_simulated_1000.csv
+data/lotto_history_real.csv
 ```
 
 本專案的 `requirements.txt` 位於儲存庫根目錄，符合 Community Cloud 對 Python 依賴檔的偵測位置。若應用程式不依賴作業系統層級工具，不需要另建 `packages.txt`。[2]
@@ -191,7 +191,7 @@ data/lotto_simulated_1000.csv
 2. 若是 `ModuleNotFoundError`，確認 `requirements.txt` 位於根目錄、已推送到 `main`，並重新部署。官方文件指出，找不到依賴套件是建置失敗的常見原因。[2]
 3. 若顯示找不到入口檔，確認 Main file path 是 `app.py`，大小寫也必須一致。
 4. 若與本機行為不同，將 Advanced settings 的 Python 設為 3.12，讓雲端與本機虛擬環境一致。
-5. 若資料檔遺失，確認 `data/lotto_simulated_1000.csv` 已被 Git 追蹤並存在 `main`。
+5. 若資料檔遺失，確認 `data/lotto_history_real.csv` 已被 Git 追蹤並存在 `main`。
 6. 若 GitHub Actions 無法推送更新，檢查 Actions 執行日誌及 `main` 的保護規則；工作流程需要保留 `contents: write` 權限。
 
 > **部署選擇提示**：Streamlit Community Cloud 很適合目前這個純 Python／Streamlit 專案，且可直接從 GitHub 部署。Manus 亦提供內建託管及自訂網域作為另一種選擇；若改採外部 Streamlit 託管，部署日誌、Python 相依套件與公開網址將在 Streamlit 平台管理，而非 Manus 管理介面中管理。

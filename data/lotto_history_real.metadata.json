@@ -1,0 +1,23 @@
+{
+  "generated_at_utc": "2026-08-17T18:27:18.854775+00:00",
+  "purpose": "真實香港六合彩公開歷史結果；僅供統計教育與實驗用途。",
+  "records": 223,
+  "start_date": "2025-01-02",
+  "end_date": "2026-08-15",
+  "latest_draw": {
+    "Draw": 26089,
+    "Date": "2026-08-15",
+    "N1": 4,
+    "N2": 16,
+    "N3": 25,
+    "N4": 27,
+    "N5": 28,
+    "N6": 33,
+    "Special": 14
+  },
+  "history_sources": [
+    "https://lottery.hk/en/mark-six/results/2025",
+    "https://lottery.hk/en/mark-six/results/2026"
+  ],
+  "latest_cross_check_source": "https://www.lotteryextreme.com/marksix/results"
+}

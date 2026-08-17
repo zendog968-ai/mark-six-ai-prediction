@@ -15,7 +15,7 @@ class StreamlitApplicationTests(unittest.TestCase):
         self.assertEqual(len(app.sidebar.file_uploader), 1)
         rendered_info = " ".join(info.value for info in app.info)
         self.assertIn("目前資料來源：", rendered_info)
-        self.assertIn("模擬資料", rendered_info)
+        self.assertIn("專案真實歷史 CSV", rendered_info)
 
 
 if __name__ == "__main__":

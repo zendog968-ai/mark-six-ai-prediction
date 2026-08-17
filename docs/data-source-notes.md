@@ -4,9 +4,12 @@
 
 | 優先序 | 來源 | 用途 | 可驗證欄位 |
 |---:|---|---|---|
+| 0 | Lottery.hk Mark Six 年度結果頁 | 建立受版本控制的真實歷史 CSV；年度頁列出期號、日期、6 個正選及特別號 | 年度表的期號、日期與 7 個號碼；最新一期再與下列即時來源交叉核對 |
 | 1 | 香港賽馬會 Mark Six 結果頁 | 公開結果的主要交叉比對來源 | 結果頁呈現期號、日期、6 個正選及特別號 |
 | 2 | LotteryExtreme Hong Kong Mark Six Results | 主來源無可解析資料時的備援 | 最新結果 HTML 逐期列出日期、括號中的期號及 7 個號碼 |
 
 > 2026-08-17 的結構檢查顯示，備援來源的每期結果使用相鄰列：日期與 `YY/NNN` 期號後，依序列出 6 個正選及 1 個特別號。更新腳本在寫入前仍會驗證 1–49 範圍與 7 個號碼不重複。
 
-來源連結：[香港賽馬會結果頁](https://bet.hkjc.com/en/marksix/results)；[LotteryExtreme 結果頁](https://www.lotteryextreme.com/marksix/results)。
+真實歷史建立器目前抓取 2025 與 2026 年度頁，產生 2025-01-02 至 2026-08-15 的 223 期 CSV；在寫入前會用主／備援即時來源核對最新期的期號及全部 7 個號碼。
+
+來源連結：[Lottery.hk 年度結果頁](https://lottery.hk/en/mark-six/results/2026)；[香港賽馬會結果頁](https://bet.hkjc.com/en/marksix/results)；[LotteryExtreme 結果頁](https://www.lotteryextreme.com/marksix/results)。

@@ -8,10 +8,11 @@
 
 | 路徑／檔案 | 用途 |
 |---|---|
-| `app.py` | Streamlit 主介面。提供資料概覽、模型實驗、模型回測及歷史資料預覽；側邊欄可上傳有效的真實歷史 CSV，通過驗證後會取代介面中的模擬資料。 |
-| `lotto_data.py` | 共用資料層：CSV 欄位與號碼驗證、模擬資料、50 期／10 期頻率與 Gap 特徵、Random Forest 訓練、組合過濾、滾動回測與日期／號碼篩選。 |
+| `app.py` | Streamlit 主介面。預設載入專案內的真實歷史 CSV；側邊欄上傳的有效真實 CSV 仍有最高優先權。 |
+| `lotto_data.py` | 共用資料層：CSV 欄位與號碼驗證、真實資料讀取、50 期／10 期頻率與 Gap 特徵、Random Forest 訓練、組合過濾、滾動回測與日期／號碼篩選。 |
 | `updater.py` | 自動更新腳本。以公開結果頁為來源，執行逾時、有限重試、來源備援、期號／日期去重及 1–49 號碼驗證；成功更新後輸出最新分析 JSON。 |
-| `data/lotto_simulated_1000.csv` | 歷史資料檔。初始內容可為模擬資料；自動更新通過驗證後會以同一標準欄位附加新一期結果。 |
+| `scripts/fetch_real_history.py` | 年度真實歷史資料擷取器。從公開年度結果表低頻讀取、嚴格驗證，並以現有主／備援結果更新器交叉核對最新一期。 |
+| `data/lotto_history_real.csv` | 受版本控制的真實歷史資料檔；目前涵蓋 2025-01-02 至 2026-08-15，共 223 期。 |
 | `data/latest_prediction.json` | 最近一次成功更新後的模型實驗輸出，包含來源期數、前 25 個相對權重及 5 組通過奇偶過濾的組合。 |
 | `.github/workflows/schedule.yml` | GitHub Actions 排程設定；負責安裝套件、執行更新腳本，並只在 CSV 或 JSON 有實際改動時提交至 `main`。 |
 | `tests/` | CSV 驗證、模型訓練、回測、篩選、更新腳本、排程設定與 Streamlit 介面冒煙測試。 |
@@ -90,7 +91,13 @@ python updater.py --dry-run
 python updater.py
 ```
 
-成功附加新一期後，腳本會更新 `data/lotto_simulated_1000.csv` 並建立／更新 `data/latest_prediction.json`。JSON 內含前 25 個相對權重、5 組組合、奇偶數量、號碼總和與連號對數。若目前最新期數已存在，腳本會保持 CSV 與 JSON 不變，避免排程重跑製造無意義提交。
+成功附加新一期後，腳本會更新 `data/lotto_history_real.csv` 並建立／更新 `data/latest_prediction.json`。JSON 內含前 25 個相對權重、5 組組合、奇偶數量、號碼總和與連號對數。若目前最新期數已存在而 JSON 與當前歷史期數一致，腳本會保持檔案不變，避免排程重跑製造無意義提交。
+
+如需重建年度真實歷史 CSV，可執行：
+
+```bash
+python scripts/fetch_real_history.py --years 2025 2026
+```
 
 ## GitHub Actions 自動化流程
 
@@ -100,7 +107,7 @@ python updater.py
 
 1. 取出 `main` 分支，安裝 `requirements.txt` 的相依套件。
 2. 執行 `python updater.py`；來源或資料驗證失敗時流程會停止，既有 CSV 不會被覆寫。
-3. 若 `data/lotto_simulated_1000.csv` 或 `data/latest_prediction.json` 有實際變動，工作流程以 `github-actions[bot]` 身分建立提交並推送回 `main`。
+3. 若 `data/lotto_history_real.csv` 或 `data/latest_prediction.json` 有實際變動，工作流程以 `github-actions[bot]` 身分建立提交並推送回 `main`。
 4. 若沒有新期數或 JSON 無變動，流程結束而不建立提交。
 
 工作流程亦支援手動執行。前往 GitHub 儲存庫的 **Actions** 頁面，選擇 **Update Mark Six data and analysis**，再按 **Run workflow** 即可手動觸發。若 `main` 分支啟用了限制機器人推送的保護規則，請在儲存庫設定中允許該工作流程的寫入權限；工作流程本身已宣告 `contents: write` 權限。[3]
