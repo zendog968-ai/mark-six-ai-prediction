@@ -25,4 +25,8 @@
 - [x] 比較 AI 推薦 Top-6 與隨機盲猜的每期及平均命中數，並繪製客觀對比圖表
 - [x] 在歷史資料預覽新增 st.date_input 日期區間與 st.multiselect 指定號碼包含篩選
 - [x] 為回測與歷史篩選新增測試並推送至 GitHub main 分支
+- [x] 建立具來源白名單、逾時、格式驗證與重複期數保護的最新六合彩結果更新腳本
+- [x] 新增更新後重訓分析、Top 5 組合及權重輸出的 latest_prediction.json
+- [x] 建立香港時間每週二、四、六 22:30 執行並自動提交 CSV／JSON 的 GitHub Actions 工作流程
+- [ ] 為更新與排程設定新增測試、文件並推送至 GitHub main 分支
 - [x] 優化 Streamlit 首次模型訓練負荷並驗證側邊欄上傳介面不會長時間阻塞
