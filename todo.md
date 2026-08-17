@@ -31,4 +31,5 @@
 - [x] 為更新與排程設定新增測試、文件並推送至 GitHub main 分支
 - [x] 撰寫完整繁體中文 README，說明架構、安裝執行、自動化更新與負責任使用免責聲明
 - [x] 檢閱 README 與目前程式設定一致，並推送至 GitHub main 分支
+- [x] 將 README 匯出為可下載 PDF，並一併交付 Markdown 原檔
 - [x] 優化 Streamlit 首次模型訓練負荷並驗證側邊欄上傳介面不會長時間阻塞
