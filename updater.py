@@ -24,8 +24,10 @@ from lotto_data import (
     MAIN_COLUMNS,
     NUMBER_COLUMNS,
     REQUIRED_COLUMNS,
+    FUSION_FEATURE_NAMES,
+    FUSION_MODEL_NAME,
     generate_filtered_combinations,
-    train_random_forest,
+    train_fusion_model,
     validate_lotto_dataframe,
 )
 
@@ -191,17 +193,32 @@ def append_if_new(history: pd.DataFrame, latest: DrawResult) -> tuple[pd.DataFra
 
 
 def build_prediction_payload(history: pd.DataFrame, latest: DrawResult, appended: bool) -> dict[str, object]:
-    ranked, error = train_random_forest(history)
-    if error or ranked is None:
+    ranked, model_details, error = train_fusion_model(history)
+    if error or ranked is None or model_details is None:
         raise UpdateError(error or "模型訓練失敗。")
     combinations = generate_filtered_combinations(ranked, n_groups=5)
+    top_details = model_details.head(25)
     return {
         "generated_at_utc": datetime.now(UTC).isoformat(),
         "purpose": "僅供統計教育與實驗用途，無法可靠預測真實開獎結果。",
         "history_records": len(history),
         "latest_draw": {**asdict(latest), "appended_to_history": appended},
-        "model": {"name": "RandomForestClassifier", "features": ["frequency_50", "frequency_10", "gap"]},
-        "top_weights": [{"number": number, "relative_weight": round(float(weight), 6)} for number, weight in ranked[:25]],
+        "model": {
+            "name": FUSION_MODEL_NAME,
+            "features": list(FUSION_FEATURE_NAMES),
+            "fusion": {"random_forest_weight": 0.5, "xgboost_weight": 0.5},
+            "kmeans_clusters": int(model_details["kmeans_cluster"].nunique()),
+        },
+        "top_weights": [
+            {
+                "number": int(row.number),
+                "relative_weight": round(float(row.fused_score), 6),
+                "random_forest_weight": round(float(row.random_forest_score), 6),
+                "xgboost_weight": round(float(row.xgboost_score), 6),
+                "kmeans_cluster": int(row.kmeans_cluster),
+            }
+            for row in top_details.itertuples(index=False)
+        ],
         "top_5_recommendations": [
             {
                 "set_index": index,
@@ -218,10 +235,15 @@ def build_prediction_payload(history: pd.DataFrame, latest: DrawResult, appended
 def cached_prediction_matches(history: pd.DataFrame, latest: DrawResult, payload: dict[str, object]) -> bool:
     """只在快取確實對應目前歷史資料與最新期號時才避免重訓。"""
     cached_draw = payload.get("latest_draw")
-    if not isinstance(cached_draw, dict):
+    cached_model = payload.get("model")
+    if not isinstance(cached_draw, dict) or not isinstance(cached_model, dict):
         return False
     try:
-        return int(payload.get("history_records", -1)) == len(history) and int(cached_draw.get("draw", -1)) == latest.draw
+        return (
+            int(payload.get("history_records", -1)) == len(history)
+            and int(cached_draw.get("draw", -1)) == latest.draw
+            and cached_model.get("name") == FUSION_MODEL_NAME
+        )
     except (TypeError, ValueError):
         return False
 

@@ -8,7 +8,10 @@ from typing import Iterable
 
 import numpy as np
 import pandas as pd
+from sklearn.cluster import KMeans
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import StandardScaler
+from xgboost import XGBClassifier
 
 
 REQUIRED_COLUMNS = ("Draw", "Date", "N1", "N2", "N3", "N4", "N5", "N6", "Special")
@@ -18,6 +21,9 @@ NUMBER_MIN = 1
 NUMBER_MAX = 49
 PROJECT_ROOT = Path(__file__).resolve().parent
 DEFAULT_REAL_HISTORY_PATH = PROJECT_ROOT / "data" / "lotto_history_real.csv"
+BASE_FEATURE_NAMES = ("frequency_50", "frequency_10", "gap")
+FUSION_FEATURE_NAMES = (*BASE_FEATURE_NAMES, "kmeans_cluster")
+FUSION_MODEL_NAME = "Random Forest + XGBoost Ensemble"
 
 
 @dataclass(frozen=True)
@@ -197,6 +203,81 @@ def train_random_forest(draws: pd.DataFrame, window: int = 50, n_estimators: int
     return ranked, None
 
 
+def train_fusion_model(
+    draws: pd.DataFrame,
+    window: int = 50,
+    random_forest_estimators: int = 70,
+    xgboost_estimators: int = 70,
+    n_clusters: int = 4,
+) -> tuple[list[tuple[int, float]] | None, pd.DataFrame | None, str | None]:
+    """以 K-Means 分群特徵融合 Random Forest 與 XGBoost 的實驗性相對分數。
+
+    K-Means 只依近期頻率與 Gap 特徵分群；其群組代號不代表號碼本身有物理
+    或因果特性。兩個分類器以相同訓練樣本產生機率，採等權平均作為展示分數。
+    """
+    base_features, labels = build_training_data(draws, window)
+    if not len(base_features):
+        return None, None, f"至少需要 {window + 1} 期有效資料才能建立目前的 {window} 期特徵。"
+    if len(np.unique(labels)) < 2:
+        return None, None, "目前資料沒有足夠的正負樣本類別可訓練融合模型。"
+
+    scaler = StandardScaler()
+    scaled_training = scaler.fit_transform(base_features)
+    cluster_count = min(n_clusters, len(base_features))
+    kmeans = KMeans(n_clusters=cluster_count, random_state=20260817, n_init=10)
+    training_clusters = kmeans.fit_predict(scaled_training).astype(np.float32)
+    training_features = np.column_stack((base_features, training_clusters)).astype(np.float32)
+
+    positive_rate = float(labels.mean())
+    scale_pos_weight = (1.0 - positive_rate) / positive_rate if positive_rate > 0 else 1.0
+    random_forest = RandomForestClassifier(
+        n_estimators=random_forest_estimators,
+        min_samples_leaf=16,
+        max_depth=6,
+        class_weight="balanced_subsample",
+        random_state=20260817,
+        n_jobs=-1,
+    )
+    xgboost = XGBClassifier(
+        n_estimators=xgboost_estimators,
+        max_depth=3,
+        learning_rate=0.08,
+        subsample=0.9,
+        colsample_bytree=0.9,
+        objective="binary:logistic",
+        eval_metric="logloss",
+        scale_pos_weight=scale_pos_weight,
+        tree_method="hist",
+        random_state=20260817,
+        n_jobs=1,
+    )
+    random_forest.fit(training_features, labels)
+    xgboost.fit(training_features, labels)
+
+    current_base = np.asarray(
+        [number_features(draws, len(draws), number, window) for number in range(1, 50)], dtype=np.float32
+    )
+    current_clusters = kmeans.predict(scaler.transform(current_base)).astype(np.float32)
+    current_features = np.column_stack((current_base, current_clusters)).astype(np.float32)
+    random_forest_scores = random_forest.predict_proba(current_features)[:, 1]
+    xgboost_scores = xgboost.predict_proba(current_features)[:, 1]
+    fused_scores = (random_forest_scores + xgboost_scores) / 2.0
+    details = pd.DataFrame(
+        {
+            "number": np.arange(1, 50, dtype=int),
+            "frequency_50": current_base[:, 0].astype(int),
+            "frequency_10": current_base[:, 1].astype(int),
+            "gap": current_base[:, 2].astype(int),
+            "kmeans_cluster": current_clusters.astype(int),
+            "random_forest_score": random_forest_scores,
+            "xgboost_score": xgboost_scores,
+            "fused_score": fused_scores,
+        }
+    ).sort_values("fused_score", ascending=False, ignore_index=True)
+    ranked = [(int(row.number), float(row.fused_score)) for row in details.itertuples(index=False)]
+    return ranked, details, None
+
+
 def rolling_backtest(
     draws: pd.DataFrame,
     training_window: int = 200,
@@ -217,7 +298,12 @@ def rolling_backtest(
     rows = []
     for target_index in range(start, len(draws)):
         history = draws.iloc[:target_index]
-        ranked, error = train_random_forest(history, window=feature_window, n_estimators=20)
+        ranked, _details, error = train_fusion_model(
+            history,
+            window=feature_window,
+            random_forest_estimators=20,
+            xgboost_estimators=20,
+        )
         if error:
             return None, error
         ai_numbers = [number for number, _score in ranked[:6]]

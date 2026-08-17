@@ -8,7 +8,7 @@ from lotto_data import (
     read_csv_with_validation,
     rolling_backtest,
     select_data_source,
-    train_random_forest,
+    train_fusion_model,
 )
 
 
@@ -53,19 +53,30 @@ with overview_tab:
     st.dataframe(draws.tail(20), width="stretch", hide_index=True)
 
 with model_tab:
-    st.subheader("特徵工程與 Random Forest 實驗")
-    st.caption("每個候選號碼使用近 50 期頻率、近 10 期頻率與 Gap；有效上傳資料會在此直接取代模擬資料。")
+    st.subheader("特徵工程與融合模型實驗")
+    st.caption("每個候選號碼使用近 50 期頻率、近 10 期頻率、Gap 與 K-Means 群組代號；Random Forest 與 XGBoost 的相對分數以等權平均融合。")
     with st.spinner("正在依目前資料來源建立特徵與訓練模型…"):
-        ranked_probabilities, training_error = train_random_forest(draws)
+        ranked_probabilities, model_details, training_error = train_fusion_model(draws)
     if training_error:
         st.warning(training_error)
     else:
-        ranking_table = [{"排名": index + 1, "號碼": number, "相對分數": round(float(score) * 100, 2)} for index, (number, score) in enumerate(ranked_probabilities[:15])]
+        st.success("目前模型：Random Forest + XGBoost 融合模型；已加入 K-Means 特徵。")
+        ranking_table = [
+            {
+                "排名": index + 1,
+                "號碼": int(row.number),
+                "融合分數": round(float(row.fused_score) * 100, 2),
+                "RF 分數": round(float(row.random_forest_score) * 100, 2),
+                "XGBoost 分數": round(float(row.xgboost_score) * 100, 2),
+                "K-Means 群組": int(row.kmeans_cluster),
+            }
+            for index, row in enumerate(model_details.head(15).itertuples(index=False))
+        ]
         left, right = st.columns([1, 1.4])
         with left:
             st.dataframe(ranking_table, width="stretch", hide_index=True)
         with right:
-            st.bar_chart({"相對分數": {str(row["號碼"]): row["相對分數"] for row in ranking_table}})
+            st.bar_chart({"融合分數": {str(row["號碼"]): row["融合分數"] for row in ranking_table}})
         st.markdown("#### 經奇偶過濾的實驗性組合")
         for index, combination in enumerate(generate_filtered_combinations(ranked_probabilities), start=1):
             odd_count = sum(number % 2 for number in combination)
@@ -73,7 +84,7 @@ with model_tab:
 
 with backtest_tab:
     st.subheader("模型回測（滾動樣本外評估）")
-    st.caption("每個測試期只使用其之前可見的歷史資料重新訓練模型，再以該期實際 6 個正選計算命中數；隨機基準為每期 100 次均勻盲猜的平均命中數。")
+    st.caption("每個測試期只使用其之前可見的歷史資料重新訓練融合模型，再以該期實際 6 個正選計算命中數；隨機基準為每期 100 次均勻盲猜的平均命中數。")
     control_a, control_b = st.columns(2)
     with control_a:
         max_training = max(51, min(500, len(draws) - 1))

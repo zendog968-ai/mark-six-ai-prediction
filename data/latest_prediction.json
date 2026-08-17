@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-08-17T18:31:10.365439+00:00",
+  "generated_at_utc": "2026-08-17T19:00:04.963375+00:00",
   "purpose": "僅供統計教育與實驗用途，無法可靠預測真實開獎結果。",
   "history_records": 223,
   "latest_draw": {
@@ -18,113 +18,194 @@
     "appended_to_history": false
   },
   "model": {
-    "name": "RandomForestClassifier",
+    "name": "Random Forest + XGBoost Ensemble",
     "features": [
       "frequency_50",
       "frequency_10",
-      "gap"
-    ]
+      "gap",
+      "kmeans_cluster"
+    ],
+    "fusion": {
+      "random_forest_weight": 0.5,
+      "xgboost_weight": 0.5
+    },
+    "kmeans_clusters": 4
   },
   "top_weights": [
     {
       "number": 7,
-      "relative_weight": 0.594756
+      "relative_weight": 0.602677,
+      "random_forest_weight": 0.580822,
+      "xgboost_weight": 0.624532,
+      "kmeans_cluster": 1
     },
     {
       "number": 31,
-      "relative_weight": 0.564067
+      "relative_weight": 0.558188,
+      "random_forest_weight": 0.554313,
+      "xgboost_weight": 0.562063,
+      "kmeans_cluster": 1
     },
     {
       "number": 1,
-      "relative_weight": 0.555986
+      "relative_weight": 0.548693,
+      "random_forest_weight": 0.55416,
+      "xgboost_weight": 0.543225,
+      "kmeans_cluster": 1
     },
     {
       "number": 14,
-      "relative_weight": 0.538373
-    },
-    {
-      "number": 30,
-      "relative_weight": 0.537597
+      "relative_weight": 0.539082,
+      "random_forest_weight": 0.527424,
+      "xgboost_weight": 0.55074,
+      "kmeans_cluster": 1
     },
     {
       "number": 48,
-      "relative_weight": 0.53711
+      "relative_weight": 0.5381,
+      "random_forest_weight": 0.532434,
+      "xgboost_weight": 0.543767,
+      "kmeans_cluster": 1
     },
     {
-      "number": 13,
-      "relative_weight": 0.529006
-    },
-    {
-      "number": 32,
-      "relative_weight": 0.517997
-    },
-    {
-      "number": 42,
-      "relative_weight": 0.515181
+      "number": 30,
+      "relative_weight": 0.537713,
+      "random_forest_weight": 0.540432,
+      "xgboost_weight": 0.534994,
+      "kmeans_cluster": 3
     },
     {
       "number": 8,
-      "relative_weight": 0.512929
-    },
-    {
-      "number": 9,
-      "relative_weight": 0.512734
-    },
-    {
-      "number": 21,
-      "relative_weight": 0.512659
-    },
-    {
-      "number": 11,
-      "relative_weight": 0.508942
-    },
-    {
-      "number": 35,
-      "relative_weight": 0.507959
+      "relative_weight": 0.521746,
+      "random_forest_weight": 0.50143,
+      "xgboost_weight": 0.542062,
+      "kmeans_cluster": 2
     },
     {
       "number": 18,
-      "relative_weight": 0.500055
+      "relative_weight": 0.52167,
+      "random_forest_weight": 0.509652,
+      "xgboost_weight": 0.533688,
+      "kmeans_cluster": 2
     },
     {
       "number": 44,
-      "relative_weight": 0.500055
+      "relative_weight": 0.52167,
+      "random_forest_weight": 0.509652,
+      "xgboost_weight": 0.533688,
+      "kmeans_cluster": 2
     },
     {
-      "number": 46,
-      "relative_weight": 0.499899
+      "number": 42,
+      "relative_weight": 0.52139,
+      "random_forest_weight": 0.522635,
+      "xgboost_weight": 0.520146,
+      "kmeans_cluster": 3
+    },
+    {
+      "number": 32,
+      "relative_weight": 0.519613,
+      "random_forest_weight": 0.514885,
+      "xgboost_weight": 0.524341,
+      "kmeans_cluster": 1
     },
     {
       "number": 17,
-      "relative_weight": 0.495756
+      "relative_weight": 0.514494,
+      "random_forest_weight": 0.52799,
+      "xgboost_weight": 0.500998,
+      "kmeans_cluster": 3
     },
     {
-      "number": 5,
-      "relative_weight": 0.494626
+      "number": 13,
+      "relative_weight": 0.512012,
+      "random_forest_weight": 0.501882,
+      "xgboost_weight": 0.522142,
+      "kmeans_cluster": 3
     },
     {
-      "number": 12,
-      "relative_weight": 0.494626
+      "number": 21,
+      "relative_weight": 0.506312,
+      "random_forest_weight": 0.507013,
+      "xgboost_weight": 0.505612,
+      "kmeans_cluster": 1
     },
     {
-      "number": 26,
-      "relative_weight": 0.494626
-    },
-    {
-      "number": 22,
-      "relative_weight": 0.493518
-    },
-    {
-      "number": 37,
-      "relative_weight": 0.492079
+      "number": 11,
+      "relative_weight": 0.50613,
+      "random_forest_weight": 0.506649,
+      "xgboost_weight": 0.505612,
+      "kmeans_cluster": 1
     },
     {
       "number": 15,
-      "relative_weight": 0.490355
+      "relative_weight": 0.502775,
+      "random_forest_weight": 0.510915,
+      "xgboost_weight": 0.494635,
+      "kmeans_cluster": 2
+    },
+    {
+      "number": 35,
+      "relative_weight": 0.501098,
+      "random_forest_weight": 0.500834,
+      "xgboost_weight": 0.501362,
+      "kmeans_cluster": 3
+    },
+    {
+      "number": 40,
+      "relative_weight": 0.50068,
+      "random_forest_weight": 0.496318,
+      "xgboost_weight": 0.505042,
+      "kmeans_cluster": 3
+    },
+    {
+      "number": 33,
+      "relative_weight": 0.498832,
+      "random_forest_weight": 0.499467,
+      "xgboost_weight": 0.498198,
+      "kmeans_cluster": 3
+    },
+    {
+      "number": 25,
+      "relative_weight": 0.497741,
+      "random_forest_weight": 0.499383,
+      "xgboost_weight": 0.496098,
+      "kmeans_cluster": 3
     },
     {
       "number": 4,
-      "relative_weight": 0.490083
+      "relative_weight": 0.497537,
+      "random_forest_weight": 0.484053,
+      "xgboost_weight": 0.511022,
+      "kmeans_cluster": 1
+    },
+    {
+      "number": 16,
+      "relative_weight": 0.497537,
+      "random_forest_weight": 0.484053,
+      "xgboost_weight": 0.511022,
+      "kmeans_cluster": 1
+    },
+    {
+      "number": 9,
+      "relative_weight": 0.496973,
+      "random_forest_weight": 0.504218,
+      "xgboost_weight": 0.489727,
+      "kmeans_cluster": 2
+    },
+    {
+      "number": 46,
+      "relative_weight": 0.495301,
+      "random_forest_weight": 0.499307,
+      "xgboost_weight": 0.491295,
+      "kmeans_cluster": 0
+    },
+    {
+      "number": 24,
+      "relative_weight": 0.494656,
+      "random_forest_weight": 0.487507,
+      "xgboost_weight": 0.501806,
+      "kmeans_cluster": 3
     }
   ],
   "top_5_recommendations": [
@@ -132,56 +213,56 @@
       "set_index": 1,
       "numbers": [
         1,
+        9,
         14,
-        17,
-        18,
-        22,
-        30
+        33,
+        40,
+        48
       ],
-      "odd_count": 2,
-      "number_sum": 102,
-      "consecutive_pairs": 1
+      "odd_count": 3,
+      "number_sum": 145,
+      "consecutive_pairs": 0
     },
     {
       "set_index": 2,
       "numbers": [
-        4,
-        8,
+        11,
         14,
-        21,
-        22,
-        35
+        16,
+        17,
+        24,
+        32
       ],
       "odd_count": 2,
-      "number_sum": 104,
+      "number_sum": 114,
       "consecutive_pairs": 1
     },
     {
       "set_index": 3,
       "numbers": [
-        5,
-        7,
-        9,
+        15,
+        17,
         21,
         31,
-        44
+        32,
+        33
       ],
       "odd_count": 5,
-      "number_sum": 117,
-      "consecutive_pairs": 0
+      "number_sum": 149,
+      "consecutive_pairs": 2
     },
     {
       "set_index": 4,
       "numbers": [
         7,
+        9,
+        11,
         14,
-        18,
-        35,
-        37,
-        44
+        21,
+        31
       ],
-      "odd_count": 3,
-      "number_sum": 155,
+      "odd_count": 5,
+      "number_sum": 93,
       "consecutive_pairs": 0
     },
     {
@@ -190,12 +271,12 @@
         1,
         7,
         15,
-        30,
-        32,
-        46
+        18,
+        35,
+        48
       ],
-      "odd_count": 3,
-      "number_sum": 131,
+      "odd_count": 4,
+      "number_sum": 124,
       "consecutive_pairs": 0
     }
   ],
