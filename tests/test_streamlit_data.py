@@ -7,7 +7,9 @@ from lotto_data import (
     REQUIRED_COLUMNS,
     generate_filtered_combinations,
     generate_mock_data,
+    filter_history,
     read_csv_with_validation,
+    rolling_backtest,
     select_data_source,
     train_random_forest,
     validate_lotto_dataframe,
@@ -71,6 +73,25 @@ class UploadedCsvValidationTests(unittest.TestCase):
         combinations = generate_filtered_combinations(ranked)
         self.assertEqual(len(combinations), 5)
         self.assertTrue(all(0 < sum(number % 2 for number in combination) < 6 for combination in combinations))
+
+    def test_history_filter_applies_inclusive_dates_and_any_selected_number(self):
+        draws = generate_mock_data(20)
+        start = draws.iloc[4]["Date"].date()
+        end = draws.iloc[9]["Date"].date()
+        selected = int(draws.iloc[6]["N3"])
+        filtered = filter_history(draws, start, end, [selected])
+        self.assertTrue((filtered["Date"] >= pd.Timestamp(start)).all())
+        self.assertTrue((filtered["Date"] <= pd.Timestamp(end)).all())
+        self.assertTrue(filtered.loc[:, ["N1", "N2", "N3", "N4", "N5", "N6", "Special"]].isin([selected]).any(axis=1).all())
+
+    def test_rolling_backtest_only_uses_prior_history_and_returns_comparable_metrics(self):
+        draws = generate_mock_data(80)
+        backtest, error = rolling_backtest(draws, training_window=60, test_periods=5, random_trials=10)
+        self.assertIsNone(error)
+        self.assertEqual(len(backtest), 5)
+        self.assertEqual(backtest["期數"].tolist(), draws["Draw"].tail(5).tolist())
+        self.assertTrue(backtest["AI Top-6 命中"].between(0, 6).all())
+        self.assertTrue(backtest["隨機平均命中"].between(0, 6).all())
 
 
 if __name__ == "__main__":

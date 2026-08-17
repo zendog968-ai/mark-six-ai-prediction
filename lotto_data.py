@@ -158,13 +158,13 @@ def build_training_data(draws: pd.DataFrame, window: int = 50) -> tuple[np.ndarr
     return np.vstack(rows).astype(np.float32), np.concatenate(labels).astype(np.int8)
 
 
-def train_random_forest(draws: pd.DataFrame, window: int = 50):
+def train_random_forest(draws: pd.DataFrame, window: int = 50, n_estimators: int = 50):
     """以目前來源資料訓練模型並輸出下期的相對分數；資料不足時回傳原因。"""
     features, labels = build_training_data(draws, window)
     if not len(features):
         return None, f"至少需要 {window + 1} 期有效資料才能建立目前的 {window} 期特徵。"
     model = RandomForestClassifier(
-        n_estimators=50,
+        n_estimators=n_estimators,
         min_samples_leaf=16,
         max_depth=6,
         class_weight="balanced_subsample",
@@ -176,6 +176,67 @@ def train_random_forest(draws: pd.DataFrame, window: int = 50):
     probabilities = model.predict_proba(current)[:, 1]
     ranked = sorted(zip(range(1, 50), probabilities, strict=True), key=lambda pair: pair[1], reverse=True)
     return ranked, None
+
+
+def rolling_backtest(
+    draws: pd.DataFrame,
+    training_window: int = 200,
+    test_periods: int = 20,
+    feature_window: int = 50,
+    random_trials: int = 100,
+    seed: int = 20260817,
+) -> tuple[pd.DataFrame | None, str | None]:
+    """以每一期之前可見的歷史資料重訓模型，與同一期實際開獎結果作樣本外比較。"""
+    if test_periods < 1 or random_trials < 1:
+        return None, "測試期數與隨機試驗次數必須大於零。"
+    minimum_history = max(training_window, feature_window + 1)
+    start = max(minimum_history, len(draws) - test_periods)
+    if start >= len(draws):
+        return None, f"至少需要 {minimum_history + 1} 期資料才能完成目前設定的滾動回測。"
+
+    rng = np.random.default_rng(seed)
+    rows = []
+    for target_index in range(start, len(draws)):
+        history = draws.iloc[:target_index]
+        ranked, error = train_random_forest(history, window=feature_window, n_estimators=20)
+        if error:
+            return None, error
+        ai_numbers = [number for number, _score in ranked[:6]]
+        actual_numbers = draws.iloc[target_index].loc[list(MAIN_COLUMNS)].astype(int).tolist()
+        actual_set = set(actual_numbers)
+        ai_hits = len(set(ai_numbers) & actual_set)
+        random_hits = [
+            len(set(rng.choice(np.arange(1, 50), size=6, replace=False).tolist()) & actual_set)
+            for _ in range(random_trials)
+        ]
+        row = draws.iloc[target_index]
+        rows.append(
+            {
+                "期數": int(row["Draw"]),
+                "日期": pd.Timestamp(row["Date"]),
+                "AI Top-6 命中": ai_hits,
+                "隨機平均命中": float(np.mean(random_hits)),
+                "AI 推薦號碼": " · ".join(f"{number:02d}" for number in sorted(ai_numbers)),
+                "實際正選號碼": " · ".join(f"{number:02d}" for number in sorted(actual_numbers)),
+            }
+        )
+    return pd.DataFrame(rows), None
+
+
+def filter_history(
+    draws: pd.DataFrame,
+    start_date,
+    end_date,
+    selected_numbers: Iterable[int] = (),
+) -> pd.DataFrame:
+    """依日期區間與『任一指定號碼』篩選；指定號碼同時涵蓋正選及特別號。"""
+    start = pd.Timestamp(start_date).normalize()
+    end = pd.Timestamp(end_date).normalize()
+    filtered = draws.loc[(draws["Date"] >= start) & (draws["Date"] <= end)].copy()
+    numbers = list(selected_numbers)
+    if numbers:
+        filtered = filtered.loc[filtered.loc[:, NUMBER_COLUMNS].isin(numbers).any(axis=1)]
+    return filtered.reset_index(drop=True)
 
 
 def generate_filtered_combinations(sorted_probs, n_groups: int = 5, seed: int = 20260817):
