@@ -1,0 +1,21 @@
+import LottoBall from "@/components/LottoBall";
+import { ErrorState, LoadingState } from "@/components/PageState";
+import { Badge } from "@/components/ui/badge";
+import { trpc } from "@/lib/trpc";
+import { BrainCircuit, ChartPie, GitBranch, Sigma, Sparkles } from "lucide-react";
+
+export default function Recommendations() {
+  const recommendations = trpc.lotto.recommendations.useQuery();
+  const overview = trpc.lotto.overview.useQuery();
+  if (recommendations.isLoading || overview.isLoading) return <LoadingState label="正在載入權重組合…" />;
+  if (recommendations.isError || overview.isError || !recommendations.data || !overview.data) return <ErrorState />;
+  const rankedNumbers = [...overview.data.stats].sort((left, right) => right.modelWeight - left.modelWeight).slice(0, 8);
+
+  return (
+    <div className="lotto-page">
+      <header className="mb-8 flex flex-col justify-between gap-5 xl:flex-row xl:items-end"><div><div className="eyebrow"><BrainCircuit className="h-3.5 w-3.5" /> Random Forest Weighting</div><h1 className="mt-3 font-serif text-3xl font-semibold tracking-tight text-[#183a32] sm:text-4xl">AI 權重組合</h1><p className="mt-2 max-w-2xl text-sm leading-6 text-[#6a766d]">模型以近 50 期頻率、近 10 期頻率及 Gap 建立相對分數，再以不重複加權抽樣產生組合；分數不代表真實中獎機率。</p></div><Badge className="w-fit rounded-full border border-[#e0c58e] bg-[#fff9e9] px-3 py-1.5 text-xs font-semibold text-[#87622c] shadow-none">5 組實驗性輸出</Badge></header>
+      <section className="grid gap-5 xl:grid-cols-5">{recommendations.data.map(recommendation => <article key={recommendation.setIndex} className={`recommendation-card ${recommendation.setIndex === 1 ? "xl:col-span-3" : "xl:col-span-2"}`}><div className="flex items-start justify-between"><div><p className="text-[11px] font-semibold uppercase tracking-[.16em] text-[#9b7b47]">Weighted Set / {String(recommendation.setIndex).padStart(2, "0")}</p><h2 className="mt-2 font-serif text-2xl font-semibold text-[#23463a]">加權組合 {String(recommendation.setIndex).padStart(2, "0")}</h2></div><span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f2e6cd] text-xs font-bold text-[#785621]">{String(recommendation.setIndex).padStart(2, "0")}</span></div><div className="mt-7 flex flex-wrap gap-2.5">{recommendation.numbers.map(number => <LottoBall key={number} number={number} size="lg" />)}</div><div className="mt-7 grid grid-cols-3 gap-2 border-t border-[#e9e1d4] pt-5"><div><div className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[.12em] text-[#938d81]"><ChartPie className="h-3 w-3" />奇偶比</div><p className="mt-2 text-sm font-semibold text-[#415c50]">{recommendation.oddEven}</p></div><div><div className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[.12em] text-[#938d81]"><Sigma className="h-3 w-3" />總和</div><p className="mt-2 text-sm font-semibold text-[#415c50]">{recommendation.numberSum}</p></div><div><div className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[.12em] text-[#938d81]"><GitBranch className="h-3 w-3" />連號</div><p className="mt-2 text-sm font-semibold text-[#415c50]">{recommendation.consecutivePairs} 對</p></div></div></article>)}</section>
+      <section className="panel mt-6 p-5 sm:p-7"><div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div><p className="eyebrow"><Sparkles className="h-3.5 w-3.5" /> Relative model score</p><h2 className="mt-2 font-serif text-xl font-semibold text-[#21463a]">前 8 名號碼相對權重</h2></div><p className="max-w-md text-xs leading-5 text-[#81877e]">分數為模型在模擬資料中的相對輸出，僅可用於比較與實驗，不能視作真實開獎機率。</p></div><div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4 xl:grid-cols-8">{rankedNumbers.map((item, index) => <div key={item.number} className="rounded-2xl border border-[#e5ddd0] bg-[#fcfbf8] p-3 text-center"><p className="text-[10px] font-semibold tracking-[.12em] text-[#a49a87]">RANK {String(index + 1).padStart(2, "0")}</p><div className="my-3 flex justify-center"><LottoBall number={item.number} size="md" /></div><p className="font-serif text-lg font-semibold text-[#2c5343]">{(item.modelWeight / 100).toFixed(2)}</p><p className="mt-1 text-[10px] text-[#878a83]">相對分數</p></div>)}</div></section>
+    </div>
+  );
+}

@@ -1,0 +1,81 @@
+{
+  "report": {
+    "model": "RandomForestClassifier",
+    "features": [
+      "frequency_50",
+      "frequency_10",
+      "gap"
+    ],
+    "training_rows": 46550,
+    "positive_rate": 0.122449,
+    "random_seed": 20260817,
+    "note": "模型分數僅為模擬資料上的相對權重，不能可靠預測真實開獎結果。"
+  },
+  "recommendations": [
+    {
+      "numbers": [
+        21,
+        30,
+        35,
+        37,
+        42,
+        47
+      ],
+      "odd_even": "4 單 / 2 雙",
+      "number_sum": 212,
+      "consecutive_pairs": 0
+    },
+    {
+      "numbers": [
+        11,
+        21,
+        23,
+        39,
+        40,
+        44
+      ],
+      "odd_even": "4 單 / 2 雙",
+      "number_sum": 178,
+      "consecutive_pairs": 1
+    },
+    {
+      "numbers": [
+        18,
+        31,
+        34,
+        37,
+        40,
+        44
+      ],
+      "odd_even": "2 單 / 4 雙",
+      "number_sum": 204,
+      "consecutive_pairs": 0
+    },
+    {
+      "numbers": [
+        4,
+        11,
+        21,
+        24,
+        29,
+        36
+      ],
+      "odd_even": "3 單 / 3 雙",
+      "number_sum": 125,
+      "consecutive_pairs": 0
+    },
+    {
+      "numbers": [
+        3,
+        14,
+        29,
+        32,
+        39,
+        45
+      ],
+      "odd_even": "4 單 / 2 雙",
+      "number_sum": 162,
+      "consecutive_pairs": 0
+    }
+  ]
+}
