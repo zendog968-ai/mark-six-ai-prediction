@@ -51,7 +51,7 @@
 - [x] 將 GitHub Actions 更新排程改為每日香港時間執行，並保留無新資料時不提交的保護
 - [x] 驗證每日排程、更新自動化文件並推送至 GitHub main 分支
 - [x] Add daily public Streamlit deployment reachability verification to GitHub Actions
-- [ ] Test, document, and push the combined daily result-checking and deployment-verification workflow
+- [x] Test, document, and push the combined daily result-checking and deployment-verification workflow
 - [x] 更新既有 Streamlit 測試預期，以驗證預設真實歷史 CSV 與模擬資料安全回退行為
 - [x] 修正預測 JSON 快取判斷，切換至真實歷史 CSV 時強制更新與資料期數一致的輸出
 - [x] 優化 Streamlit 首次模型訓練負荷並驗證側邊欄上傳介面不會長時間阻塞
