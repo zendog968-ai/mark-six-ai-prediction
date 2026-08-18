@@ -44,6 +44,12 @@
 - [x] 建立 K-Means 分群特徵，並以 Random Forest 與 XGBoost 融合相對分數產生號碼排行
 - [x] 更新 Streamlit 模型實驗頁與 latest_prediction.json，呈現融合模型與 K-Means 特徵資訊
 - [x] 為融合模型與分群特徵新增測試、更新文件並推送至 GitHub main 分支
+- [x] 檢查 26/090 期 GitHub Actions 執行、真實 CSV、融合模型 JSON 與部署狀態
+- [x] 查找並檢視公開 Streamlit 雲端畫面，核對融合模型、K-Means 特徵與真實資料版本
+- [x] 開啟指定 Streamlit 雲端網址，確認其已部署真實資料與融合模型版本
+- [x] 手動觸發 GitHub Actions，檢查 26/090 正式結果、真實 CSV 與融合模型 JSON 輸出
+- [x] 將 GitHub Actions 更新排程改為每日香港時間執行，並保留無新資料時不提交的保護
+- [x] 驗證每日排程、更新自動化文件並推送至 GitHub main 分支
 - [x] 更新既有 Streamlit 測試預期，以驗證預設真實歷史 CSV 與模擬資料安全回退行為
 - [x] 修正預測 JSON 快取判斷，切換至真實歷史 CSV 時強制更新與資料期數一致的輸出
 - [x] 優化 Streamlit 首次模型訓練負荷並驗證側邊欄上傳介面不會長時間阻塞

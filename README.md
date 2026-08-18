@@ -101,7 +101,7 @@ python scripts/fetch_real_history.py --years 2025 2026
 
 ## GitHub Actions 自動化流程
 
-`.github/workflows/schedule.yml` 使用 GitHub Actions 的 `schedule` 事件。GitHub 的工作流程 cron 以 UTC 解讀；本專案設定為 `30 14 * * 2,4,6`，即 **UTC 14:30**，對應**香港時間（UTC+8）每週二、四、六 22:30**。[3]
+`.github/workflows/schedule.yml` 使用 GitHub Actions 的 `schedule` 事件。GitHub 的工作流程 cron 以 UTC 解讀；本專案設定為 `30 14 * * *`，即每日 **UTC 14:30**，對應**香港時間（UTC+8）每日 22:30**。[3]
 
 每次排程依序執行：
 

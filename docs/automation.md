@@ -19,6 +19,6 @@ python updater.py --dry-run
 
 ## 排程
 
-`.github/workflows/schedule.yml` 使用 `30 14 * * 2,4,6` 的 UTC 排程，等同香港時間每週二、四、六 22:30。工作流程只會在 CSV 或 JSON 實際變動時提交至 `main`。
+`.github/workflows/schedule.yml` 使用 `30 14 * * *` 的 UTC 排程，等同香港時間每日 22:30。工作流程只會在 CSV 或 JSON 實際變動時提交至 `main`；若尚未公布新結果或資料沒有改變，流程會正常結束而不建立提交。
 
 > 分析結果只供統計教育與實驗用途，不能可靠預測真實開獎結果。
