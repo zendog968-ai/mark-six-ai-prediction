@@ -6,9 +6,9 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
 class ScheduleConfigurationTests(unittest.TestCase):
-    def test_workflow_runs_daily_at_hong_kong_2230_and_commits_generated_files(self):
+    def test_workflow_runs_daily_at_hong_kong_2200_and_commits_generated_files(self):
         content = (PROJECT_ROOT / ".github" / "workflows" / "schedule.yml").read_text(encoding="utf-8")
-        self.assertIn('cron: "30 14 * * *"', content)
+        self.assertIn('cron: "0 14 * * *"', content)
         self.assertIn("every day", content)
         self.assertIn("python updater.py", content)
         self.assertIn("data/lotto_history_real.csv", content)
