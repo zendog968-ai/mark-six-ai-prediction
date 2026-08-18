@@ -109,6 +109,7 @@ python scripts/fetch_real_history.py --years 2025 2026
 2. 執行 `python updater.py`；來源或資料驗證失敗時流程會停止，既有 CSV 不會被覆寫。
 3. 若 `data/lotto_history_real.csv` 或 `data/latest_prediction.json` 有實際變動，工作流程以 `github-actions[bot]` 身分建立提交並推送回 `main`。
 4. 若沒有新期數或 JSON 無變動，流程結束而不建立提交。
+5. 工作流程會以最多 3 次重試檢查公開 Streamlit 應用程式的 `/healthz` 端點，確認雲端應用程式可連線；若持續不可用，該次工作流程會失敗並保留可檢視的日誌。
 
 工作流程亦支援手動執行。前往 GitHub 儲存庫的 **Actions** 頁面，選擇 **Update Mark Six data and analysis**，再按 **Run workflow** 即可手動觸發。若 `main` 分支啟用了限制機器人推送的保護規則，請在儲存庫設定中允許該工作流程的寫入權限；工作流程本身已宣告 `contents: write` 權限。[3]
 

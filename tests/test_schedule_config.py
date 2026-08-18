@@ -14,6 +14,10 @@ class ScheduleConfigurationTests(unittest.TestCase):
         self.assertIn("data/lotto_history_real.csv", content)
         self.assertIn("data/latest_prediction.json", content)
         self.assertIn("contents: write", content)
+        self.assertIn("Verify public Streamlit deployment", content)
+        self.assertIn("STREAMLIT_HEALTH_URL", content)
+        self.assertIn("/healthz", content)
+        self.assertIn("for attempt in 1 2 3", content)
 
 
 if __name__ == "__main__":

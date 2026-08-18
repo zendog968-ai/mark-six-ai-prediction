@@ -13,6 +13,9 @@ concurrency:
   group: mark-six-data-update
   cancel-in-progress: false
 
+env:
+  STREAMLIT_HEALTH_URL: https://mark-six-ai-prediction-kdaaxgkknz94c7fbylxigj.streamlit.app/healthz
+
 jobs:
   update-data:
     runs-on: ubuntu-latest
@@ -46,3 +49,20 @@ jobs:
           git add data/lotto_history_real.csv data/latest_prediction.json
           git commit -m "chore(data): update Mark Six results and analysis"
           git push origin main
+
+      - name: Verify public Streamlit deployment
+        run: |
+          for attempt in 1 2 3; do
+            echo "Deployment health check attempt ${attempt}/3"
+            if curl --fail --silent --show-error --location \
+              --connect-timeout 20 --max-time 60 "$STREAMLIT_HEALTH_URL"; then
+              echo "Public Streamlit deployment is reachable."
+              exit 0
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              echo "Deployment is not reachable yet; waiting 20 seconds before retrying."
+              sleep 20
+            fi
+          done
+          echo "Public Streamlit deployment health check failed after 3 attempts." >&2
+          exit 1
