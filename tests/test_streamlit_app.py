@@ -16,6 +16,8 @@ class StreamlitApplicationTests(unittest.TestCase):
         rendered_info = " ".join(info.value for info in app.info)
         self.assertIn("目前資料來源：", rendered_info)
         self.assertIn("專案真實歷史 CSV", rendered_info)
+        rendered_subheaders = " ".join(item.value for item in app.subheader)
+        self.assertIn("命中率與回測分析", rendered_subheaders)
 
 
 if __name__ == "__main__":

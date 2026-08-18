@@ -52,6 +52,14 @@
 - [x] 驗證每日排程、更新自動化文件並推送至 GitHub main 分支
 - [x] Add daily public Streamlit deployment reachability verification to GitHub Actions
 - [x] Test, document, and push the combined daily result-checking and deployment-verification workflow
+- [x] Confirm active daily Mark Six collection and Streamlit deployment verification workflow status
+- [x] 手動觸發每日 GitHub Actions 工作流程並擷取最新執行日誌與狀態
+- [x] 檢視 GitHub main 分支真實歷史 CSV 的最新內容與統計摘要
+- [x] 以最新真實歷史 CSV 重新執行融合模型，核對 26/090 的實驗性權重與五組過濾組合
+- [x] 建立可版本保存的 prediction_history.json，為每個目標期數記錄五組實驗性組合、模型與產生時間
+- [x] 將已完成期數的真實開獎結果與五組預測組合比對，產生逐組及單期最高命中統計
+- [x] 新增 Streamlit「命中率與回測分析」分頁，呈現彩色／符號命中表格與總體命中率指標
+- [x] 為預測紀錄、命中率指標與介面新增測試、文件並推送至 GitHub main 分支
 - [x] 更新既有 Streamlit 測試預期，以驗證預設真實歷史 CSV 與模擬資料安全回退行為
 - [x] 修正預測 JSON 快取判斷，切換至真實歷史 CSV 時強制更新與資料期數一致的輸出
 - [x] 優化 Streamlit 首次模型訓練負荷並驗證側邊欄上傳介面不會長時間阻塞

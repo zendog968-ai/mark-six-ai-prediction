@@ -13,6 +13,7 @@ class ScheduleConfigurationTests(unittest.TestCase):
         self.assertIn("python updater.py", content)
         self.assertIn("data/lotto_history_real.csv", content)
         self.assertIn("data/latest_prediction.json", content)
+        self.assertIn("data/prediction_history.json", content)
         self.assertIn("contents: write", content)
         self.assertIn("Verify public Streamlit deployment", content)
         self.assertIn("STREAMLIT_HEALTH_URL", content)

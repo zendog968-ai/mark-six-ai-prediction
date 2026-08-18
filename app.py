@@ -10,6 +10,12 @@ from lotto_data import (
     select_data_source,
     train_fusion_model,
 )
+from prediction_tracking import (
+    DEFAULT_PREDICTION_HISTORY_PATH,
+    build_hit_rate_table,
+    hit_rate_metrics,
+    load_prediction_history,
+)
 
 
 st.set_page_config(page_title="六合彩資料分析實驗室", page_icon="🎱", layout="wide")
@@ -42,7 +48,9 @@ if validated_upload is None and uploaded_file is not None:
     st.error("上傳檔案未通過驗證，因此系統不會用它訓練模型；目前會使用專案內真實歷史資料（如不可用才回退模擬資料）。")
 
 st.info(f"目前資料來源：**{source_label}**；共 {len(draws):,} 期紀錄。")
-overview_tab, model_tab, backtest_tab, data_tab = st.tabs(["資料概覽", "模型實驗", "模型回測", "歷史資料預覽"])
+overview_tab, model_tab, backtest_tab, hit_rate_tab, data_tab = st.tabs(
+    ["資料概覽", "模型實驗", "模型回測", "命中率與回測分析", "歷史資料預覽"]
+)
 
 with overview_tab:
     st.subheader("資料品質與近期紀錄")
@@ -113,6 +121,54 @@ with backtest_tab:
         st.bar_chart(backtest.set_index("期數")[["AI Top-6 命中", "隨機平均命中"]])
         st.caption("平均命中差異只描述此歷史樣本與本次設定；公平攪珠下，單次或有限樣本優勢可能只是隨機波動。")
         st.dataframe(backtest, width="stretch", hide_index=True)
+
+with hit_rate_tab:
+    st.subheader("命中率與回測分析")
+    st.caption("每次模型對下一期產生的 5 組實驗性組合會保存至版本控制紀錄；只有在該目標期有實際六個正選結果後，才會計入命中率指標。✅ 代表該組合與實際正選的交集。")
+    prediction_records = load_prediction_history(DEFAULT_PREDICTION_HISTORY_PATH)
+    hit_table, history_validation = build_hit_rate_table(draws, prediction_records)
+    if history_validation is not None:
+        st.error("無法比對預測紀錄，因目前資料來源未通過驗證。")
+        for error in history_validation.errors:
+            st.error(error)
+    elif hit_table.empty:
+        st.info("目前沒有已保存的預測紀錄。下一次日常更新建立下一期組合時，系統會自動開始追蹤。")
+    else:
+        metrics = hit_rate_metrics(hit_table)
+        metric_a, metric_b, metric_c, metric_d = st.columns(4)
+        metric_a.metric("已結算期數", metrics["settled_draws"])
+        metric_b.metric("待攪珠紀錄", metrics["pending_draws"])
+        metric_c.metric("平均每期最高命中", f"{metrics['average_best_hits']:.2f}")
+        metric_d.metric("命中 3 個字或以上", metrics["draws_with_3_plus"])
+        st.caption(f"已結算期的五組合計平均命中數：{metrics['average_total_hits']:.2f}。這些數字只用作歷史追蹤與模型參數調整，不代表未來中獎率。")
+
+        def highlight_hit_cell(value):
+            return "background-color: #dcfce7; color: #166534; font-weight: 600; white-space: pre-line;" if "✅" in str(value) else "white-space: pre-line;"
+
+        def highlight_status(value):
+            if value == "已結算":
+                return "background-color: #ecfdf5; color: #166534; font-weight: 600;"
+            return "background-color: #fffbeb; color: #92400e; font-weight: 600;"
+
+        display_columns = [
+            "期數",
+            "目標日期",
+            "實際日期",
+            "狀態",
+            "實際開獎號碼",
+            "特別號",
+            "AI 預測 5 組組合",
+            "命中號碼",
+            "單期最高命中",
+            "五組合計命中",
+            "每組命中數",
+        ]
+        styled_table = (
+            hit_table.loc[:, display_columns]
+            .style.map(highlight_hit_cell, subset=["命中號碼"])
+            .map(highlight_status, subset=["狀態"])
+        )
+        st.dataframe(styled_table, width="stretch", hide_index=True, height=min(720, 120 + 58 * len(hit_table)))
 
 with data_tab:
     st.subheader("歷史資料互動篩選")

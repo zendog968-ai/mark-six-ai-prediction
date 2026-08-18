@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "purpose": "預測紀錄僅供統計教育與回測分析，無法可靠預測真實開獎結果。",
+  "predictions": [
+    {
+      "target_draw": 26090,
+      "target_date": "2026-08-18",
+      "generated_at_utc": "2026-08-18T09:58:51.511204+00:00",
+      "source_history_records": 223,
+      "source_latest_draw": 26089,
+      "source_latest_date": "2026-08-15",
+      "model": {
+        "name": "Random Forest + XGBoost Ensemble",
+        "features": [
+          "frequency_50",
+          "frequency_10",
+          "gap",
+          "kmeans_cluster"
+        ],
+        "fusion": {
+          "random_forest_weight": 0.5,
+          "xgboost_weight": 0.5
+        },
+        "kmeans_clusters": 4
+      },
+      "combinations": [
+        {
+          "set_index": 1,
+          "numbers": [
+            1,
+            9,
+            14,
+            33,
+            40,
+            48
+          ],
+          "odd_count": 3,
+          "number_sum": 145,
+          "consecutive_pairs": 0
+        },
+        {
+          "set_index": 2,
+          "numbers": [
+            11,
+            14,
+            16,
+            17,
+            24,
+            32
+          ],
+          "odd_count": 2,
+          "number_sum": 114,
+          "consecutive_pairs": 1
+        },
+        {
+          "set_index": 3,
+          "numbers": [
+            15,
+            17,
+            21,
+            31,
+            32,
+            33
+          ],
+          "odd_count": 5,
+          "number_sum": 149,
+          "consecutive_pairs": 2
+        },
+        {
+          "set_index": 4,
+          "numbers": [
+            7,
+            9,
+            11,
+            14,
+            21,
+            31
+          ],
+          "odd_count": 5,
+          "number_sum": 93,
+          "consecutive_pairs": 0
+        },
+        {
+          "set_index": 5,
+          "numbers": [
+            1,
+            7,
+            15,
+            18,
+            35,
+            48
+          ],
+          "odd_count": 4,
+          "number_sum": 124,
+          "consecutive_pairs": 0
+        }
+      ]
+    }
+  ]
+}

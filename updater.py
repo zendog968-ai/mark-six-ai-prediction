@@ -30,6 +30,7 @@ from lotto_data import (
     train_fusion_model,
     validate_lotto_dataframe,
 )
+from prediction_tracking import DEFAULT_PREDICTION_HISTORY_PATH, record_prediction
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent
@@ -248,22 +249,45 @@ def cached_prediction_matches(history: pd.DataFrame, latest: DrawResult, payload
         return False
 
 
-def update(history_path: Path, output_path: Path, fetcher: Callable[[str], str] = fetch_html, dry_run: bool = False) -> dict[str, object]:
+def update(
+    history_path: Path,
+    output_path: Path,
+    fetcher: Callable[[str], str] = fetch_html,
+    dry_run: bool = False,
+    prediction_history_path: Path = DEFAULT_PREDICTION_HISTORY_PATH,
+) -> dict[str, object]:
     history = load_history(history_path)
     latest = get_latest_draw(fetcher)
     updated_history, appended = append_if_new(history, latest)
+    cache_matches = False
     if not appended and output_path.exists() and not dry_run:
         cached_payload = json.loads(output_path.read_text(encoding="utf-8"))
         if cached_prediction_matches(updated_history, latest, cached_payload):
-            cached_payload["run_appended_to_history"] = False
-            return cached_payload
-    payload = build_prediction_payload(updated_history, latest, appended)
+            payload = cached_payload
+            cache_matches = True
+        else:
+            payload = build_prediction_payload(updated_history, latest, appended)
+    else:
+        payload = build_prediction_payload(updated_history, latest, appended)
     payload["run_appended_to_history"] = appended
     if not dry_run:
         history_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.parent.mkdir(parents=True, exist_ok=True)
         updated_history.to_csv(history_path, index=False)
-        output_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+        prediction_record, prediction_logged = record_prediction(
+            updated_history,
+            latest.draw,
+            latest.date,
+            payload,
+            prediction_history_path,
+        )
+        payload["prediction_log"] = {
+            "target_draw": prediction_record["target_draw"],
+            "target_date": prediction_record["target_date"],
+            "logged": prediction_logged,
+        }
+        if appended or not cache_matches or prediction_logged:
+            output_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     return payload
 
 
@@ -271,9 +295,15 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="更新公開六合彩結果並輸出最新模型實驗結果。")
     parser.add_argument("--history-csv", type=Path, default=DEFAULT_HISTORY_PATH)
     parser.add_argument("--output-json", type=Path, default=DEFAULT_PREDICTION_PATH)
+    parser.add_argument("--prediction-history-json", type=Path, default=DEFAULT_PREDICTION_HISTORY_PATH)
     parser.add_argument("--dry-run", action="store_true", help="只驗證與分析，不寫入 CSV 或 JSON。")
     args = parser.parse_args()
-    result = update(args.history_csv, args.output_json, dry_run=args.dry_run)
+    result = update(
+        args.history_csv,
+        args.output_json,
+        dry_run=args.dry_run,
+        prediction_history_path=args.prediction_history_json,
+    )
     status = "已附加新一期" if result["run_appended_to_history"] else "沒有新一期可附加"
     print(f"{status}；已使用 {result['history_records']} 期資料產生最新實驗結果。")
 
