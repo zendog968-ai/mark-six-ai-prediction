@@ -1,19 +1,19 @@
 {
-  "generated_at_utc": "2026-08-19T07:33:34.543772+00:00",
+  "generated_at_utc": "2026-08-20T15:52:13.875860+00:00",
   "purpose": "僅供統計教育與實驗用途，無法可靠預測真實開獎結果。",
-  "history_records": 224,
+  "history_records": 225,
   "latest_draw": {
-    "draw": 26090,
-    "date": "2026-08-18",
+    "draw": 26091,
+    "date": "2026-08-20",
     "main_numbers": [
       7,
-      8,
       9,
-      14,
-      39,
-      41
+      10,
+      15,
+      24,
+      46
     ],
-    "special": 49,
+    "special": 34,
     "source_url": "https://www.lotteryextreme.com/marksix/results",
     "appended_to_history": true
   },
@@ -34,177 +34,177 @@
   "top_weights": [
     {
       "number": 7,
-      "relative_weight": 0.563573,
-      "random_forest_weight": 0.618363,
-      "xgboost_weight": 0.508782,
-      "kmeans_cluster": 2
-    },
-    {
-      "number": 30,
-      "relative_weight": 0.548561,
-      "random_forest_weight": 0.538346,
-      "xgboost_weight": 0.558775,
-      "kmeans_cluster": 0
-    },
-    {
-      "number": 13,
-      "relative_weight": 0.54821,
-      "random_forest_weight": 0.550488,
-      "xgboost_weight": 0.545933,
-      "kmeans_cluster": 0
-    },
-    {
-      "number": 1,
-      "relative_weight": 0.546037,
-      "random_forest_weight": 0.548184,
-      "xgboost_weight": 0.54389,
-      "kmeans_cluster": 2
+      "relative_weight": 0.679232,
+      "random_forest_weight": 0.65818,
+      "xgboost_weight": 0.700284,
+      "kmeans_cluster": 3
     },
     {
       "number": 48,
-      "relative_weight": 0.540844,
-      "random_forest_weight": 0.542718,
-      "xgboost_weight": 0.538969,
-      "kmeans_cluster": 2
+      "relative_weight": 0.55888,
+      "random_forest_weight": 0.559963,
+      "xgboost_weight": 0.557797,
+      "kmeans_cluster": 3
     },
     {
-      "number": 16,
-      "relative_weight": 0.53732,
-      "random_forest_weight": 0.533046,
-      "xgboost_weight": 0.541593,
-      "kmeans_cluster": 2
-    },
-    {
-      "number": 4,
-      "relative_weight": 0.53732,
-      "random_forest_weight": 0.533046,
-      "xgboost_weight": 0.541593,
-      "kmeans_cluster": 2
-    },
-    {
-      "number": 11,
-      "relative_weight": 0.527496,
-      "random_forest_weight": 0.526576,
-      "xgboost_weight": 0.528417,
-      "kmeans_cluster": 2
-    },
-    {
-      "number": 45,
-      "relative_weight": 0.51926,
-      "random_forest_weight": 0.50061,
-      "xgboost_weight": 0.53791,
+      "number": 13,
+      "relative_weight": 0.547493,
+      "random_forest_weight": 0.544524,
+      "xgboost_weight": 0.550463,
       "kmeans_cluster": 1
     },
     {
-      "number": 6,
-      "relative_weight": 0.518662,
-      "random_forest_weight": 0.501373,
-      "xgboost_weight": 0.535951,
-      "kmeans_cluster": 1
+      "number": 1,
+      "relative_weight": 0.545447,
+      "random_forest_weight": 0.540744,
+      "xgboost_weight": 0.55015,
+      "kmeans_cluster": 3
     },
     {
       "number": 31,
-      "relative_weight": 0.517972,
-      "random_forest_weight": 0.510185,
-      "xgboost_weight": 0.52576,
-      "kmeans_cluster": 2
+      "relative_weight": 0.532852,
+      "random_forest_weight": 0.525648,
+      "xgboost_weight": 0.540057,
+      "kmeans_cluster": 0
     },
     {
       "number": 32,
-      "relative_weight": 0.517972,
-      "random_forest_weight": 0.510185,
-      "xgboost_weight": 0.52576,
-      "kmeans_cluster": 2
-    },
-    {
-      "number": 39,
-      "relative_weight": 0.509631,
-      "random_forest_weight": 0.518798,
-      "xgboost_weight": 0.500463,
+      "relative_weight": 0.532852,
+      "random_forest_weight": 0.525648,
+      "xgboost_weight": 0.540057,
       "kmeans_cluster": 0
     },
     {
-      "number": 9,
-      "relative_weight": 0.509631,
-      "random_forest_weight": 0.518798,
-      "xgboost_weight": 0.500463,
-      "kmeans_cluster": 0
+      "number": 16,
+      "relative_weight": 0.52896,
+      "random_forest_weight": 0.538389,
+      "xgboost_weight": 0.519531,
+      "kmeans_cluster": 3
     },
     {
-      "number": 8,
-      "relative_weight": 0.509631,
-      "random_forest_weight": 0.518798,
-      "xgboost_weight": 0.500463,
-      "kmeans_cluster": 0
-    },
-    {
-      "number": 27,
-      "relative_weight": 0.508306,
-      "random_forest_weight": 0.510179,
-      "xgboost_weight": 0.506433,
-      "kmeans_cluster": 2
-    },
-    {
-      "number": 21,
-      "relative_weight": 0.508263,
-      "random_forest_weight": 0.515138,
-      "xgboost_weight": 0.501389,
-      "kmeans_cluster": 2
-    },
-    {
-      "number": 28,
-      "relative_weight": 0.506104,
-      "random_forest_weight": 0.506976,
-      "xgboost_weight": 0.505233,
-      "kmeans_cluster": 2
-    },
-    {
-      "number": 40,
-      "relative_weight": 0.499442,
-      "random_forest_weight": 0.505117,
-      "xgboost_weight": 0.493768,
-      "kmeans_cluster": 0
-    },
-    {
-      "number": 17,
-      "relative_weight": 0.498646,
-      "random_forest_weight": 0.499144,
-      "xgboost_weight": 0.498148,
-      "kmeans_cluster": 0
-    },
-    {
-      "number": 19,
-      "relative_weight": 0.4974,
-      "random_forest_weight": 0.500339,
-      "xgboost_weight": 0.49446,
+      "number": 11,
+      "relative_weight": 0.517718,
+      "random_forest_weight": 0.51017,
+      "xgboost_weight": 0.525266,
       "kmeans_cluster": 0
     },
     {
       "number": 35,
-      "relative_weight": 0.496603,
-      "random_forest_weight": 0.498991,
-      "xgboost_weight": 0.494214,
-      "kmeans_cluster": 0
-    },
-    {
-      "number": 18,
-      "relative_weight": 0.491566,
-      "random_forest_weight": 0.489896,
-      "xgboost_weight": 0.493235,
-      "kmeans_cluster": 1
-    },
-    {
-      "number": 44,
-      "relative_weight": 0.49112,
-      "random_forest_weight": 0.487035,
-      "xgboost_weight": 0.495205,
+      "relative_weight": 0.514964,
+      "random_forest_weight": 0.511312,
+      "xgboost_weight": 0.518616,
       "kmeans_cluster": 1
     },
     {
       "number": 15,
-      "relative_weight": 0.489657,
-      "random_forest_weight": 0.491894,
-      "xgboost_weight": 0.487421,
+      "relative_weight": 0.508901,
+      "random_forest_weight": 0.508064,
+      "xgboost_weight": 0.509738,
+      "kmeans_cluster": 1
+    },
+    {
+      "number": 46,
+      "relative_weight": 0.508901,
+      "random_forest_weight": 0.508064,
+      "xgboost_weight": 0.509738,
+      "kmeans_cluster": 1
+    },
+    {
+      "number": 17,
+      "relative_weight": 0.502829,
+      "random_forest_weight": 0.504412,
+      "xgboost_weight": 0.501247,
+      "kmeans_cluster": 1
+    },
+    {
+      "number": 28,
+      "relative_weight": 0.502653,
+      "random_forest_weight": 0.502908,
+      "xgboost_weight": 0.502398,
+      "kmeans_cluster": 0
+    },
+    {
+      "number": 27,
+      "relative_weight": 0.502653,
+      "random_forest_weight": 0.502908,
+      "xgboost_weight": 0.502398,
+      "kmeans_cluster": 0
+    },
+    {
+      "number": 30,
+      "relative_weight": 0.501953,
+      "random_forest_weight": 0.501531,
+      "xgboost_weight": 0.502376,
+      "kmeans_cluster": 1
+    },
+    {
+      "number": 12,
+      "relative_weight": 0.500905,
+      "random_forest_weight": 0.502416,
+      "xgboost_weight": 0.499393,
+      "kmeans_cluster": 2
+    },
+    {
+      "number": 9,
+      "relative_weight": 0.496508,
+      "random_forest_weight": 0.501678,
+      "xgboost_weight": 0.491338,
+      "kmeans_cluster": 1
+    },
+    {
+      "number": 18,
+      "relative_weight": 0.494853,
+      "random_forest_weight": 0.490291,
+      "xgboost_weight": 0.499414,
+      "kmeans_cluster": 2
+    },
+    {
+      "number": 4,
+      "relative_weight": 0.493844,
+      "random_forest_weight": 0.492038,
+      "xgboost_weight": 0.495649,
+      "kmeans_cluster": 0
+    },
+    {
+      "number": 14,
+      "relative_weight": 0.492968,
+      "random_forest_weight": 0.48749,
+      "xgboost_weight": 0.498446,
+      "kmeans_cluster": 0
+    },
+    {
+      "number": 40,
+      "relative_weight": 0.491921,
+      "random_forest_weight": 0.49389,
+      "xgboost_weight": 0.489952,
+      "kmeans_cluster": 1
+    },
+    {
+      "number": 45,
+      "relative_weight": 0.491611,
+      "random_forest_weight": 0.490241,
+      "xgboost_weight": 0.49298,
+      "kmeans_cluster": 2
+    },
+    {
+      "number": 6,
+      "relative_weight": 0.491611,
+      "random_forest_weight": 0.490241,
+      "xgboost_weight": 0.49298,
+      "kmeans_cluster": 2
+    },
+    {
+      "number": 19,
+      "relative_weight": 0.490078,
+      "random_forest_weight": 0.490204,
+      "xgboost_weight": 0.489952,
+      "kmeans_cluster": 1
+    },
+    {
+      "number": 29,
+      "relative_weight": 0.488704,
+      "random_forest_weight": 0.488794,
+      "xgboost_weight": 0.488614,
       "kmeans_cluster": 1
     }
   ],
@@ -213,82 +213,82 @@
       "set_index": 1,
       "numbers": [
         1,
-        8,
-        13,
-        28,
-        35,
+        18,
+        30,
+        31,
+        45,
         48
       ],
       "odd_count": 3,
-      "number_sum": 133,
-      "consecutive_pairs": 0
+      "number_sum": 173,
+      "consecutive_pairs": 1
     },
     {
       "set_index": 2,
       "numbers": [
-        1,
-        9,
-        15,
-        31,
-        32,
-        35
+        4,
+        7,
+        12,
+        17,
+        46,
+        48
       ],
-      "odd_count": 5,
-      "number_sum": 123,
-      "consecutive_pairs": 1
+      "odd_count": 2,
+      "number_sum": 134,
+      "consecutive_pairs": 0
     },
     {
       "set_index": 3,
       "numbers": [
+        1,
+        6,
         7,
-        27,
-        30,
-        31,
-        32,
-        40
+        12,
+        28,
+        30
       ],
-      "odd_count": 3,
-      "number_sum": 167,
-      "consecutive_pairs": 2
+      "odd_count": 2,
+      "number_sum": 84,
+      "consecutive_pairs": 1
     },
     {
       "set_index": 4,
       "numbers": [
         1,
-        7,
-        9,
-        16,
-        18,
-        27
+        12,
+        13,
+        14,
+        28,
+        30
       ],
-      "odd_count": 4,
-      "number_sum": 78,
-      "consecutive_pairs": 0
+      "odd_count": 2,
+      "number_sum": 98,
+      "consecutive_pairs": 2
     },
     {
       "set_index": 5,
       "numbers": [
+        4,
+        6,
         7,
-        8,
         11,
         13,
-        21,
-        44
+        29
       ],
       "odd_count": 4,
-      "number_sum": 104,
+      "number_sum": 70,
       "consecutive_pairs": 1
     }
   ],
-  "run_appended_to_history": false,
+  "run_appended_to_history": true,
   "prediction_log": {
-    "target_draw": 26091,
-    "target_date": "2026-08-20",
-    "logged": false
+    "target_draw": 26092,
+    "target_date": "2026-08-22",
+    "logged": true
   },
   "blind_test_log": {
-    "target_draw": 26091,
-    "target_date": "2026-08-20",
+    "target_draw": 26092,
+    "target_date": "2026-08-22",
     "config_version": "2026-08-20-v1",
     "locked": true
   }
