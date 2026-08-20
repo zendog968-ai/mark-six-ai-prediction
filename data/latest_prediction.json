@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-08-19T15:17:32.792629+00:00",
+  "generated_at_utc": "2026-08-19T07:33:34.543772+00:00",
   "purpose": "僅供統計教育與實驗用途，無法可靠預測真實開獎結果。",
   "history_records": 224,
   "latest_draw": {
@@ -280,10 +280,16 @@
       "consecutive_pairs": 1
     }
   ],
-  "run_appended_to_history": true,
+  "run_appended_to_history": false,
   "prediction_log": {
     "target_draw": 26091,
     "target_date": "2026-08-20",
-    "logged": true
+    "logged": false
+  },
+  "blind_test_log": {
+    "target_draw": 26091,
+    "target_date": "2026-08-20",
+    "config_version": "2026-08-20-v1",
+    "locked": true
   }
 }

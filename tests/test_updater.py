@@ -47,13 +47,14 @@ class UpdaterTests(unittest.TestCase):
             )
             history_path = root / "history.csv"
             output_path = root / "latest_prediction.json"
+            blind_path = root / "blind_test_history.json"
             legacy.to_csv(history_path, index=False)
 
             def fake_fetcher(url):
                 self.assertIn(url, {"https://bet.hkjc.com/en/marksix/results", FALLBACK_RESULTS_URL})
                 return FALLBACK_SAMPLE if url == FALLBACK_RESULTS_URL else "no parseable official result"
 
-            payload = update(history_path, output_path, fetcher=fake_fetcher)
+            payload = update(history_path, output_path, fetcher=fake_fetcher, blind_test_history_path=blind_path)
             written = load_history(history_path)
             self.assertEqual(list(written.columns), list(REQUIRED_COLUMNS))
             self.assertEqual(len(written), 61)
@@ -64,9 +65,12 @@ class UpdaterTests(unittest.TestCase):
             self.assertIn("kmeans_cluster", payload["model"]["features"])
             self.assertIn("xgboost_weight", payload["top_weights"][0])
             self.assertIn("kmeans_cluster", payload["top_weights"][0])
+            self.assertEqual(payload["blind_test_log"]["target_draw"], 26090)
+            self.assertTrue(payload["blind_test_log"]["locked"])
+            self.assertTrue(blind_path.exists())
             self.assertEqual(json.loads(output_path.read_text(encoding="utf-8"))["history_records"], 61)
             first_json = output_path.read_text(encoding="utf-8")
-            repeated = update(history_path, output_path, fetcher=fake_fetcher)
+            repeated = update(history_path, output_path, fetcher=fake_fetcher, blind_test_history_path=blind_path)
             self.assertFalse(repeated["run_appended_to_history"])
             self.assertEqual(len(load_history(history_path)), 61)
             self.assertEqual(output_path.read_text(encoding="utf-8"), first_json)
@@ -74,7 +78,7 @@ class UpdaterTests(unittest.TestCase):
             stale = json.loads(first_json)
             stale["history_records"] = 1_000
             output_path.write_text(json.dumps(stale), encoding="utf-8")
-            refreshed = update(history_path, output_path, fetcher=fake_fetcher)
+            refreshed = update(history_path, output_path, fetcher=fake_fetcher, blind_test_history_path=blind_path)
             self.assertFalse(refreshed["run_appended_to_history"])
             self.assertEqual(refreshed["history_records"], 61)
             self.assertEqual(json.loads(output_path.read_text(encoding="utf-8"))["history_records"], 61)

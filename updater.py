@@ -30,6 +30,7 @@ from lotto_data import (
     train_fusion_model,
     validate_lotto_dataframe,
 )
+from blind_test_tracking import DEFAULT_BLIND_TEST_HISTORY_PATH, record_blind_test
 from prediction_tracking import DEFAULT_PREDICTION_HISTORY_PATH, record_prediction
 
 
@@ -255,6 +256,7 @@ def update(
     fetcher: Callable[[str], str] = fetch_html,
     dry_run: bool = False,
     prediction_history_path: Path = DEFAULT_PREDICTION_HISTORY_PATH,
+    blind_test_history_path: Path = DEFAULT_BLIND_TEST_HISTORY_PATH,
 ) -> dict[str, object]:
     history = load_history(history_path)
     latest = get_latest_draw(fetcher)
@@ -286,7 +288,19 @@ def update(
             "target_date": prediction_record["target_date"],
             "logged": prediction_logged,
         }
-        if appended or not cache_matches or prediction_logged:
+        blind_record, blind_logged = record_blind_test(
+            updated_history,
+            latest.draw,
+            latest.date,
+            blind_test_history_path,
+        )
+        payload["blind_test_log"] = {
+            "target_draw": blind_record["target_draw"],
+            "target_date": blind_record["target_date"],
+            "config_version": blind_record["config_version"],
+            "locked": blind_logged,
+        }
+        if appended or not cache_matches or prediction_logged or blind_logged:
             output_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     return payload
 
@@ -296,6 +310,7 @@ def main() -> None:
     parser.add_argument("--history-csv", type=Path, default=DEFAULT_HISTORY_PATH)
     parser.add_argument("--output-json", type=Path, default=DEFAULT_PREDICTION_PATH)
     parser.add_argument("--prediction-history-json", type=Path, default=DEFAULT_PREDICTION_HISTORY_PATH)
+    parser.add_argument("--blind-test-history-json", type=Path, default=DEFAULT_BLIND_TEST_HISTORY_PATH)
     parser.add_argument("--dry-run", action="store_true", help="只驗證與分析，不寫入 CSV 或 JSON。")
     args = parser.parse_args()
     result = update(
@@ -303,6 +318,7 @@ def main() -> None:
         args.output_json,
         dry_run=args.dry_run,
         prediction_history_path=args.prediction_history_json,
+        blind_test_history_path=args.blind_test_history_json,
     )
     status = "已附加新一期" if result["run_appended_to_history"] else "沒有新一期可附加"
     print(f"{status}；已使用 {result['history_records']} 期資料產生最新實驗結果。")

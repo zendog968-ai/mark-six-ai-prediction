@@ -16,6 +16,12 @@ from prediction_tracking import (
     hit_rate_metrics,
     load_prediction_history,
 )
+from blind_test_tracking import (
+    DEFAULT_BLIND_TEST_HISTORY_PATH,
+    blind_test_metrics,
+    build_blind_test_table,
+    load_blind_test_history,
+)
 
 
 st.set_page_config(page_title="六合彩資料分析實驗室", page_icon="🎱", layout="wide")
@@ -48,8 +54,8 @@ if validated_upload is None and uploaded_file is not None:
     st.error("上傳檔案未通過驗證，因此系統不會用它訓練模型；目前會使用專案內真實歷史資料（如不可用才回退模擬資料）。")
 
 st.info(f"目前資料來源：**{source_label}**；共 {len(draws):,} 期紀錄。")
-overview_tab, model_tab, backtest_tab, hit_rate_tab, data_tab = st.tabs(
-    ["資料概覽", "模型實驗", "模型回測", "命中率與回測分析", "歷史資料預覽"]
+overview_tab, model_tab, backtest_tab, hit_rate_tab, blind_test_tab, data_tab = st.tabs(
+    ["資料概覽", "模型實驗", "模型回測", "命中率與回測分析", "三配置盲測追蹤", "歷史資料預覽"]
 )
 
 with overview_tab:
@@ -169,6 +175,39 @@ with hit_rate_tab:
             .map(highlight_status, subset=["狀態"])
         )
         st.dataframe(styled_table, width="stretch", hide_index=True, height=min(720, 120 + 58 * len(hit_table)))
+
+with blind_test_tab:
+    st.subheader("三配置盲測追蹤")
+    st.caption("每期會在上一期結果更新後，預先鎖定融合基準、50% frequency_50 變體與熱門 6 三種候選。鎖定紀錄包含雜湊；同一期不會被重跑覆寫，只有實際正選結果出現後才結算。")
+    blind_records = load_blind_test_history(DEFAULT_BLIND_TEST_HISTORY_PATH)
+    blind_table, blind_validation = build_blind_test_table(draws, blind_records)
+    if blind_validation is not None:
+        st.error("無法比對盲測紀錄，因目前資料來源未通過驗證。")
+        for error in blind_validation.errors:
+            st.error(error)
+    elif blind_table.empty:
+        st.info("尚未建立盲測紀錄。下一次日常更新建立下一個未結算期的候選後，系統會自動開始鎖定。")
+    else:
+        blind_metrics = blind_test_metrics(blind_table)
+        metric_a, metric_b, metric_c, metric_d = st.columns(4)
+        metric_a.metric("已鎖定目標期", blind_metrics["locked_records"])
+        metric_b.metric("已結算目標期", blind_metrics["settled_records"])
+        metric_c.metric("已結算配置", blind_metrics["settled_variants"])
+        metric_d.metric("已結算配置平均命中", f"{blind_metrics['average_hits']:.2f}")
+        st.caption(f"命中 3 個字或以上的已結算配置：{blind_metrics['three_plus']}。盲測樣本累積不足時不可推論模型優勢。")
+
+        def highlight_blind_hits(value):
+            return "background-color: #dcfce7; color: #166534; font-weight: 600;" if "✅" in str(value) else ""
+
+        def highlight_blind_status(value):
+            return "background-color: #ecfdf5; color: #166534; font-weight: 600;" if value == "已結算" else "background-color: #fffbeb; color: #92400e; font-weight: 600;"
+
+        styled_blind_table = (
+            blind_table.style
+            .map(highlight_blind_hits, subset=["命中號碼"])
+            .map(highlight_blind_status, subset=["狀態"])
+        )
+        st.dataframe(styled_blind_table, width="stretch", hide_index=True, height=min(680, 120 + 46 * len(blind_table)))
 
 with data_tab:
     st.subheader("歷史資料互動篩選")

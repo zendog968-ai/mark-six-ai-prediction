@@ -110,6 +110,7 @@ temp/
 .webdev/
 
 # Python runtime cache
+.venv/
 __pycache__/
 *.py[cod]
 
