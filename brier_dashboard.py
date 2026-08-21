@@ -53,7 +53,7 @@ def load_multiscale_preview(path: Path = DEFAULT_MULTISCALE_PREVIEW_PATH) -> dic
         return None
 
 
-def build_brier_by_draw(records: Iterable[dict[str, Any]]) -> tuple[pd.DataFrame, list[str]]:
+def build_brier_by_draw(records: Iterable[dict[str, Any]], settlement_history: pd.DataFrame | None = None) -> tuple[pd.DataFrame, list[str]]:
     """Build one row per fully settled common draw, excluding incomplete records.
 
     Each accepted record must contain ``actual_main_numbers`` and a
@@ -64,11 +64,20 @@ def build_brier_by_draw(records: Iterable[dict[str, Any]]) -> tuple[pd.DataFrame
     rows: list[dict[str, Any]] = []
     warnings: list[str] = []
     expected_keys = list(CONFIG_LABELS)
+    actual_by_draw = {}
+    if settlement_history is not None and not settlement_history.empty:
+        actual_by_draw = {
+            int(row.Draw): [int(row.N1), int(row.N2), int(row.N3), int(row.N4), int(row.N5), int(row.N6)]
+            for row in settlement_history.itertuples(index=False)
+        }
     for record in records:
         draw = record.get("target_draw")
-        actual = record.get("actual_main_numbers")
+        actual = record.get("actual_main_numbers") or actual_by_draw.get(int(draw), []) if isinstance(draw, int) else []
         probability_map = record.get("configuration_probabilities")
-        if not isinstance(draw, int) or not isinstance(actual, list) or not isinstance(probability_map, dict):
+        if not isinstance(draw, int) or not isinstance(probability_map, dict):
+            continue
+        if not isinstance(actual, list) or len(actual) != 6:
+            warnings.append(f"期數 {draw} 已鎖定完整機率向量，正在等待官方正選結果結算。")
             continue
         missing = [key for key in expected_keys if key not in probability_map]
         if missing:
@@ -92,13 +101,20 @@ def build_brier_by_draw(records: Iterable[dict[str, Any]]) -> tuple[pd.DataFrame
     return frame, warnings
 
 
-def brier_coverage_summary(frame: pd.DataFrame, locked_three_config_records: int, multiscale_preview: dict[str, Any] | None) -> pd.DataFrame:
+def brier_coverage_summary(
+    frame: pd.DataFrame,
+    locked_three_config_records: int,
+    multiscale_preview: dict[str, Any] | None,
+    locked_four_config_records: int = 0,
+) -> pd.DataFrame:
     """Summarise real Brier coverage without equating Top-6-only records to probabilities."""
     completed = int(len(frame))
     rows = []
     for key, label in CONFIGURATIONS:
         if completed:
             status = "已有共同已結算完整機率記錄"
+        elif locked_four_config_records:
+            status = "完整 49 號機率已鎖定，待官方結果結算"
         elif key == "multiscale_calibrated" and multiscale_preview is not None:
             status = "研究預覽已建立，尚未納入正式四配置盲測"
         elif key != "multiscale_calibrated" and locked_three_config_records:

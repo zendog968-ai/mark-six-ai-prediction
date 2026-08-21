@@ -31,6 +31,7 @@ from lotto_data import (
     validate_lotto_dataframe,
 )
 from blind_test_tracking import DEFAULT_BLIND_TEST_HISTORY_PATH, record_blind_test
+from four_config_tracking import DEFAULT_EXTENDED_HISTORY_PATH, DEFAULT_FOUR_CONFIG_HISTORY_PATH, record_four_config
 from prediction_tracking import DEFAULT_PREDICTION_HISTORY_PATH, record_prediction
 
 
@@ -257,6 +258,9 @@ def update(
     dry_run: bool = False,
     prediction_history_path: Path = DEFAULT_PREDICTION_HISTORY_PATH,
     blind_test_history_path: Path = DEFAULT_BLIND_TEST_HISTORY_PATH,
+    four_config_history_path: Path = DEFAULT_FOUR_CONFIG_HISTORY_PATH,
+    extended_history_path: Path = DEFAULT_EXTENDED_HISTORY_PATH,
+    enable_four_config_tracking: bool = False,
 ) -> dict[str, object]:
     history = load_history(history_path)
     latest = get_latest_draw(fetcher)
@@ -300,7 +304,29 @@ def update(
             "config_version": blind_record["config_version"],
             "locked": blind_logged,
         }
-        if appended or not cache_matches or prediction_logged or blind_logged:
+        four_config_logged = False
+        if enable_four_config_tracking:
+            extended_history = load_history(extended_history_path)
+            updated_extended_history, extended_appended = append_if_new(extended_history, latest)
+            if int(updated_extended_history.iloc[-1]["Draw"]) != int(latest.draw):
+                raise UpdateError("擴充歷史資料無法同步至官方最新期數，拒絕鎖定四配置完整機率。")
+            extended_history_path.parent.mkdir(parents=True, exist_ok=True)
+            if extended_appended:
+                updated_extended_history.to_csv(extended_history_path, index=False)
+            four_config_record, four_config_logged = record_four_config(
+                updated_extended_history,
+                latest.draw,
+                latest.date,
+                four_config_history_path,
+            )
+            payload["four_config_brier_log"] = {
+                "target_draw": four_config_record["target_draw"],
+                "target_date": four_config_record["target_date"],
+                "config_version": four_config_record["config_version"],
+                "locked": four_config_logged,
+                "extended_history_records": len(updated_extended_history),
+            }
+        if appended or not cache_matches or prediction_logged or blind_logged or four_config_logged:
             output_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     return payload
 
@@ -311,6 +337,9 @@ def main() -> None:
     parser.add_argument("--output-json", type=Path, default=DEFAULT_PREDICTION_PATH)
     parser.add_argument("--prediction-history-json", type=Path, default=DEFAULT_PREDICTION_HISTORY_PATH)
     parser.add_argument("--blind-test-history-json", type=Path, default=DEFAULT_BLIND_TEST_HISTORY_PATH)
+    parser.add_argument("--four-config-history-json", type=Path, default=DEFAULT_FOUR_CONFIG_HISTORY_PATH)
+    parser.add_argument("--extended-history-csv", type=Path, default=DEFAULT_EXTENDED_HISTORY_PATH)
+    parser.add_argument("--disable-four-config-tracking", action="store_true", help="停用四配置完整機率盲測追蹤。")
     parser.add_argument("--dry-run", action="store_true", help="只驗證與分析，不寫入 CSV 或 JSON。")
     args = parser.parse_args()
     result = update(
@@ -319,6 +348,9 @@ def main() -> None:
         dry_run=args.dry_run,
         prediction_history_path=args.prediction_history_json,
         blind_test_history_path=args.blind_test_history_json,
+        four_config_history_path=args.four_config_history_json,
+        extended_history_path=args.extended_history_csv,
+        enable_four_config_tracking=not args.disable_four_config_tracking,
     )
     status = "已附加新一期" if result["run_appended_to_history"] else "沒有新一期可附加"
     print(f"{status}；已使用 {result['history_records']} 期資料產生最新實驗結果。")

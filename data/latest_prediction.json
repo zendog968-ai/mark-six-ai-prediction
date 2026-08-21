@@ -280,16 +280,23 @@
       "consecutive_pairs": 1
     }
   ],
-  "run_appended_to_history": true,
+  "run_appended_to_history": false,
   "prediction_log": {
     "target_draw": 26092,
     "target_date": "2026-08-22",
-    "logged": true
+    "logged": false
   },
   "blind_test_log": {
     "target_draw": 26092,
     "target_date": "2026-08-22",
     "config_version": "2026-08-20-v1",
-    "locked": true
+    "locked": false
+  },
+  "four_config_brier_log": {
+    "target_draw": 26092,
+    "target_date": "2026-08-22",
+    "config_version": "2026-08-21-v1",
+    "locked": true,
+    "extended_history_records": 3420
   }
 }

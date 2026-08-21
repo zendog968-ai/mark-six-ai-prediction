@@ -34,3 +34,18 @@ def test_inference_waits_for_at_least_three_common_draws():
     result, message = run_four_configuration_inference(frame, block_length=5, n_bootstrap=100)
     assert result.empty
     assert message is not None
+
+
+def test_pending_locked_record_is_reported_as_waiting_for_official_result():
+    record = {
+        "target_draw": 26092,
+        "configuration_probabilities": {
+            "fusion_top6": _probabilities(1),
+            "frequency50_50": _probabilities(2),
+            "hot6": _probabilities(3),
+            "multiscale_calibrated": _probabilities(4),
+        },
+    }
+    frame, warnings = build_brier_by_draw([record])
+    assert frame.empty
+    assert "等待官方正選結果結算" in warnings[0]

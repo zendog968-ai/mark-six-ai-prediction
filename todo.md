@@ -79,3 +79,4 @@
 - [x] 提供四配置成對 Brier 損失的 moving-block bootstrap 與 Holm–Bonferroni 可重用 Python 實作
 - [x] 擴充 Brier 成對比較模組，加入 Diebold–Mariano 檢定並與 moving-block bootstrap 交叉驗證
 - [x] 建立四配置 Brier、Bootstrap、Diebold–Mariano 與 Holm 校正的互動式 Streamlit 統計檢定儀表板
+- [x] 在每日更新中鎖定四配置完整 49 號機率向量，並於結果寫入後自動結算可供 Brier 儀表板使用的共同期數
