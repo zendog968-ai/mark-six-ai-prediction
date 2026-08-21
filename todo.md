@@ -80,3 +80,5 @@
 - [x] 擴充 Brier 成對比較模組，加入 Diebold–Mariano 檢定並與 moving-block bootstrap 交叉驗證
 - [x] 建立四配置 Brier、Bootstrap、Diebold–Mariano 與 Holm 校正的互動式 Streamlit 統計檢定儀表板
 - [x] 在每日更新中鎖定四配置完整 49 號機率向量，並於結果寫入後自動結算可供 Brier 儀表板使用的共同期數
+- [x] 制定四配置累積滿 100 期後依 Bootstrap 與 Diebold–Mariano 結果進行受約束權重調整的決策框架
+- [x] 提供以共同盲測機率資料實作受約束 Brier 最小化與 alpha 等於 0.25 平滑權重過渡的可重用 Python 模組
