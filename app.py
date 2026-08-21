@@ -33,6 +33,11 @@ from brier_dashboard import (
     load_multiscale_preview,
     run_four_configuration_inference,
 )
+from weight_monitor import (
+    DEFAULT_WEIGHT_HISTORY_PATH,
+    build_weight_monitor_state,
+    load_weight_adjustment_history,
+)
 
 
 st.set_page_config(page_title="六合彩資料分析實驗室", page_icon="🎱", layout="wide")
@@ -65,8 +70,8 @@ if validated_upload is None and uploaded_file is not None:
     st.error("上傳檔案未通過驗證，因此系統不會用它訓練模型；目前會使用專案內真實歷史資料（如不可用才回退模擬資料）。")
 
 st.info(f"目前資料來源：**{source_label}**；共 {len(draws):,} 期紀錄。")
-overview_tab, model_tab, backtest_tab, hit_rate_tab, blind_test_tab, inference_tab, data_tab = st.tabs(
-    ["資料概覽", "模型實驗", "模型回測", "命中率與回測分析", "三配置盲測追蹤", "Brier 統計檢定", "歷史資料預覽"]
+overview_tab, model_tab, backtest_tab, hit_rate_tab, blind_test_tab, inference_tab, weight_tab, data_tab = st.tabs(
+    ["資料概覽", "模型實驗", "模型回測", "命中率與回測分析", "三配置盲測追蹤", "Brier 統計檢定", "權重演變與凍結", "歷史資料預覽"]
 )
 
 with overview_tab:
@@ -281,6 +286,34 @@ with inference_tab:
             })
             st.dataframe(display, width="stretch", hide_index=True)
             st.caption("Bootstrap 是主要推論，Diebold–Mariano 是敏感度／交叉驗證。四配置共同已結算期數少於 100 時，所有結果均只屬描述性與探索性，不可宣稱長期優勢。")
+
+with weight_tab:
+    st.subheader("受約束 Brier 權重演變與 50 期凍結監控")
+    st.caption("本頁只展示已鎖定的權重版本。新的權重必須先通過 100 期共同盲測、Bootstrap、Diebold–Mariano、Holm 與效應量資格閘門，才可產生候選；候選權重再以 α = 0.25 平滑過渡並凍結 50 個未來期數。")
+    weight_history = load_weight_adjustment_history(DEFAULT_WEIGHT_HISTORY_PATH)
+    weight_state = build_weight_monitor_state(brier_frame, weight_history)
+    weight_a, weight_b, weight_c, weight_d = st.columns(4)
+    weight_a.metric("共同已結算期數", weight_state["completed_common_draws"])
+    weight_b.metric("距離首次正式檢定", f"{weight_state['next_gate_remaining']} 期")
+    weight_c.metric("目前權重版本", weight_state["active_version"])
+    weight_d.metric("50 期凍結確認", f"{weight_state['freeze_completed_draws']}/{weight_state['freeze_confirmation_draws']}")
+    st.dataframe(weight_state["gate_rows"], width="stretch", hide_index=True)
+    st.markdown("#### 目前鎖定權重")
+    current_weights = weight_state["weight_rows"].set_index("配置")["目前權重"]
+    st.bar_chart(current_weights)
+    st.dataframe(
+        weight_state["weight_rows"].assign(目前權重=lambda table: table["目前權重"].map(lambda value: f"{value:.1%}")),
+        width="stretch",
+        hide_index=True,
+    )
+    if weight_state["history"].empty:
+        st.info("目前仍在共同盲測累積期；尚未產生任何通過資格閘門的候選權重版本，因此不存在可凍結或可視覺化的權重變動。系統維持 25%／25%／25%／25% 的觀察期參照，不會自行調整。")
+    else:
+        st.markdown("#### 已鎖定權重版本歷史")
+        history = weight_state["history"].copy()
+        st.line_chart(history.set_index("版本")[[label for label in CONFIG_LABELS.values()]])
+        st.dataframe(history, width="stretch", hide_index=True)
+    st.caption("權重調整只是一種受約束的機率預報組合研究，並不代表可預測獨立隨機攪珠結果，也不構成投注建議。")
 
 with data_tab:
     st.subheader("歷史資料互動篩選")
