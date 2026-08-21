@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "experiment_id": "marksix_four_configuration_brier_tracking",
+  "purpose": "只接受開獎前鎖定的完整 49 號機率向量與其後出現的六個正選結果；空白 records 代表尚未有可作 Brier 統計的共同盲測期數。",
+  "records": []
+}

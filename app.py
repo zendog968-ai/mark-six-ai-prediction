@@ -22,6 +22,17 @@ from blind_test_tracking import (
     build_blind_test_table,
     load_blind_test_history,
 )
+from brier_dashboard import (
+    BASELINE_KEY,
+    CONFIG_LABELS,
+    DEFAULT_BRIER_TRACKING_PATH,
+    build_brier_by_draw,
+    brier_coverage_summary,
+    cumulative_brier,
+    load_brier_tracking,
+    load_multiscale_preview,
+    run_four_configuration_inference,
+)
 
 
 st.set_page_config(page_title="六合彩資料分析實驗室", page_icon="🎱", layout="wide")
@@ -54,8 +65,8 @@ if validated_upload is None and uploaded_file is not None:
     st.error("上傳檔案未通過驗證，因此系統不會用它訓練模型；目前會使用專案內真實歷史資料（如不可用才回退模擬資料）。")
 
 st.info(f"目前資料來源：**{source_label}**；共 {len(draws):,} 期紀錄。")
-overview_tab, model_tab, backtest_tab, hit_rate_tab, blind_test_tab, data_tab = st.tabs(
-    ["資料概覽", "模型實驗", "模型回測", "命中率與回測分析", "三配置盲測追蹤", "歷史資料預覽"]
+overview_tab, model_tab, backtest_tab, hit_rate_tab, blind_test_tab, inference_tab, data_tab = st.tabs(
+    ["資料概覽", "模型實驗", "模型回測", "命中率與回測分析", "三配置盲測追蹤", "Brier 統計檢定", "歷史資料預覽"]
 )
 
 with overview_tab:
@@ -208,6 +219,68 @@ with blind_test_tab:
             .map(highlight_blind_status, subset=["狀態"])
         )
         st.dataframe(styled_blind_table, width="stretch", hide_index=True, height=min(680, 120 + 46 * len(blind_table)))
+
+with inference_tab:
+    st.subheader("四配置 Brier 統計檢定儀表板")
+    st.caption("此頁只使用開獎前鎖定的完整 49 號機率向量與其後的實際六個正選。舊有三配置紀錄只保存了 Top-6 號碼，不能被追溯轉換為機率或 Brier 分數。")
+    brier_records = load_brier_tracking(DEFAULT_BRIER_TRACKING_PATH)
+    brier_frame, brier_warnings = build_brier_by_draw(brier_records)
+    multiscale_preview = load_multiscale_preview()
+    coverage = brier_coverage_summary(brier_frame, len(blind_records), multiscale_preview)
+    coverage_a, coverage_b, coverage_c = st.columns(3)
+    coverage_a.metric("共同已結算完整機率期數", len(brier_frame))
+    coverage_b.metric("正式顯著性門檻", "100 期")
+    coverage_c.metric("第四配置狀態", "研究預覽" if multiscale_preview is not None else "尚未鎖定")
+    st.dataframe(coverage, width="stretch", hide_index=True)
+
+    if multiscale_preview is not None:
+        top6 = multiscale_preview.get("top_6_numbers", [])
+        target = multiscale_preview.get("target", {})
+        st.info(
+            f"研究預覽：目標期 {target.get('draw', '—')}，Top-6 為 "
+            f"{' · '.join(f'{int(number):02d}' for number in sorted(top6)) if top6 else '—'}。"
+            "此紀錄尚未加入正式四配置盲測，故不會計入 Brier 或檢定。"
+        )
+
+    if brier_warnings:
+        with st.expander("資料完整性提示"):
+            for warning in brier_warnings:
+                st.warning(warning)
+
+    if brier_frame.empty:
+        st.info("目前尚無共同已結算的四配置完整機率紀錄，因此沒有可視覺化的長期 Brier 走勢或可執行的檢定。當未來每期在開獎前鎖定四組完整機率並在結果寫入後結算，此頁會自動開始累積。")
+    else:
+        visible_periods = st.slider("顯示最近共同已結算期數", min_value=1, max_value=len(brier_frame), value=len(brier_frame))
+        visible = brier_frame.tail(visible_periods).copy()
+        metric_a, metric_b, metric_c, metric_d = st.columns(4)
+        for metric, key in zip((metric_a, metric_b, metric_c, metric_d), CONFIG_LABELS, strict=True):
+            metric.metric(CONFIG_LABELS[key], f"{visible[key].mean():.6f}")
+        chart = cumulative_brier(visible).pivot(index="期數", columns="配置", values="累積平均 Brier")
+        st.line_chart(chart)
+        st.dataframe(visible.rename(columns=CONFIG_LABELS), width="stretch", hide_index=True)
+
+        max_block = max(1, min(10, len(visible)))
+        controls_a, controls_b = st.columns(2)
+        with controls_a:
+            block_length = st.slider("Bootstrap 區塊長度", min_value=1, max_value=max_block, value=min(5, max_block))
+        with controls_b:
+            bootstrap_runs = st.select_slider("Bootstrap 重抽次數", options=[500, 1_000, 2_000, 5_000], value=2_000)
+        inference, inference_error = run_four_configuration_inference(visible, block_length=block_length, n_bootstrap=bootstrap_runs)
+        if inference_error:
+            st.info(inference_error)
+        else:
+            display = inference.loc[:, [
+                "配置", "candidate_mean_brier", "baseline_mean_brier", "mean_difference", "ci95_lower", "ci95_upper",
+                "brier_skill_score_vs_baseline", "bootstrap_p_value_holm", "dm_dm_statistic", "dm_p_value_holm",
+                "inference_methods_agree", "both_methods_support_candidate",
+            ]].rename(columns={
+                "candidate_mean_brier": "候選平均 Brier", "baseline_mean_brier": "基準平均 Brier", "mean_difference": "平均差（候選−基準）",
+                "ci95_lower": "Bootstrap 95% CI 下界", "ci95_upper": "Bootstrap 95% CI 上界", "brier_skill_score_vs_baseline": "Brier Skill Score",
+                "bootstrap_p_value_holm": "Bootstrap Holm p", "dm_dm_statistic": "DM 統計量", "dm_p_value_holm": "DM Holm p",
+                "inference_methods_agree": "兩方法拒絕結論一致", "both_methods_support_candidate": "雙方法支持候選",
+            })
+            st.dataframe(display, width="stretch", hide_index=True)
+            st.caption("Bootstrap 是主要推論，Diebold–Mariano 是敏感度／交叉驗證。四配置共同已結算期數少於 100 時，所有結果均只屬描述性與探索性，不可宣稱長期優勢。")
 
 with data_tab:
     st.subheader("歷史資料互動篩選")

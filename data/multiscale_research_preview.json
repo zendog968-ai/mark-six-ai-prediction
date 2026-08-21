@@ -1,0 +1,141 @@
+{
+  "experiment_id": "marksix_multiscale_calibrated_research_candidate",
+  "config_version": "2026-08-20-research-v1",
+  "status": "research_preview_not_in_official_three_config_blind_test",
+  "target_draw": 26092,
+  "target_date": "2026-08-22",
+  "generated_at_utc": "2026-08-20T20:34:18.666464+00:00",
+  "source_history_records": 3420,
+  "source_latest_draw": 26091,
+  "source_latest_date": "2026-08-20",
+  "source_history_sha256": "a7c6ea9a0e980649ff76808a1814bcbaee738471557a9da5b3e354b2955df8f4",
+  "model": {
+    "name": "Calibrated Random Forest + XGBoost multiscale research candidate",
+    "features": [
+      "frequency_10",
+      "frequency_50",
+      "frequency_100",
+      "frequency_200",
+      "gap",
+      "decayed_frequency_half_life_25",
+      "short_medium_trend"
+    ],
+    "calibration": "Logistic regression fitted only on the most recent 360 already-settled draws; probabilities rescaled to expected six main numbers.",
+    "training_draws": 2860,
+    "calibration_draws": 360
+  },
+  "top_6_numbers": [
+    1,
+    5,
+    7,
+    10,
+    33,
+    37
+  ],
+  "top_10_probabilities": [
+    {
+      "number": 7,
+      "probability": 0.12273475
+    },
+    {
+      "number": 5,
+      "probability": 0.12246577
+    },
+    {
+      "number": 33,
+      "probability": 0.12246551
+    },
+    {
+      "number": 37,
+      "probability": 0.12246261
+    },
+    {
+      "number": 10,
+      "probability": 0.12246067
+    },
+    {
+      "number": 1,
+      "probability": 0.12245896
+    },
+    {
+      "number": 29,
+      "probability": 0.12245777
+    },
+    {
+      "number": 46,
+      "probability": 0.12245752
+    },
+    {
+      "number": 30,
+      "probability": 0.12245683
+    },
+    {
+      "number": 14,
+      "probability": 0.12245675
+    }
+  ],
+  "all_probabilities": [
+    0.1224589628,
+    0.1224533955,
+    0.1224471964,
+    0.1224559225,
+    0.1224657691,
+    0.1223816103,
+    0.1227347517,
+    0.1224477685,
+    0.12245217,
+    0.1224606679,
+    0.122435381,
+    0.1224132549,
+    0.1224294079,
+    0.1224567534,
+    0.1224455102,
+    0.1224543113,
+    0.1224423617,
+    0.1224529348,
+    0.122436477,
+    0.1224354748,
+    0.1224351811,
+    0.1224421409,
+    0.1224449926,
+    0.1224273294,
+    0.1224427839,
+    0.1224536978,
+    0.1224374238,
+    0.1224506707,
+    0.1224577717,
+    0.1224568291,
+    0.122445585,
+    0.1224359468,
+    0.1224655137,
+    0.1224323777,
+    0.1224400245,
+    0.1224360172,
+    0.1224626115,
+    0.1224542061,
+    0.1224404537,
+    0.1224565328,
+    0.1224400359,
+    0.122433965,
+    0.1224434346,
+    0.1224201952,
+    0.1224296397,
+    0.122457521,
+    0.1224534669,
+    0.1224128822,
+    0.122430688
+  ],
+  "brier_tracking": {
+    "outcome_encoding": "For each number i from 1 to 49, y_i = 1 if i is among the six main numbers in the actual draw; otherwise y_i = 0. The special number is excluded.",
+    "single_draw_formula": "Brier_t = (1 / 49) × Σ_{i=1}^{49}(p_i − y_i)^2",
+    "cumulative_formula": "Cumulative Brier_T = mean(Brier_t for all settled, pre-locked research records through T)",
+    "uniform_reference": 0.1224489796,
+    "comparators": [
+      "uniform reference",
+      "current calibrated 50/10/Gap baseline",
+      "multiscale calibrated candidate"
+    ],
+    "promotion_rule": "Do not promote before at least 100 future pre-locked records. Promotion additionally requires lower cumulative Brier and log loss than the calibrated baseline, plus a Top-6 hit-difference 95% confidence interval whose lower bound is above zero."
+  },
+  "purpose": "Research preview only. This candidate remains separate from the official three-configuration blind test until a future explicit pre-registration decision."
+}

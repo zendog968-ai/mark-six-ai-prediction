@@ -73,6 +73,76 @@
       "status": "locked_pending_result",
       "purpose": "盲測僅供統計教育及模型評估；所有候選會在開獎前鎖定，不構成投注建議或中獎保證。",
       "record_sha256": "7f83f21a1c40e18c732de65a904f9a3368f2a7960cb294794cc4776ce58ea671"
+    },
+    {
+      "experiment_id": "marksix_three_config_blind_test",
+      "schema_version": 1,
+      "config_version": "2026-08-20-v1",
+      "target_draw": 26092,
+      "target_date": "2026-08-22",
+      "locked_at_utc": "2026-08-20T20:21:00.972866+00:00",
+      "source_latest_draw": 26091,
+      "source_latest_date": "2026-08-20",
+      "source_history_records": 225,
+      "source_history_sha256": "ee0a4d93de4c709dce2d63a6e32a9c5ad7b345d8ddaf22b533bfe7bc4129b1d9",
+      "model": {
+        "name": "Random Forest + XGBoost Ensemble",
+        "fusion": {
+          "random_forest_weight": 0.5,
+          "xgboost_weight": 0.5
+        },
+        "features": [
+          "frequency_50",
+          "frequency_10",
+          "gap",
+          "kmeans_cluster"
+        ],
+        "kmeans_clusters": 4
+      },
+      "variants": [
+        {
+          "key": "fusion_top6",
+          "label": "融合模型 Top-6（基準）",
+          "rule": "依原有 Random Forest + XGBoost 等權融合分數取前 6 個號碼。",
+          "numbers": [
+            1,
+            7,
+            13,
+            31,
+            32,
+            48
+          ]
+        },
+        {
+          "key": "frequency50_50",
+          "label": "50% frequency_50 變體",
+          "rule": "0.5 × 標準化融合分數 + 0.5 × 標準化近 50 期頻率，取前 6 個號碼。",
+          "numbers": [
+            1,
+            4,
+            7,
+            16,
+            31,
+            32
+          ]
+        },
+        {
+          "key": "hot6",
+          "label": "熱門 6 配置",
+          "rule": "先以近 50 期頻率最高的 16 個號碼建立熱門池，再按融合分數取前 6 個號碼。",
+          "numbers": [
+            1,
+            7,
+            16,
+            27,
+            31,
+            32
+          ]
+        }
+      ],
+      "status": "locked_pending_result",
+      "purpose": "盲測僅供統計教育及模型評估；所有候選會在開獎前鎖定，不構成投注建議或中獎保證。",
+      "record_sha256": "b785c620f1b98a94384651fa118ad5df21f45b4548ecbaac4d20c6eeaa50af5f"
     }
   ]
 }

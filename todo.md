@@ -72,3 +72,10 @@
 - [x] 以固定樣本外規則比較不同 frequency_50 權重對融合模型回測命中的敏感度
 - [x] 以固定時間順序回測比較熱門、均衡與冷門號碼組合配置的樣本外命中表現
 - [x] 從下一個未結算期開始鎖定融合基準、50% frequency_50 變體與熱門 6 配置的盲測候選，並自動結算追蹤
+- [ ] 建立每日盲測結果結算摘要與不重複通知流程，並接入現有 22:00 香港時間更新排程
+- [x] 建立以機率校準、穩定性篩選與時間順序保留驗證為核心的模型改良研究，評估是否值得加入後續盲測
+- [x] 展示第四個多尺度校準候選與逐期 Brier 分數追蹤規格，暫不納入現有三配置盲測
+- [x] 制定四配置長期 Brier 分數的成對顯著性檢驗、時間區塊重抽樣與多重比較控制規格
+- [x] 提供四配置成對 Brier 損失的 moving-block bootstrap 與 Holm–Bonferroni 可重用 Python 實作
+- [x] 擴充 Brier 成對比較模組，加入 Diebold–Mariano 檢定並與 moving-block bootstrap 交叉驗證
+- [x] 建立四配置 Brier、Bootstrap、Diebold–Mariano 與 Holm 校正的互動式 Streamlit 統計檢定儀表板
