@@ -87,3 +87,4 @@
 - [x] 以 Gmail 向 zendog968@gmail.com 發送權重調整與凍結確認摘要，並加入防重複、審計與失敗重試機制
 - [x] 以 root-only 設定入口安全配置 Gmail SMTP App Password，並驗證 Cloud Computer 可獨立投遞測試信
 - [x] 設計權重調整與 50 期凍結確認後的防重複通知事件、審計紀錄及 Telegram／Email 安全整合選項
+- [x] 建立每日盲測結果與模型權重狀態 Gmail 摘要、受控模擬通知及 cron／SMTP 健康檢查流程
