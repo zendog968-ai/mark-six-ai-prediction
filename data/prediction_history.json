@@ -283,6 +283,100 @@
           "consecutive_pairs": 1
         }
       ]
+    },
+    {
+      "target_draw": 26093,
+      "target_date": "2026-08-25",
+      "generated_at_utc": "2026-08-22T14:52:46.338955+00:00",
+      "source_history_records": 226,
+      "source_latest_draw": 26092,
+      "source_latest_date": "2026-08-22",
+      "model": {
+        "name": "Random Forest + XGBoost Ensemble",
+        "features": [
+          "frequency_50",
+          "frequency_10",
+          "gap",
+          "kmeans_cluster"
+        ],
+        "fusion": {
+          "random_forest_weight": 0.5,
+          "xgboost_weight": 0.5
+        },
+        "kmeans_clusters": 4
+      },
+      "combinations": [
+        {
+          "set_index": 1,
+          "numbers": [
+            11,
+            15,
+            16,
+            37,
+            45,
+            48
+          ],
+          "odd_count": 4,
+          "number_sum": 172,
+          "consecutive_pairs": 1
+        },
+        {
+          "set_index": 2,
+          "numbers": [
+            4,
+            16,
+            25,
+            30,
+            45,
+            46
+          ],
+          "odd_count": 2,
+          "number_sum": 166,
+          "consecutive_pairs": 1
+        },
+        {
+          "set_index": 3,
+          "numbers": [
+            4,
+            7,
+            9,
+            13,
+            17,
+            28
+          ],
+          "odd_count": 4,
+          "number_sum": 78,
+          "consecutive_pairs": 0
+        },
+        {
+          "set_index": 4,
+          "numbers": [
+            6,
+            7,
+            15,
+            16,
+            17,
+            33
+          ],
+          "odd_count": 4,
+          "number_sum": 94,
+          "consecutive_pairs": 3
+        },
+        {
+          "set_index": 5,
+          "numbers": [
+            1,
+            3,
+            7,
+            11,
+            23,
+            48
+          ],
+          "odd_count": 5,
+          "number_sum": 93,
+          "consecutive_pairs": 0
+        }
+      ]
     }
   ]
 }
