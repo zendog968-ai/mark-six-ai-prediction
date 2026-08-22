@@ -113,6 +113,7 @@ temp/
 .venv/
 __pycache__/
 *.py[cod]
+data/weight_notification_events.json
 
 # Local inspection artefacts
 .tmp-source/

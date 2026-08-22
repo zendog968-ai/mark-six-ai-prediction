@@ -84,3 +84,6 @@
 - [x] 提供以共同盲測機率資料實作受約束 Brier 最小化與 alpha 等於 0.25 平滑權重過渡的可重用 Python 模組
 - [x] 建立受約束 Brier 權重演變、資格閘門與下一個 50 期凍結狀態的互動式 Streamlit 監控儀表板
 - [x] 匯出可離線開啟的單檔 HTML 儀表板，保留四配置 Brier 與權重凍結的前端互動並標示伺服器端限制
+- [x] 以 Gmail 向 zendog968@gmail.com 發送權重調整與凍結確認摘要，並加入防重複、審計與失敗重試機制
+- [x] 以 root-only 設定入口安全配置 Gmail SMTP App Password，並驗證 Cloud Computer 可獨立投遞測試信
+- [x] 設計權重調整與 50 期凍結確認後的防重複通知事件、審計紀錄及 Telegram／Email 安全整合選項
