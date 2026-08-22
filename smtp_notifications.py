@@ -27,6 +27,7 @@ DEFAULT_EVENT_LEDGER_PATH = PROJECT_ROOT / "data" / "weight_notification_events.
 DEFAULT_DRAW_HISTORY_PATH = PROJECT_ROOT / "data" / "lotto_history_real.csv"
 DEFAULT_BLIND_HISTORY_PATH = PROJECT_ROOT / "data" / "blind_test_history.json"
 DEFAULT_BRIER_HISTORY_PATH = PROJECT_ROOT / "data" / "brier_tracking_history.json"
+DEFAULT_PREDICTION_VERIFICATION_PATH = PROJECT_ROOT / "data" / "runtime_prediction_verification.json"
 MAX_ATTEMPTS = 3
 FORMAL_STATUSES = {"frozen", "confirmed", "activated", "rolled_back"}
 HONG_KONG_TZ = ZoneInfo("Asia/Hong_Kong")
@@ -388,18 +389,67 @@ def send_simulated_daily_status(settings: dict[str, Any]) -> None:
     )
 
 
+def render_prediction_verification_body(path: Path = DEFAULT_PREDICTION_VERIFICATION_PATH) -> tuple[str, str]:
+    """Render a read-only prediction verification email from the local audit output."""
+    try:
+        report = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise NotificationConfigurationError("找不到受控預測驗證輸出；請先執行 verify_locked_prediction.py。") from error
+    target_draw = report.get("target_draw", "未知")
+    top_weights = report.get("rebuilt_top_weights", [])
+    recommendations = report.get("rebuilt_recommendations", [])
+    top_lines = [
+        f"- {int(item.get('number', 0)):02d}：相對權重 {float(item.get('relative_weight', 0)):.6f}"
+        for item in top_weights[:6]
+        if isinstance(item, dict)
+    ]
+    set_lines = [
+        f"- 組合 {item.get('set_index', '?')}：{_number_text(item.get('numbers'))}"
+        for item in recommendations
+        if isinstance(item, dict)
+    ]
+    subject = f"[模擬] Mark Six {target_draw} 受控預測重建驗證"
+    body = "\n".join(
+        [
+            "【受控預測重建通知】",
+            "本信由 Cloud Computer 以本機已驗證歷史資料重新計算，沒有連網抓取結果、沒有寫入歷史 CSV，也沒有改寫正式盲測、Brier 或權重版本。",
+            "",
+            f"目標期數：{target_draw}",
+            f"最新驗證期數：{report.get('latest_verified_draw', {}).get('draw', '未知')}",
+            f"歷史資料期數：{report.get('history_records', '未知')}",
+            f"Top 權重是否與鎖定輸出一致：{report.get('top_weights_match_locked')}",
+            f"五組候選是否與鎖定輸出一致：{report.get('recommendations_match_locked')}",
+            "",
+            "前六個相對權重：",
+            *(top_lines or ["- 無可用資料"]),
+            "",
+            "五組候選：",
+            *(set_lines or ["- 無可用資料"]),
+            "",
+            "此內容僅供統計實驗與系統驗證，不構成投注建議或中獎保證。",
+        ]
+    )
+    return subject, body
+
+
+def send_prediction_verification(settings: dict[str, Any]) -> None:
+    subject, body = render_prediction_verification_body()
+    send_email(settings, subject, body)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="派送 Mark Six 正式權重事件的 Gmail SMTP 通知。")
     parser.add_argument("--dispatch", action="store_true", help="派送符合正式資格且尚未寄出的事件。")
     parser.add_argument("--daily-summary", action="store_true", help="寄送每日盲測與權重狀態摘要。")
     parser.add_argument("--send-simulation", action="store_true", help="寄送不影響正式紀錄的受控每日摘要模擬信。")
+    parser.add_argument("--send-prediction-simulation", action="store_true", help="寄送不改寫記錄的受控預測重建驗證信。")
     parser.add_argument("--send-test", action="store_true", help="寄出單次 SMTP 測試信。")
     parser.add_argument("--weight-history", type=Path, default=DEFAULT_WEIGHT_HISTORY_PATH)
     parser.add_argument("--ledger", type=Path, default=DEFAULT_EVENT_LEDGER_PATH)
     args = parser.parse_args()
-    selected = sum((args.dispatch, args.daily_summary, args.send_simulation, args.send_test))
+    selected = sum((args.dispatch, args.daily_summary, args.send_simulation, args.send_prediction_simulation, args.send_test))
     if selected != 1:
-        parser.error("請指定 --dispatch、--daily-summary、--send-simulation 或 --send-test 其中之一。")
+        parser.error("請指定 --dispatch、--daily-summary、--send-simulation、--send-prediction-simulation 或 --send-test 其中之一。")
     settings = smtp_settings_from_environment()
     if args.send_test:
         send_test(settings)
@@ -408,6 +458,10 @@ def main() -> None:
     if args.send_simulation:
         send_simulated_daily_status(settings)
         print("每日摘要模擬信已提交至寄件伺服器。")
+        return
+    if args.send_prediction_simulation:
+        send_prediction_verification(settings)
+        print("受控預測重建驗證信已提交至寄件伺服器。")
         return
     if args.daily_summary:
         print(json.dumps(dispatch_daily_status(settings), ensure_ascii=False))

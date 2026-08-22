@@ -114,6 +114,7 @@ temp/
 __pycache__/
 *.py[cod]
 data/weight_notification_events.json
+data/runtime_prediction_verification.json
 
 # Local inspection artefacts
 .tmp-source/
