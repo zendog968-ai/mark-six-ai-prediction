@@ -11,6 +11,8 @@ def test_empty_history_shows_equal_baseline_and_waiting_gate():
     assert state["next_gate_remaining"] == 100
     assert state["status"] == "累積共同盲測中"
     assert set(state["weight_rows"]["目前權重"]) == {0.25}
+    assert state["gate_rows"]["目前"].dtype == object
+    assert state["gate_rows"]["目前"].tolist()[0] == "0"
 
 
 def test_valid_frozen_version_reports_progress_without_reoptimising():

@@ -73,7 +73,7 @@ def build_weight_monitor_state(
     freeze_completed = max(0, min(freeze_completed, freeze_confirmation_draws))
     next_gate_remaining = max(0, minimum_common_draws - completed)
     gate_rows = [
-        {"資格條件": "共同已結算完整機率期數", "要求": f"至少 {minimum_common_draws} 期", "目前": completed, "狀態": "通過" if completed >= minimum_common_draws else "等待"},
+        {"資格條件": "共同已結算完整機率期數", "要求": f"至少 {minimum_common_draws} 期", "目前": str(completed), "狀態": "通過" if completed >= minimum_common_draws else "等待"},
         {"資格條件": "Bootstrap＋Holm", "要求": "校正後 p < 0.05 且 95% CI 上界 < 0", "目前": "尚未正式檢定" if completed < minimum_common_draws else "需由預先註冊程序確認", "狀態": "等待"},
         {"資格條件": "Diebold–Mariano＋Holm", "要求": "校正後單向 p < 0.05，方向一致", "目前": "尚未正式檢定" if completed < minimum_common_draws else "需由預先註冊程序確認", "狀態": "等待"},
         {"資格條件": "實際效應量", "要求": "Brier Skill Score ≥ +0.5%", "目前": "尚未正式檢定", "狀態": "等待"},
