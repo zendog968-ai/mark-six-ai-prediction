@@ -280,11 +280,11 @@
       "consecutive_pairs": 0
     }
   ],
-  "run_appended_to_history": true,
+  "run_appended_to_history": false,
   "prediction_log": {
     "target_draw": 26093,
     "target_date": "2026-08-25",
-    "logged": true
+    "logged": false
   },
   "blind_test_log": {
     "target_draw": 26093,
