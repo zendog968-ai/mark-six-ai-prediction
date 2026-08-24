@@ -37,6 +37,68 @@ def load_long_window_research(path: Path = DEFAULT_LONG_WINDOW_RESEARCH_PATH) ->
     return loaded if isinstance(loaded, dict) else None
 
 
+def _build_chart_tables(family_table: pd.DataFrame, holdout_table: pd.DataFrame) -> dict[str, pd.DataFrame]:
+    """Build the three dashboard chart tables from a possibly filtered state."""
+    window_signal_chart = pd.DataFrame(
+        [
+            {
+                "窗口": f"{window} 期",
+                "全樣本 Holm 候選": int(family_table[f"{window}期 Holm 顯著數"].sum()),
+                "留出驗證通過": int(
+                    (holdout_table.loc[holdout_table["窗口"] == f"{window} 期", "通過留出驗證"] == "是").sum()
+                ),
+            }
+            for window in ("5", "10")
+        ]
+    ).set_index("窗口")
+    frequency_chart = family_table.set_index("組合家族")[
+        ["總頻率原始偏離數", "總頻率 Holm 顯著數"]
+    ]
+    holdout_flow_chart = pd.DataFrame(
+        [
+            {
+                "窗口": f"{window} 期",
+                "探索期候選": int((holdout_table["窗口"] == f"{window} 期").sum()),
+                "通過留出驗證": int(
+                    (holdout_table.loc[holdout_table["窗口"] == f"{window} 期", "通過留出驗證"] == "是").sum()
+                ),
+            }
+            for window in ("5", "10")
+        ]
+    ).set_index("窗口")
+    return {
+        "window_signal_chart": window_signal_chart,
+        "frequency_chart": frequency_chart,
+        "holdout_flow_chart": holdout_flow_chart,
+    }
+
+
+def filter_long_window_research(state: dict[str, Any], selected_families: list[str]) -> dict[str, Any]:
+    """Return a display state restricted to the requested predefined families."""
+    if not state.get("available"):
+        return state
+
+    selected = set(selected_families)
+    family_table = state["family_table"].loc[
+        state["family_table"]["組合家族"].isin(selected)
+    ].copy()
+    holdout_table = state["holdout_table"].loc[
+        state["holdout_table"]["組合家族"].isin(selected)
+    ].copy()
+    charts = _build_chart_tables(family_table, holdout_table)
+    filtered = dict(state)
+    filtered.update(charts)
+    filtered["family_table"] = family_table
+    filtered["holdout_table"] = holdout_table
+    filtered["total_tests"] = int(family_table["同時檢驗數"].sum())
+    filtered["initial_signals"] = {
+        window: int(family_table[f"{window}期 Holm 顯著數"].sum())
+        for window in ("5", "10")
+    }
+    filtered["passed_holdout"] = int((holdout_table["通過留出驗證"] == "是").sum())
+    return filtered
+
+
 def build_long_window_research_state(path: Path = DEFAULT_LONG_WINDOW_RESEARCH_PATH) -> dict[str, Any]:
     """Convert the long-window analysis snapshot into Streamlit-ready tables."""
     raw = load_long_window_research(path)
@@ -99,34 +161,7 @@ def build_long_window_research_state(path: Path = DEFAULT_LONG_WINDOW_RESEARCH_P
     date_range = method.get("date_range", ["—", "—"])
     family_table = pd.DataFrame(family_rows)
     holdout_table = pd.DataFrame(holdout_rows)
-    window_signal_chart = pd.DataFrame(
-        [
-            {
-                "窗口": f"{window} 期",
-                "全樣本 Holm 候選": initial_signals[window],
-                "留出驗證通過": int(
-                    (holdout_table["窗口"] == f"{window} 期").sum()
-                    and (holdout_table.loc[holdout_table["窗口"] == f"{window} 期", "通過留出驗證"] == "是").sum()
-                ) if not holdout_table.empty else 0,
-            }
-            for window in ("5", "10")
-        ]
-    ).set_index("窗口")
-    frequency_chart = family_table.set_index("組合家族")[
-        ["總頻率原始偏離數", "總頻率 Holm 顯著數"]
-    ]
-    holdout_flow_chart = pd.DataFrame(
-        [
-            {
-                "窗口": f"{window} 期",
-                "探索期候選": int((holdout_table["窗口"] == f"{window} 期").sum()) if not holdout_table.empty else 0,
-                "通過留出驗證": int(
-                    (holdout_table.loc[holdout_table["窗口"] == f"{window} 期", "通過留出驗證"] == "是").sum()
-                ) if not holdout_table.empty else 0,
-            }
-            for window in ("5", "10")
-        ]
-    ).set_index("窗口")
+    charts = _build_chart_tables(family_table, holdout_table)
     return {
         "available": True,
         "draw_count": int(method.get("draw_count", 0)),
@@ -134,9 +169,7 @@ def build_long_window_research_state(path: Path = DEFAULT_LONG_WINDOW_RESEARCH_P
         "source_text": "、".join(method.get("sources", [])),
         "family_table": family_table,
         "holdout_table": holdout_table,
-        "window_signal_chart": window_signal_chart,
-        "frequency_chart": frequency_chart,
-        "holdout_flow_chart": holdout_flow_chart,
+        **charts,
         "total_tests": total_tests,
         "initial_signals": initial_signals,
         "passed_holdout": passed_holdout,
