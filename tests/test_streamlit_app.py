@@ -18,6 +18,14 @@ class StreamlitApplicationTests(unittest.TestCase):
         self.assertIn("專案真實歷史 CSV", rendered_info)
         rendered_subheaders = " ".join(item.value for item in app.subheader)
         self.assertIn("命中率與回測分析", rendered_subheaders)
+        rendered_captions = " ".join(item.value for item in app.caption)
+        self.assertIn("游標移到長條", rendered_captions)
+        self.assertIn("提示同時顯示實際聚集分數", rendered_captions)
+        source = (PROJECT_ROOT / "app.py").read_text(encoding="utf-8")
+        self.assertIn("st.altair_chart(frequency_chart", source)
+        self.assertIn("st.altair_chart(window_trend_chart", source)
+        self.assertIn("總頻率 Holm 狀態", source)
+        self.assertIn("窗口 Holm 狀態", source)
 
 
 if __name__ == "__main__":

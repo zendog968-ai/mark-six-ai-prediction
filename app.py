@@ -1,5 +1,7 @@
 import streamlit as st
 
+import altair as alt
+
 from lotto_data import (
     DEFAULT_REAL_HISTORY_PATH,
     REQUIRED_COLUMNS,
@@ -374,9 +376,65 @@ with window_research_tab:
             st.bar_chart(research["window_signal_chart"], height=230)
             st.caption("長條僅代表通過家族內 Holm 校正的探索候選數；留出驗證通過數才是可追蹤的研究結果。")
 
-            st.caption("**總頻率：原始偏離與 Holm 校正後**")
-            st.bar_chart(research["frequency_chart"], height=230)
-            st.caption("原始偏離在大量檢驗下屬常見現象；Holm 欄位用於判斷是否仍有可解釋的頻率失衡。")
+        st.markdown("#### 實際頻率與隨機期望：懸浮查看詳細數值")
+        frequency_chart = (
+            alt.Chart(research["frequency_tooltip_chart"])
+            .mark_bar()
+            .encode(
+                x=alt.X("組合家族:N", sort=None, title=None),
+                xOffset="數據系列:N",
+                y=alt.Y("期數:Q", title="出現期數"),
+                color=alt.Color("數據系列:N", title="數據系列"),
+                tooltip=[
+                    alt.Tooltip("組合家族:N"),
+                    alt.Tooltip("候選模式:N"),
+                    alt.Tooltip("數據系列:N"),
+                    alt.Tooltip("期數:Q", format=".2f"),
+                    alt.Tooltip("實際出現期數:Q", format=".2f"),
+                    alt.Tooltip("隨機期望期數:Q", format=".2f"),
+                    alt.Tooltip("頻率偏離:Q", format="+.2f"),
+                    alt.Tooltip("基準機率:Q", format=".4%"),
+                    alt.Tooltip("總頻率原始 p:Q", format=".4f"),
+                    alt.Tooltip("總頻率 Holm p:Q", format=".4f"),
+                    alt.Tooltip("總頻率 Holm 狀態:N"),
+                ],
+            )
+            .properties(height=280)
+            .interactive()
+        )
+        st.altair_chart(frequency_chart, width="stretch")
+        st.caption("游標移到長條可查看候選模式、實際期數、隨機期望、偏離及 Holm 校正資訊。所有候選均屬研究篩查，不構成預測訊號。")
+
+        st.markdown("#### 5／10 期窗口分數趨勢：懸浮查看實際與期望")
+        window_trend_chart = (
+            alt.Chart(research["window_tooltip_chart"])
+            .mark_line(point=True)
+            .encode(
+                x=alt.X("窗口:O", sort=["5 期", "10 期"], title="窗口長度"),
+                y=alt.Y("分數:Q", title="窗口聚集分數"),
+                color=alt.Color("數據系列:N", title="數據系列"),
+                detail=[alt.Detail("組合家族:N"), alt.Detail("數據系列:N")],
+                strokeDash=alt.StrokeDash("組合家族:N", title="組合家族"),
+                tooltip=[
+                    alt.Tooltip("組合家族:N"),
+                    alt.Tooltip("候選模式:N"),
+                    alt.Tooltip("窗口:N"),
+                    alt.Tooltip("數據系列:N"),
+                    alt.Tooltip("分數:Q", format=".2f"),
+                    alt.Tooltip("實際窗口分數:Q", format=".2f"),
+                    alt.Tooltip("隨機期望分數:Q", format=".2f"),
+                    alt.Tooltip("窗口偏離:Q", format="+.2f"),
+                    alt.Tooltip("方向:N"),
+                    alt.Tooltip("窗口原始 p:Q", format=".4f"),
+                    alt.Tooltip("窗口 Holm p:Q", format=".4f"),
+                    alt.Tooltip("窗口 Holm 狀態:N"),
+                ],
+            )
+            .properties(height=320)
+            .interactive()
+        )
+        st.altair_chart(window_trend_chart, width="stretch")
+        st.caption("每條線代表所選家族在該窗口中最突出的候選；提示同時顯示實際聚集分數、條件式隨機期望、偏離與校正結果。")
 
         st.markdown("#### 時間留出驗證")
         st.caption(f"先以前 {research['training_draws']:,} 期選出每個家族在 5 期與 10 期窗口最突出的候選，再以前述以外的 {research['holdout_draws']:,} 期獨立檢驗。跨五個家族的候選再作 Holm 校正。")
