@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -12,6 +13,211 @@ import pandas as pd
 DEFAULT_LONG_WINDOW_RESEARCH_PATH = (
     Path(__file__).resolve().parent / "data" / "long_window_research_snapshot.json"
 )
+
+
+RESEARCH_COPY = {
+    "zh": {
+        "language_label": "顯示語言",
+        "language_help": "只改變窗口研究頁的文字、表格與圖表標籤；統計資料與檢定規則不變。",
+        "title": "5／10 期窗口頻率研究",
+        "intro": "本區展示已封存的長期真實資料研究快照；資料以均勻 49 選 6 為基準，並對同一組合家族作 Holm 多重比較校正。它不會修改模型、盲測紀錄或權重。",
+        "family_filter": "組合家族篩選器",
+        "family_filter_help": "篩選會同步套用至家族摘要、全樣本候選、總頻率與時間留出驗證圖表。清除全部選項可檢視空白狀態。",
+        "sample": "研究樣本",
+        "tests": "預先定義檢驗",
+        "five_signals": "5 期全樣本候選",
+        "holdout_passed": "留出驗證通過",
+        "no_families": "尚未選擇組合家族。請在上方選擇至少一個家族以顯示研究表格與圖表。",
+        "range": "資料範圍：{start} 至 {end}。所選家族中，全樣本的少數表面偏離在按時間保留的後 {holdout:,} 期均未通過驗證；因此不列為模型訊號。",
+        "summary_title": "家族摘要：總頻率與窗口偏離",
+        "signal_holdout_title": "5／10 期全樣本候選與留出驗證",
+        "signal_holdout_caption": "長條僅代表通過家族內 Holm 校正的探索候選數；留出驗證通過數才是可追蹤的研究結果。",
+        "frequency_title": "實際頻率與隨機期望：懸浮查看詳細數值",
+        "frequency_caption": "游標移到長條可查看候選模式、實際期數、隨機期望、偏離及 Holm 校正資訊。所有候選均屬研究篩查，不構成預測訊號。",
+        "window_title": "5／10 期窗口分數趨勢：懸浮查看實際與期望",
+        "window_caption": "每條線代表所選家族在該窗口中最突出的候選；提示同時顯示實際聚集分數、條件式隨機期望、偏離與校正結果。",
+        "holdout_title": "時間留出驗證",
+        "holdout_caption": "先以前 {training:,} 期選出每個家族在 5 期與 10 期窗口最突出的候選，再以前述以外的 {holdout:,} 期獨立檢驗。跨五個家族的候選再作 Holm 校正。",
+        "flow_title": "研究流程：探索期至留出期",
+        "flow_caption": "所有探索期候選均需在未參與選擇的後續期數重現；目前兩個窗口均沒有候選通過。",
+        "methods_title": "研究方法與判讀限制",
+        "methods_text": """
+- **總頻率**：比較組合實際出現次數與均勻 49 選 6 的理論期望；原始 p 值會因大量同時檢驗而自然出現少數偏離，故必須配合 Holm 校正。
+- **5／10 期窗口**：固定組合的實際出現總數，只檢查其在相鄰窗口中是否異常集中或分散，避免把「總出現較多」錯當成跨期週期。
+- **留出驗證**：探索期選出的候選，必須在之後未參與篩選的新期數重現，才可成為未來盲測的研究候選。
+
+六合彩攪珠應視為獨立隨機事件。本區只供統計教育與模型治理研究，不構成投注建議或中獎保證。
+""",
+    },
+    "en": {
+        "language_label": "Display language",
+        "language_help": "Only the window-research copy, tables, chart labels, and tooltips change. Statistical values and testing rules stay unchanged.",
+        "title": "5/10-draw window frequency research",
+        "intro": "This view presents a versioned long-run research snapshot. It uses a uniform 6-from-49 benchmark and Holm multiple-testing correction within each combination family. It does not alter the model, blind-test ledger, or weights.",
+        "family_filter": "Combination-family filter",
+        "family_filter_help": "The filter updates the family summary, full-sample candidates, total-frequency chart, and temporal holdout views together. Clear all options to inspect the empty state.",
+        "sample": "Research sample",
+        "tests": "Predefined tests",
+        "five_signals": "5-draw full-sample candidates",
+        "holdout_passed": "Passed holdout",
+        "no_families": "No combination family is selected. Choose at least one family above to display the research tables and charts.",
+        "range": "Data range: {start} to {end}. Within the selected families, the few apparent full-sample deviations did not pass validation in the later {holdout:,} held-out draws; they are therefore not model signals.",
+        "summary_title": "Family summary: total-frequency and window deviations",
+        "signal_holdout_title": "5/10-draw full-sample candidates and holdout validation",
+        "signal_holdout_caption": "Bars count exploratory candidates passing the within-family Holm correction. Only candidates that also pass holdout validation are research signals worth tracking.",
+        "frequency_title": "Observed frequency vs random expectation: hover for details",
+        "frequency_caption": "Hover over a bar to view the candidate pattern, observed draws, random expectation, deviation, and Holm-correction information. All candidates remain research screens, not predictive signals.",
+        "window_title": "5/10-draw window-score trend: hover for observed and expected values",
+        "window_caption": "Each line represents the most prominent candidate in a selected family for that window. Tooltips show the observed clustering score, conditional random expectation, deviation, and correction result.",
+        "holdout_title": "Temporal holdout validation",
+        "holdout_caption": "The most prominent candidate for each family and 5/10-draw window is selected from the first {training:,} draws, then independently tested on the following {holdout:,} draws. The selected candidates receive a Holm correction across families.",
+        "flow_title": "Research flow: exploration to holdout",
+        "flow_caption": "Every exploratory candidate must replicate in later draws that did not participate in selection. At present, no candidate passes either window's holdout validation.",
+        "methods_title": "Methods and interpretation limits",
+        "methods_text": """
+- **Total frequency**: compares observed combination counts with the theoretical expectation under uniform 6-from-49 draws. Raw p-values naturally contain some deviations after many simultaneous tests, so Holm correction is required.
+- **5/10-draw windows**: conditions on a combination's observed total count and tests only whether its appearances are unusually clustered or dispersed in adjacent windows. This prevents a high total count from being mistaken for a cycle.
+- **Holdout validation**: a candidate selected in the exploration period must reproduce in later draws not used for selection before it can become a prospective blind-test research candidate.
+
+Mark Six draws should be treated as independent random events. This view is for statistical education and model-governance research only; it is not betting advice or a guarantee of any result.
+""",
+    },
+}
+
+FAMILY_TRANSLATIONS = {
+    "三區精確分布": "Exact low/mid/high distribution",
+    "同尾數至少兩個": "At least two with the same terminal digit",
+    "奇偶精確分布": "Exact odd/even distribution",
+    "所有指定號碼對": "All specified number pairs",
+    "連號對": "Consecutive pairs",
+}
+
+COLUMN_TRANSLATIONS = {
+    "組合家族": "Combination family",
+    "同時檢驗數": "Tests",
+    "總頻率原始偏離數": "Unadjusted frequency deviations",
+    "總頻率 Holm 顯著數": "Frequency Holm discoveries",
+    "5期 Holm 顯著數": "5-draw Holm discoveries",
+    "10期 Holm 顯著數": "10-draw Holm discoveries",
+    "5期最突出候選": "Top 5-draw candidate",
+    "10期最突出候選": "Top 10-draw candidate",
+    "5期原始 p": "5-draw raw p",
+    "10期原始 p": "10-draw raw p",
+    "5期方向": "5-draw direction",
+    "10期方向": "10-draw direction",
+    "窗口": "Window",
+    "探索期選出候選": "Exploration candidate",
+    "留出期方向": "Holdout direction",
+    "留出期原始 p": "Holdout raw p",
+    "跨家族 Holm p": "Across-family Holm p",
+    "通過留出驗證": "Passed holdout",
+    "全樣本 Holm 候選": "Full-sample Holm candidates",
+    "留出驗證通過": "Passed holdout",
+    "探索期候選": "Exploration candidates",
+    "候選模式": "Candidate pattern",
+    "實際出現期數": "Observed draws",
+    "隨機期望期數": "Random expected draws",
+    "頻率偏離": "Frequency deviation",
+    "基準機率": "Baseline probability",
+    "總頻率原始 p": "Frequency raw p",
+    "總頻率 Holm p": "Frequency Holm p",
+    "總頻率 Holm 狀態": "Frequency Holm status",
+    "數據系列": "Data series",
+    "期數": "Draws",
+    "實際窗口分數": "Observed window score",
+    "隨機期望分數": "Random expected score",
+    "窗口偏離": "Window deviation",
+    "方向": "Direction",
+    "窗口原始 p": "Window raw p",
+    "窗口 Holm p": "Window Holm p",
+    "窗口 Holm 狀態": "Window Holm status",
+    "分數": "Score",
+}
+
+VALUE_TRANSLATIONS = {
+    "通過": "Pass",
+    "未通過": "Not passed",
+    "是": "Yes",
+    "否": "No",
+    "較集中": "More clustered",
+    "較分散": "More dispersed",
+    "實際出現期數": "Observed draws",
+    "隨機期望期數": "Random expected draws",
+    "實際窗口分數": "Observed window score",
+    "隨機期望分數": "Random expected score",
+    "5 期": "5 draws",
+    "10 期": "10 draws",
+}
+
+
+def research_copy(language: str) -> dict[str, str]:
+    """Return the copy dictionary for the requested window-research language."""
+    return RESEARCH_COPY["en" if language == "en" else "zh"]
+
+
+def family_display_name(family: str, language: str) -> str:
+    """Map a canonical Chinese family key to its display name."""
+    return FAMILY_TRANSLATIONS.get(family, family) if language == "en" else family
+
+
+def canonical_family_name(display_name: str, language: str) -> str:
+    """Map a family option selected in the UI back to the canonical research key."""
+    if language != "en":
+        return display_name
+    return next(
+        (canonical for canonical, translated in FAMILY_TRANSLATIONS.items() if translated == display_name),
+        display_name,
+    )
+
+
+def _localize_pattern(value: object) -> object:
+    if not isinstance(value, str):
+        return value
+    localized = value.replace("號碼對 ", "Pair ").replace("連號 ", "Consecutive ")
+    localized = re.sub(r"尾數 (\d)（至少兩個）", r"Terminal digit \1 (at least two)", localized)
+    localized = re.sub(r"(\d) 奇 (\d) 偶", r"\1 odd / \2 even", localized)
+    localized = localized.replace("低中高 =", "Low / Mid / High =")
+    return localized
+
+
+def _localize_frame(frame: pd.DataFrame, language: str) -> pd.DataFrame:
+    if language != "en" or frame.empty:
+        return frame.copy()
+    translated = frame.copy()
+    for column, mapper in {
+        "組合家族": lambda value: family_display_name(str(value), "en"),
+        "候選模式": _localize_pattern,
+        "探索期選出候選": _localize_pattern,
+        "5期最突出候選": _localize_pattern,
+        "10期最突出候選": _localize_pattern,
+    }.items():
+        if column in translated.columns:
+            translated[column] = translated[column].map(mapper)
+    for column in ("方向", "留出期方向", "5期方向", "10期方向", "總頻率 Holm 狀態", "窗口 Holm 狀態", "通過留出驗證", "數據系列", "窗口"):
+        if column in translated.columns:
+            translated[column] = translated[column].map(lambda value: VALUE_TRANSLATIONS.get(value, value))
+    return translated.rename(columns=COLUMN_TRANSLATIONS)
+
+
+def localize_long_window_research(state: dict[str, Any], language: str) -> dict[str, Any]:
+    """Translate all window-research display tables and chart data without changing statistics."""
+    if language != "en" or not state.get("available"):
+        return state
+    localized = dict(state)
+    for key in (
+        "family_table",
+        "holdout_table",
+        "frequency_detail_table",
+        "window_score_table",
+        "frequency_tooltip_chart",
+        "window_tooltip_chart",
+    ):
+        localized[key] = _localize_frame(state[key], language)
+    for key in ("window_signal_chart", "frequency_chart", "holdout_flow_chart"):
+        chart = state[key].copy()
+        chart.index = [VALUE_TRANSLATIONS.get(value, family_display_name(str(value), "en")) for value in chart.index]
+        localized[key] = chart.rename(columns=COLUMN_TRANSLATIONS)
+    return localized
 
 
 def _p_value(value: float | None) -> str:

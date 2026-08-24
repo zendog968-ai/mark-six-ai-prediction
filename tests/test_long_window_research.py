@@ -1,7 +1,14 @@
 import unittest
 from pathlib import Path
 
-from long_window_research import build_long_window_research_state, filter_long_window_research
+from long_window_research import (
+    build_long_window_research_state,
+    canonical_family_name,
+    family_display_name,
+    filter_long_window_research,
+    localize_long_window_research,
+    research_copy,
+)
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -67,6 +74,26 @@ class LongWindowResearchTests(unittest.TestCase):
         self.assertEqual(filtered["window_signal_chart"].to_numpy().sum(), 0)
         self.assertTrue(filtered["frequency_tooltip_chart"].empty)
         self.assertTrue(filtered["window_tooltip_chart"].empty)
+
+    def test_english_localization_translates_tables_charts_and_tooltip_fields(self):
+        state = build_long_window_research_state(
+            PROJECT_ROOT / "data" / "long_window_research_snapshot.json"
+        )
+        english = localize_long_window_research(state, "en")
+
+        self.assertIn("Combination family", english["family_table"].columns)
+        self.assertIn("Frequency Holm discoveries", english["family_table"].columns)
+        self.assertIn("Observed draws", english["frequency_tooltip_chart"].columns)
+        self.assertIn("Random expected draws", english["frequency_tooltip_chart"].columns)
+        self.assertIn("Observed window score", english["window_tooltip_chart"].columns)
+        self.assertIn("Random expected score", english["window_tooltip_chart"].columns)
+        self.assertIn("Consecutive pairs", english["family_table"]["Combination family"].tolist())
+        self.assertIn("Pass", english["window_tooltip_chart"]["Window Holm status"].tolist())
+        self.assertEqual(list(english["window_signal_chart"].index), ["5 draws", "10 draws"])
+        self.assertFalse(english["frequency_tooltip_chart"][["Observed draws", "Random expected draws"]].isna().any().any())
+        self.assertEqual(family_display_name("連號對", "en"), "Consecutive pairs")
+        self.assertEqual(canonical_family_name("Consecutive pairs", "en"), "連號對")
+        self.assertEqual(research_copy("en")["title"], "5/10-draw window frequency research")
 
 
 if __name__ == "__main__":

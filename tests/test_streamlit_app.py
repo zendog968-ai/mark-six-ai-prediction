@@ -26,6 +26,17 @@ class StreamlitApplicationTests(unittest.TestCase):
         self.assertIn("st.altair_chart(window_trend_chart", source)
         self.assertIn("總頻率 Holm 狀態", source)
         self.assertIn("窗口 Holm 狀態", source)
+        self.assertEqual(len(app.selectbox), 1)
+        self.assertEqual(app.selectbox[0].label, "Language / 語言")
+
+        app.selectbox[0].set_value("English").run(timeout=30)
+        self.assertFalse(app.exception)
+        english_subheaders = " ".join(item.value for item in app.subheader)
+        english_captions = " ".join(item.value for item in app.caption)
+        self.assertIn("5/10-draw window frequency research", english_subheaders)
+        self.assertIn("Hover over a bar", english_captions)
+        self.assertIn("Combination family", source)
+        self.assertIn("Random expected score", source)
 
 
 if __name__ == "__main__":

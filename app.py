@@ -40,7 +40,14 @@ from weight_monitor import (
     build_weight_monitor_state,
     load_weight_adjustment_history,
 )
-from long_window_research import build_long_window_research_state, filter_long_window_research
+from long_window_research import (
+    build_long_window_research_state,
+    canonical_family_name,
+    family_display_name,
+    filter_long_window_research,
+    localize_long_window_research,
+    research_copy,
+)
 
 
 st.set_page_config(page_title="六合彩資料分析實驗室", page_icon="🎱", layout="wide")
@@ -342,115 +349,144 @@ with data_tab:
     st.code(", ".join(REQUIRED_COLUMNS), language=None)
 
 with window_research_tab:
-    st.subheader("5／10 期窗口頻率研究")
-    st.caption("本區展示已封存的長期真實資料研究快照；資料以均勻 49 選 6 為基準，並對同一組合家族作 Holm 多重比較校正。它不會修改模型、盲測紀錄或權重。")
+    language_choice = st.selectbox(
+        "Language / 語言",
+        options=["繁體中文", "English"],
+        index=0,
+        help="This selector changes only the 5/10-draw window research view.",
+    )
+    language = "en" if language_choice == "English" else "zh"
+    copy = research_copy(language)
+    field = {
+        "family": "Combination family" if language == "en" else "組合家族",
+        "series": "Data series" if language == "en" else "數據系列",
+        "draws": "Draws" if language == "en" else "期數",
+        "observed_draws": "Observed draws" if language == "en" else "實際出現期數",
+        "expected_draws": "Random expected draws" if language == "en" else "隨機期望期數",
+        "frequency_deviation": "Frequency deviation" if language == "en" else "頻率偏離",
+        "baseline_probability": "Baseline probability" if language == "en" else "基準機率",
+        "frequency_raw_p": "Frequency raw p" if language == "en" else "總頻率原始 p",
+        "frequency_holm_p": "Frequency Holm p" if language == "en" else "總頻率 Holm p",
+        "frequency_holm_status": "Frequency Holm status" if language == "en" else "總頻率 Holm 狀態",
+        "pattern": "Candidate pattern" if language == "en" else "候選模式",
+        "window": "Window" if language == "en" else "窗口",
+        "score": "Score" if language == "en" else "分數",
+        "observed_score": "Observed window score" if language == "en" else "實際窗口分數",
+        "expected_score": "Random expected score" if language == "en" else "隨機期望分數",
+        "window_deviation": "Window deviation" if language == "en" else "窗口偏離",
+        "direction": "Direction" if language == "en" else "方向",
+        "window_raw_p": "Window raw p" if language == "en" else "窗口原始 p",
+        "window_holm_p": "Window Holm p" if language == "en" else "窗口 Holm p",
+        "window_holm_status": "Window Holm status" if language == "en" else "窗口 Holm 狀態",
+    }
+    st.subheader(copy["title"])
+    st.caption(copy["intro"])
     research = build_long_window_research_state()
     if not research["available"]:
-        st.warning(research["message"])
+        st.warning(research["message"] if language == "zh" else "No verifiable 5/10-draw window-research snapshot was found.")
     else:
-        family_options = research["family_table"]["組合家族"].tolist()
-        selected_families = st.multiselect(
-            "組合家族篩選器",
+        canonical_options = research["family_table"]["組合家族"].tolist()
+        family_options = [family_display_name(family, language) for family in canonical_options]
+        selected_family_labels = st.multiselect(
+            copy["family_filter"],
             options=family_options,
             default=family_options,
-            help="篩選會同步套用至家族摘要、全樣本候選、總頻率與時間留出驗證圖表。清除全部選項可檢視空白狀態。",
+            help=copy["family_filter_help"],
         )
+        selected_families = [canonical_family_name(label, language) for label in selected_family_labels]
         research = filter_long_window_research(research, selected_families)
+        research = localize_long_window_research(research, language)
         start_date, end_date = research["date_range"]
         metric_a, metric_b, metric_c, metric_d = st.columns(4)
-        metric_a.metric("研究樣本", f"{research['draw_count']:,} 期")
-        metric_b.metric("預先定義檢驗", f"{research['total_tests']:,}")
-        metric_c.metric("5 期全樣本候選", research["initial_signals"]["5"])
-        metric_d.metric("留出驗證通過", f"{research['passed_holdout']}/10")
+        draw_unit = "draws" if language == "en" else "期"
+        metric_a.metric(copy["sample"], f"{research['draw_count']:,} {draw_unit}")
+        metric_b.metric(copy["tests"], f"{research['total_tests']:,}")
+        metric_c.metric(copy["five_signals"], research["initial_signals"]["5"])
+        metric_d.metric(copy["holdout_passed"], f"{research['passed_holdout']}/10")
         if not selected_families:
-            st.info("尚未選擇組合家族。請在上方選擇至少一個家族以顯示研究表格與圖表。")
+            st.info(copy["no_families"])
         else:
-            st.info(f"資料範圍：{start_date} 至 {end_date}。所選家族中，全樣本的少數表面偏離在按時間保留的後 {research['holdout_draws']:,} 期均未通過驗證；因此不列為模型訊號。")
+            st.info(copy["range"].format(start=start_date, end=end_date, holdout=research["holdout_draws"]))
 
-        st.markdown("#### 家族摘要：總頻率與窗口偏離")
+        st.markdown(f"#### {copy['summary_title']}")
         summary_table, summary_charts = st.columns([1.55, 1])
         with summary_table:
             st.dataframe(research["family_table"], width="stretch", hide_index=True, height=260)
         with summary_charts:
-            st.caption("**5／10 期全樣本候選與留出驗證**")
+            st.caption(f"**{copy['signal_holdout_title']}**")
             st.bar_chart(research["window_signal_chart"], height=230)
-            st.caption("長條僅代表通過家族內 Holm 校正的探索候選數；留出驗證通過數才是可追蹤的研究結果。")
+            st.caption(copy["signal_holdout_caption"])
 
-        st.markdown("#### 實際頻率與隨機期望：懸浮查看詳細數值")
+        st.markdown(f"#### {copy['frequency_title']}")
         frequency_chart = (
             alt.Chart(research["frequency_tooltip_chart"])
             .mark_bar()
             .encode(
-                x=alt.X("組合家族:N", sort=None, title=None),
-                xOffset="數據系列:N",
-                y=alt.Y("期數:Q", title="出現期數"),
-                color=alt.Color("數據系列:N", title="數據系列"),
+                x=alt.X(f"{field['family']}:N", sort=None, title=None),
+                xOffset=f"{field['series']}:N",
+                y=alt.Y(f"{field['draws']}:Q", title=field["draws"]),
+                color=alt.Color(f"{field['series']}:N", title=field["series"]),
                 tooltip=[
-                    alt.Tooltip("組合家族:N"),
-                    alt.Tooltip("候選模式:N"),
-                    alt.Tooltip("數據系列:N"),
-                    alt.Tooltip("期數:Q", format=".2f"),
-                    alt.Tooltip("實際出現期數:Q", format=".2f"),
-                    alt.Tooltip("隨機期望期數:Q", format=".2f"),
-                    alt.Tooltip("頻率偏離:Q", format="+.2f"),
-                    alt.Tooltip("基準機率:Q", format=".4%"),
-                    alt.Tooltip("總頻率原始 p:Q", format=".4f"),
-                    alt.Tooltip("總頻率 Holm p:Q", format=".4f"),
-                    alt.Tooltip("總頻率 Holm 狀態:N"),
+                    alt.Tooltip(f"{field['family']}:N"),
+                    alt.Tooltip(f"{field['pattern']}:N"),
+                    alt.Tooltip(f"{field['series']}:N"),
+                    alt.Tooltip(f"{field['draws']}:Q", format=".2f"),
+                    alt.Tooltip(f"{field['observed_draws']}:Q", format=".2f"),
+                    alt.Tooltip(f"{field['expected_draws']}:Q", format=".2f"),
+                    alt.Tooltip(f"{field['frequency_deviation']}:Q", format="+.2f"),
+                    alt.Tooltip(f"{field['baseline_probability']}:Q", format=".4%"),
+                    alt.Tooltip(f"{field['frequency_raw_p']}:Q", format=".4f"),
+                    alt.Tooltip(f"{field['frequency_holm_p']}:Q", format=".4f"),
+                    alt.Tooltip(f"{field['frequency_holm_status']}:N"),
                 ],
             )
             .properties(height=280)
             .interactive()
         )
         st.altair_chart(frequency_chart, width="stretch")
-        st.caption("游標移到長條可查看候選模式、實際期數、隨機期望、偏離及 Holm 校正資訊。所有候選均屬研究篩查，不構成預測訊號。")
+        st.caption(copy["frequency_caption"])
 
-        st.markdown("#### 5／10 期窗口分數趨勢：懸浮查看實際與期望")
+        st.markdown(f"#### {copy['window_title']}")
+        window_sort = ["5 draws", "10 draws"] if language == "en" else ["5 期", "10 期"]
         window_trend_chart = (
             alt.Chart(research["window_tooltip_chart"])
             .mark_line(point=True)
             .encode(
-                x=alt.X("窗口:O", sort=["5 期", "10 期"], title="窗口長度"),
-                y=alt.Y("分數:Q", title="窗口聚集分數"),
-                color=alt.Color("數據系列:N", title="數據系列"),
-                detail=[alt.Detail("組合家族:N"), alt.Detail("數據系列:N")],
-                strokeDash=alt.StrokeDash("組合家族:N", title="組合家族"),
+                x=alt.X(f"{field['window']}:O", sort=window_sort, title=field["window"]),
+                y=alt.Y(f"{field['score']}:Q", title=field["score"]),
+                color=alt.Color(f"{field['series']}:N", title=field["series"]),
+                detail=[alt.Detail(f"{field['family']}:N"), alt.Detail(f"{field['series']}:N")],
+                strokeDash=alt.StrokeDash(f"{field['family']}:N", title=field["family"]),
                 tooltip=[
-                    alt.Tooltip("組合家族:N"),
-                    alt.Tooltip("候選模式:N"),
-                    alt.Tooltip("窗口:N"),
-                    alt.Tooltip("數據系列:N"),
-                    alt.Tooltip("分數:Q", format=".2f"),
-                    alt.Tooltip("實際窗口分數:Q", format=".2f"),
-                    alt.Tooltip("隨機期望分數:Q", format=".2f"),
-                    alt.Tooltip("窗口偏離:Q", format="+.2f"),
-                    alt.Tooltip("方向:N"),
-                    alt.Tooltip("窗口原始 p:Q", format=".4f"),
-                    alt.Tooltip("窗口 Holm p:Q", format=".4f"),
-                    alt.Tooltip("窗口 Holm 狀態:N"),
+                    alt.Tooltip(f"{field['family']}:N"),
+                    alt.Tooltip(f"{field['pattern']}:N"),
+                    alt.Tooltip(f"{field['window']}:N"),
+                    alt.Tooltip(f"{field['series']}:N"),
+                    alt.Tooltip(f"{field['score']}:Q", format=".2f"),
+                    alt.Tooltip(f"{field['observed_score']}:Q", format=".2f"),
+                    alt.Tooltip(f"{field['expected_score']}:Q", format=".2f"),
+                    alt.Tooltip(f"{field['window_deviation']}:Q", format="+.2f"),
+                    alt.Tooltip(f"{field['direction']}:N"),
+                    alt.Tooltip(f"{field['window_raw_p']}:Q", format=".4f"),
+                    alt.Tooltip(f"{field['window_holm_p']}:Q", format=".4f"),
+                    alt.Tooltip(f"{field['window_holm_status']}:N"),
                 ],
             )
             .properties(height=320)
             .interactive()
         )
         st.altair_chart(window_trend_chart, width="stretch")
-        st.caption("每條線代表所選家族在該窗口中最突出的候選；提示同時顯示實際聚集分數、條件式隨機期望、偏離與校正結果。")
+        st.caption(copy["window_caption"])
 
-        st.markdown("#### 時間留出驗證")
-        st.caption(f"先以前 {research['training_draws']:,} 期選出每個家族在 5 期與 10 期窗口最突出的候選，再以前述以外的 {research['holdout_draws']:,} 期獨立檢驗。跨五個家族的候選再作 Holm 校正。")
+        st.markdown(f"#### {copy['holdout_title']}")
+        st.caption(copy["holdout_caption"].format(training=research["training_draws"], holdout=research["holdout_draws"]))
         holdout_table, holdout_chart = st.columns([1.55, 1])
         with holdout_table:
             st.dataframe(research["holdout_table"], width="stretch", hide_index=True, height=380)
         with holdout_chart:
-            st.caption("**研究流程：探索期至留出期**")
+            st.caption(f"**{copy['flow_title']}**")
             st.bar_chart(research["holdout_flow_chart"], height=240)
-            st.caption("所有探索期候選均需在未參與選擇的後續期數重現；目前兩個窗口均沒有候選通過。")
+            st.caption(copy["flow_caption"])
 
-        with st.expander("研究方法與判讀限制"):
-            st.markdown("""
-            - **總頻率**：比較組合實際出現次數與均勻 49 選 6 的理論期望；原始 p 值會因大量同時檢驗而自然出現少數偏離，故必須配合 Holm 校正。
-            - **5／10 期窗口**：固定組合的實際出現總數，只檢查其在相鄰窗口中是否異常集中或分散，避免把「總出現較多」錯當成跨期週期。
-            - **留出驗證**：探索期選出的候選，必須在之後未參與篩選的新期數重現，才可成為未來盲測的研究候選。
-
-            六合彩攪珠應視為獨立隨機事件。本區只供統計教育與模型治理研究，不構成投注建議或中獎保證。
-            """)
+        with st.expander(copy["methods_title"]):
+            st.markdown(copy["methods_text"])
