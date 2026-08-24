@@ -22,6 +22,13 @@ class LongWindowResearchTests(unittest.TestCase):
         self.assertIn("5期 Holm 顯著數", state["family_table"].columns)
         self.assertIn("10期 Holm 顯著數", state["family_table"].columns)
         self.assertIn("通過留出驗證", state["holdout_table"].columns)
+        self.assertEqual(list(state["window_signal_chart"].index), ["5 期", "10 期"])
+        self.assertEqual(state["window_signal_chart"].loc["5 期", "全樣本 Holm 候選"], 2)
+        self.assertEqual(state["window_signal_chart"].loc["10 期", "全樣本 Holm 候選"], 1)
+        self.assertEqual(state["window_signal_chart"]["留出驗證通過"].sum(), 0)
+        self.assertEqual(state["holdout_flow_chart"]["探索期候選"].sum(), 10)
+        self.assertEqual(state["holdout_flow_chart"]["通過留出驗證"].sum(), 0)
+        self.assertIn("總頻率 Holm 顯著數", state["frequency_chart"].columns)
 
 
 if __name__ == "__main__":

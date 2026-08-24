@@ -97,13 +97,46 @@ def build_long_window_research_state(path: Path = DEFAULT_LONG_WINDOW_RESEARCH_P
         )
 
     date_range = method.get("date_range", ["—", "—"])
+    family_table = pd.DataFrame(family_rows)
+    holdout_table = pd.DataFrame(holdout_rows)
+    window_signal_chart = pd.DataFrame(
+        [
+            {
+                "窗口": f"{window} 期",
+                "全樣本 Holm 候選": initial_signals[window],
+                "留出驗證通過": int(
+                    (holdout_table["窗口"] == f"{window} 期").sum()
+                    and (holdout_table.loc[holdout_table["窗口"] == f"{window} 期", "通過留出驗證"] == "是").sum()
+                ) if not holdout_table.empty else 0,
+            }
+            for window in ("5", "10")
+        ]
+    ).set_index("窗口")
+    frequency_chart = family_table.set_index("組合家族")[
+        ["總頻率原始偏離數", "總頻率 Holm 顯著數"]
+    ]
+    holdout_flow_chart = pd.DataFrame(
+        [
+            {
+                "窗口": f"{window} 期",
+                "探索期候選": int((holdout_table["窗口"] == f"{window} 期").sum()) if not holdout_table.empty else 0,
+                "通過留出驗證": int(
+                    (holdout_table.loc[holdout_table["窗口"] == f"{window} 期", "通過留出驗證"] == "是").sum()
+                ) if not holdout_table.empty else 0,
+            }
+            for window in ("5", "10")
+        ]
+    ).set_index("窗口")
     return {
         "available": True,
         "draw_count": int(method.get("draw_count", 0)),
         "date_range": date_range,
         "source_text": "、".join(method.get("sources", [])),
-        "family_table": pd.DataFrame(family_rows),
-        "holdout_table": pd.DataFrame(holdout_rows),
+        "family_table": family_table,
+        "holdout_table": holdout_table,
+        "window_signal_chart": window_signal_chart,
+        "frequency_chart": frequency_chart,
+        "holdout_flow_chart": holdout_flow_chart,
         "total_tests": total_tests,
         "initial_signals": initial_signals,
         "passed_holdout": passed_holdout,

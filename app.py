@@ -355,11 +355,27 @@ with window_research_tab:
         st.info(f"資料範圍：{start_date} 至 {end_date}。全樣本的少數表面偏離，在按時間保留的後 {research['holdout_draws']:,} 期均未通過驗證；因此不列為模型訊號。")
 
         st.markdown("#### 家族摘要：總頻率與窗口偏離")
-        st.dataframe(research["family_table"], width="stretch", hide_index=True)
+        summary_table, summary_charts = st.columns([1.55, 1])
+        with summary_table:
+            st.dataframe(research["family_table"], width="stretch", hide_index=True, height=260)
+        with summary_charts:
+            st.caption("**5／10 期全樣本候選與留出驗證**")
+            st.bar_chart(research["window_signal_chart"])
+            st.caption("長條僅代表通過家族內 Holm 校正的探索候選數；留出驗證通過數才是可追蹤的研究結果。")
+
+            st.caption("**總頻率：原始偏離與 Holm 校正後**")
+            st.bar_chart(research["frequency_chart"])
+            st.caption("原始偏離在大量檢驗下屬常見現象；Holm 欄位用於判斷是否仍有可解釋的頻率失衡。")
 
         st.markdown("#### 時間留出驗證")
         st.caption(f"先以前 {research['training_draws']:,} 期選出每個家族在 5 期與 10 期窗口最突出的候選，再以前述以外的 {research['holdout_draws']:,} 期獨立檢驗。跨五個家族的候選再作 Holm 校正。")
-        st.dataframe(research["holdout_table"], width="stretch", hide_index=True)
+        holdout_table, holdout_chart = st.columns([1.55, 1])
+        with holdout_table:
+            st.dataframe(research["holdout_table"], width="stretch", hide_index=True, height=380)
+        with holdout_chart:
+            st.caption("**研究流程：探索期至留出期**")
+            st.bar_chart(research["holdout_flow_chart"])
+            st.caption("所有探索期候選均需在未參與選擇的後續期數重現；目前兩個窗口均沒有候選通過。")
 
         with st.expander("研究方法與判讀限制"):
             st.markdown("""
