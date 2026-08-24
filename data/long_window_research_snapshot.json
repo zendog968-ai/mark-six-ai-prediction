@@ -1,0 +1,4594 @@
+{
+  "method": {
+    "draw_count": 3421,
+    "date_range": [
+      "2002-01-03",
+      "2026-08-22"
+    ],
+    "sources": [
+      "data/lotto_history_extended_2002_2026.csv",
+      "data/lotto_history_real.csv"
+    ],
+    "frequency_test": "Two-sided normal approximation to the binomial total-frequency baseline, omitted where the expected total is below five.",
+    "window_test": "Conditional random-position test: event totals are held fixed and rolling-window pair co-occurrence is compared with its exact null expectation and variance. The reported two-sided p-value uses a normal approximation to that conditional statistic.",
+    "correction": "Holm correction is applied separately for each predefined family and each window length."
+  },
+  "families": {
+    "三區精確分布": {
+      "tests": 28,
+      "frequency_significant_unadjusted": [
+        {
+          "family": "三區精確分布",
+          "pattern": "低中高 = 0-5-1",
+          "baseline_probability": 0.007080184693505693,
+          "observed_draws": 36,
+          "expected_draws": 24.221311836482975,
+          "frequency_z_score": 2.4018230297930208,
+          "frequency_two_sided_p": 0.016313598466568824,
+          "windows": {
+            "5": {
+              "observed_score": 6.0,
+              "expected_score": 3.682056647025339,
+              "z_score": 0.7050729520618529,
+              "two_sided_p": 0.4807648379398498,
+              "profile_mean": 0.05267778753292362,
+              "profile_variance": 0.053430327354822525,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 16.0,
+              "expected_score": 16.561177864274836,
+              "z_score": -0.055451296340253614,
+              "two_sided_p": 0.9557789300993257,
+              "profile_mean": 0.10550996483001172,
+              "profile_variance": 0.10378669383207147,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 0.39152636319765177,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "三區精確分布",
+          "pattern": "低中高 = 3-3-0",
+          "baseline_probability": 0.02723147959040651,
+          "observed_draws": 117,
+          "expected_draws": 93.15889167878068,
+          "frequency_z_score": 2.504433649986115,
+          "frequency_two_sided_p": 0.012264760679826153,
+          "windows": {
+            "5": {
+              "observed_score": 38.0,
+              "expected_score": 39.661010169387225,
+              "z_score": -0.157714552279877,
+              "two_sided_p": 0.8746817329525209,
+              "profile_mean": 0.17120280948200176,
+              "profile_variance": 0.16418218865720993,
+              "profile_maximum": 3,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 168.0,
+              "expected_score": 178.38754442376037,
+              "z_score": -0.3203710660258905,
+              "two_sided_p": 0.7486870565574799,
+              "profile_mean": 0.3429073856975381,
+              "profile_variance": 0.3238928052576606,
+              "profile_maximum": 4,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 0.30661901699565386,
+          "frequency_significant_at_0_05": false
+        }
+      ],
+      "frequency_significant_holm": [],
+      "windows": {
+        "5": {
+          "significant": [],
+          "top_raw": [
+            {
+              "family": "三區精確分布",
+              "pattern": "低中高 = 3-0-3",
+              "baseline_probability": 0.022425924368570067,
+              "observed_draws": 71,
+              "expected_draws": 76.7190872648782,
+              "frequency_z_score": -0.6603895184762727,
+              "frequency_two_sided_p": 0.5090038967171113,
+              "windows": {
+                "5": {
+                  "observed_score": 29.0,
+                  "expected_score": 14.523667885488836,
+                  "z_score": 2.2402932082421265,
+                  "two_sided_p": 0.02507189388698303,
+                  "profile_mean": 0.10389230318993269,
+                  "profile_variance": 0.11010486896006264,
+                  "profile_maximum": 2,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 0.6518692410615587,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 114.0,
+                  "expected_score": 65.32464602019517,
+                  "z_score": 2.4469142373420474,
+                  "two_sided_p": 0.014408511958722243,
+                  "profile_mean": 0.20808909730363423,
+                  "profile_variance": 0.23167890381542647,
+                  "profile_maximum": 3,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 0.3746213109267783,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "三區精確分布",
+              "pattern": "低中高 = 1-4-1",
+              "baseline_probability": 0.04357036734465042,
+              "observed_draws": 141,
+              "expected_draws": 149.05422668604908,
+              "frequency_z_score": -0.6745671516363562,
+              "frequency_two_sided_p": 0.4999508085552939,
+              "windows": {
+                "5": {
+                  "observed_score": 37.0,
+                  "expected_score": 57.6855541367303,
+                  "z_score": -1.640502815177202,
+                  "two_sided_p": 0.10090066361300161,
+                  "profile_mean": 0.20632133450395082,
+                  "profile_variance": 0.18546354191297265,
+                  "profile_maximum": 2,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 217.0,
+                  "expected_score": 259.4584532069724,
+                  "z_score": -1.0937119976196639,
+                  "two_sided_p": 0.27408131066035796,
+                  "profile_mean": 0.41324736225087927,
+                  "profile_variance": 0.3697804805705835,
+                  "profile_maximum": 3,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "三區精確分布",
+              "pattern": "低中高 = 2-4-0",
+              "baseline_probability": 0.02042360969280488,
+              "observed_draws": 69,
+              "expected_draws": 69.8691687590855,
+              "frequency_z_score": -0.10506115357313849,
+              "frequency_two_sided_p": 0.9163272836186931,
+              "windows": {
+                "5": {
+                  "observed_score": 5.0,
+                  "expected_score": 13.711277609399119,
+                  "z_score": -1.3866552676841994,
+                  "two_sided_p": 0.16554690689538437,
+                  "profile_mean": 0.1006731050629207,
+                  "profile_variance": 0.09349193555572463,
+                  "profile_maximum": 2,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 51.0,
+                  "expected_score": 61.6706718564901,
+                  "z_score": -0.5517504313602348,
+                  "two_sided_p": 0.5811193525775467,
+                  "profile_mean": 0.19988276670574442,
+                  "profile_variance": 0.18987978689729762,
+                  "profile_maximum": 2,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "三區精確分布",
+              "pattern": "低中高 = 1-1-4",
+              "baseline_probability": 0.03540092346752846,
+              "observed_draws": 104,
+              "expected_draws": 121.10655918241487,
+              "frequency_z_score": -1.5827248116316421,
+              "frequency_two_sided_p": 0.11348420053678117,
+              "windows": {
+                "5": {
+                  "observed_score": 43.0,
+                  "expected_score": 31.303326034075738,
+                  "z_score": 1.2452178046518976,
+                  "two_sided_p": 0.2130516996197577,
+                  "profile_mean": 0.15218027509511267,
+                  "profile_variance": 0.1542348527372779,
+                  "profile_maximum": 3,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 160.0,
+                  "expected_score": 140.79629943024764,
+                  "z_score": 0.6640720000705542,
+                  "two_sided_p": 0.5066442299420983,
+                  "profile_mean": 0.3048065650644783,
+                  "profile_variance": 0.3057757761163713,
+                  "profile_maximum": 4,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "三區精確分布",
+              "pattern": "低中高 = 2-3-1",
+              "baseline_probability": 0.09336507288139374,
+              "observed_draws": 321,
+              "expected_draws": 319.401914327248,
+              "frequency_z_score": 0.0939106999922736,
+              "frequency_two_sided_p": 0.925180094039467,
+              "windows": {
+                "5": {
+                  "observed_score": 332.0,
+                  "expected_score": 300.17528474797047,
+                  "z_score": 1.1705742900159202,
+                  "two_sided_p": 0.241769936623614,
+                  "profile_mean": 0.4697102721685689,
+                  "profile_variance": 0.4435348399207983,
+                  "profile_maximum": 4,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 1444.0,
+                  "expected_score": 1350.130309697072,
+                  "z_score": 1.1212269106015615,
+                  "two_sided_p": 0.26219128768516503,
+                  "profile_mean": 0.9407971864009379,
+                  "profile_variance": 0.9023866993998797,
+                  "profile_maximum": 5,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            }
+          ]
+        },
+        "10": {
+          "significant": [],
+          "top_raw": [
+            {
+              "family": "三區精確分布",
+              "pattern": "低中高 = 3-0-3",
+              "baseline_probability": 0.022425924368570067,
+              "observed_draws": 71,
+              "expected_draws": 76.7190872648782,
+              "frequency_z_score": -0.6603895184762727,
+              "frequency_two_sided_p": 0.5090038967171113,
+              "windows": {
+                "5": {
+                  "observed_score": 29.0,
+                  "expected_score": 14.523667885488836,
+                  "z_score": 2.2402932082421265,
+                  "two_sided_p": 0.02507189388698303,
+                  "profile_mean": 0.10389230318993269,
+                  "profile_variance": 0.11010486896006264,
+                  "profile_maximum": 2,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 0.6518692410615587,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 114.0,
+                  "expected_score": 65.32464602019517,
+                  "z_score": 2.4469142373420474,
+                  "two_sided_p": 0.014408511958722243,
+                  "profile_mean": 0.20808909730363423,
+                  "profile_variance": 0.23167890381542647,
+                  "profile_maximum": 3,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 0.3746213109267783,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "三區精確分布",
+              "pattern": "低中高 = 5-0-1",
+              "baseline_probability": 0.004997777430709901,
+              "observed_draws": 14,
+              "expected_draws": 17.097396590458573,
+              "frequency_z_score": -0.7509651750697817,
+              "frequency_two_sided_p": 0.4526736145053427,
+              "windows": {
+                "5": {
+                  "observed_score": 2.0,
+                  "expected_score": 0.531852626792549,
+                  "z_score": 1.1674562821214067,
+                  "two_sided_p": 0.24302615350433682,
+                  "profile_mean": 0.02048580626280363,
+                  "profile_variance": 0.021242972354099457,
+                  "profile_maximum": 2,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 7.0,
+                  "expected_score": 2.39217013595081,
+                  "z_score": 1.1903032621693928,
+                  "two_sided_p": 0.23392721908739428,
+                  "profile_mean": 0.041031652989449004,
+                  "profile_variance": 0.04346396029946559,
+                  "profile_maximum": 2,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "三區精確分布",
+              "pattern": "低中高 = 2-3-1",
+              "baseline_probability": 0.09336507288139374,
+              "observed_draws": 321,
+              "expected_draws": 319.401914327248,
+              "frequency_z_score": 0.0939106999922736,
+              "frequency_two_sided_p": 0.925180094039467,
+              "windows": {
+                "5": {
+                  "observed_score": 332.0,
+                  "expected_score": 300.17528474797047,
+                  "z_score": 1.1705742900159202,
+                  "two_sided_p": 0.241769936623614,
+                  "profile_mean": 0.4697102721685689,
+                  "profile_variance": 0.4435348399207983,
+                  "profile_maximum": 4,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 1444.0,
+                  "expected_score": 1350.130309697072,
+                  "z_score": 1.1212269106015615,
+                  "two_sided_p": 0.26219128768516503,
+                  "profile_mean": 0.9407971864009379,
+                  "profile_variance": 0.9023866993998797,
+                  "profile_maximum": 5,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "三區精確分布",
+              "pattern": "低中高 = 1-4-1",
+              "baseline_probability": 0.04357036734465042,
+              "observed_draws": 141,
+              "expected_draws": 149.05422668604908,
+              "frequency_z_score": -0.6745671516363562,
+              "frequency_two_sided_p": 0.4999508085552939,
+              "windows": {
+                "5": {
+                  "observed_score": 37.0,
+                  "expected_score": 57.6855541367303,
+                  "z_score": -1.640502815177202,
+                  "two_sided_p": 0.10090066361300161,
+                  "profile_mean": 0.20632133450395082,
+                  "profile_variance": 0.18546354191297265,
+                  "profile_maximum": 2,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 217.0,
+                  "expected_score": 259.4584532069724,
+                  "z_score": -1.0937119976196639,
+                  "two_sided_p": 0.27408131066035796,
+                  "profile_mean": 0.41324736225087927,
+                  "profile_variance": 0.3697804805705835,
+                  "profile_maximum": 3,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "三區精確分布",
+              "pattern": "低中高 = 1-5-0",
+              "baseline_probability": 0.007080184693505693,
+              "observed_draws": 24,
+              "expected_draws": 24.221311836482975,
+              "frequency_z_score": -0.04512827390040015,
+              "frequency_two_sided_p": 0.9640050650610801,
+              "windows": {
+                "5": {
+                  "observed_score": 4.0,
+                  "expected_score": 1.6130914834587198,
+                  "z_score": 1.0930696865173835,
+                  "two_sided_p": 0.2743632042486562,
+                  "profile_mean": 0.03511852502194908,
+                  "profile_variance": 0.036237054156137614,
+                  "profile_maximum": 2,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 14.0,
+                  "expected_score": 7.25537315958707,
+                  "z_score": 1.0033571768628733,
+                  "two_sided_p": 0.315688557986175,
+                  "profile_mean": 0.07033997655334115,
+                  "profile_variance": 0.07362017168783293,
+                  "profile_maximum": 2,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            }
+          ]
+        }
+      }
+    },
+    "同尾數至少兩個": {
+      "tests": 10,
+      "frequency_significant_unadjusted": [
+        {
+          "family": "同尾數至少兩個",
+          "pattern": "尾數 0（至少兩個）",
+          "baseline_probability": 0.06805867582925862,
+          "observed_draws": 264,
+          "expected_draws": 232.82873001189373,
+          "frequency_z_score": 2.1161279689524903,
+          "frequency_two_sided_p": 0.03433392532249054,
+          "windows": {
+            "5": {
+              "observed_score": 194.0,
+              "expected_score": 202.89885485417724,
+              "z_score": -0.390943868745286,
+              "two_sided_p": 0.6958387266658317,
+              "profile_mean": 0.38571846649107405,
+              "profile_variance": 0.35059223102013004,
+              "profile_maximum": 4,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 874.0,
+              "expected_score": 912.599763073278,
+              "z_score": -0.5507188554737916,
+              "two_sided_p": 0.5818264169410652,
+              "profile_mean": 0.7716881594372802,
+              "profile_variance": 0.688696885429974,
+              "profile_maximum": 5,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 0.34333925322490544,
+          "frequency_significant_at_0_05": false
+        }
+      ],
+      "frequency_significant_holm": [],
+      "windows": {
+        "5": {
+          "significant": [],
+          "top_raw": [
+            {
+              "family": "同尾數至少兩個",
+              "pattern": "尾數 5（至少兩個）",
+              "baseline_probability": 0.10688956433637285,
+              "observed_draws": 347,
+              "expected_draws": 365.66919959473154,
+              "frequency_z_score": -1.0330680406480135,
+              "frequency_two_sided_p": 0.30157205830993755,
+              "windows": {
+                "5": {
+                  "observed_score": 403.0,
+                  "expected_score": 350.8532421866319,
+                  "z_score": 1.7891186376054045,
+                  "two_sided_p": 0.07359571121492059,
+                  "profile_mean": 0.5077553409423471,
+                  "profile_variance": 0.48596149984339226,
+                  "profile_maximum": 4,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 0.7359571121492059,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 1697.0,
+                  "expected_score": 1578.0699497940993,
+                  "z_score": 1.325019957083224,
+                  "two_sided_p": 0.18516453216298107,
+                  "profile_mean": 1.0169988276670574,
+                  "profile_variance": 0.9777232682484054,
+                  "profile_maximum": 5,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "同尾數至少兩個",
+              "pattern": "尾數 8（至少兩個）",
+              "baseline_probability": 0.10688956433637285,
+              "observed_draws": 356,
+              "expected_draws": 365.66919959473154,
+              "frequency_z_score": -0.5350492413602329,
+              "frequency_two_sided_p": 0.5926158077318371,
+              "windows": {
+                "5": {
+                  "observed_score": 322.0,
+                  "expected_score": 369.3161262310019,
+                  "z_score": -1.5869242383503028,
+                  "two_sided_p": 0.11252980454598288,
+                  "profile_mean": 0.5209247878255779,
+                  "profile_variance": 0.43815980025482176,
+                  "profile_maximum": 3,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 1514.0,
+                  "expected_score": 1661.1124273706776,
+                  "z_score": -1.6021759997319924,
+                  "two_sided_p": 0.1091166957233955,
+                  "profile_mean": 1.041324736225088,
+                  "profile_variance": 0.844671126412273,
+                  "profile_maximum": 4,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "同尾數至少兩個",
+              "pattern": "尾數 3（至少兩個）",
+              "baseline_probability": 0.10688956433637285,
+              "observed_draws": 369,
+              "expected_draws": 365.66919959473154,
+              "frequency_z_score": 0.18431124649989478,
+              "frequency_two_sided_p": 0.8537692916378908,
+              "windows": {
+                "5": {
+                  "observed_score": 352.0,
+                  "expected_score": 396.8205049308451,
+                  "z_score": -1.4563613777407365,
+                  "two_sided_p": 0.14529274641429069,
+                  "profile_mean": 0.5387767047117354,
+                  "profile_variance": 0.4546581049841028,
+                  "profile_maximum": 3,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 1671.0,
+                  "expected_score": 1784.8217972584196,
+                  "z_score": -1.2009480390059781,
+                  "two_sided_p": 0.22977135794621714,
+                  "profile_mean": 1.078546307151231,
+                  "profile_variance": 0.8950306624695015,
+                  "profile_maximum": 5,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "同尾數至少兩個",
+              "pattern": "尾數 9（至少兩個）",
+              "baseline_probability": 0.10688956433637285,
+              "observed_draws": 373,
+              "expected_draws": 365.66919959473154,
+              "frequency_z_score": 0.40565293507224176,
+              "frequency_two_sided_p": 0.684997628314829,
+              "windows": {
+                "5": {
+                  "observed_score": 440.0,
+                  "expected_score": 405.4821048528952,
+                  "z_score": 1.1110066819705888,
+                  "two_sided_p": 0.26656547314005075,
+                  "profile_mean": 0.5452151009657594,
+                  "profile_variance": 0.5056394223948448,
+                  "profile_maximum": 4,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 1918.0,
+                  "expected_score": 1823.7799966153325,
+                  "z_score": 0.984735370912789,
+                  "two_sided_p": 0.32475407371885456,
+                  "profile_mean": 1.0905627198124268,
+                  "profile_variance": 1.0258036117203049,
+                  "profile_maximum": 5,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "同尾數至少兩個",
+              "pattern": "尾數 6（至少兩個）",
+              "baseline_probability": 0.10688956433637285,
+              "observed_draws": 384,
+              "expected_draws": 365.66919959473154,
+              "frequency_z_score": 1.014342578646196,
+              "frequency_two_sided_p": 0.31041931356011415,
+              "windows": {
+                "5": {
+                  "observed_score": 409.0,
+                  "expected_score": 429.7836787232624,
+                  "z_score": -0.6521140982722428,
+                  "two_sided_p": 0.5143275698558143,
+                  "profile_mean": 0.5618964003511853,
+                  "profile_variance": 0.4857022574138538,
+                  "profile_maximum": 3,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 1877.0,
+                  "expected_score": 1933.0837705195465,
+                  "z_score": -0.5713944727594427,
+                  "two_sided_p": 0.5677322749497765,
+                  "profile_mean": 1.122801875732708,
+                  "profile_variance": 0.9602890689146864,
+                  "profile_maximum": 5,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            }
+          ]
+        },
+        "10": {
+          "significant": [],
+          "top_raw": [
+            {
+              "family": "同尾數至少兩個",
+              "pattern": "尾數 8（至少兩個）",
+              "baseline_probability": 0.10688956433637285,
+              "observed_draws": 356,
+              "expected_draws": 365.66919959473154,
+              "frequency_z_score": -0.5350492413602329,
+              "frequency_two_sided_p": 0.5926158077318371,
+              "windows": {
+                "5": {
+                  "observed_score": 322.0,
+                  "expected_score": 369.3161262310019,
+                  "z_score": -1.5869242383503028,
+                  "two_sided_p": 0.11252980454598288,
+                  "profile_mean": 0.5209247878255779,
+                  "profile_variance": 0.43815980025482176,
+                  "profile_maximum": 3,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 1514.0,
+                  "expected_score": 1661.1124273706776,
+                  "z_score": -1.6021759997319924,
+                  "two_sided_p": 0.1091166957233955,
+                  "profile_mean": 1.041324736225088,
+                  "profile_variance": 0.844671126412273,
+                  "profile_maximum": 4,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "同尾數至少兩個",
+              "pattern": "尾數 5（至少兩個）",
+              "baseline_probability": 0.10688956433637285,
+              "observed_draws": 347,
+              "expected_draws": 365.66919959473154,
+              "frequency_z_score": -1.0330680406480135,
+              "frequency_two_sided_p": 0.30157205830993755,
+              "windows": {
+                "5": {
+                  "observed_score": 403.0,
+                  "expected_score": 350.8532421866319,
+                  "z_score": 1.7891186376054045,
+                  "two_sided_p": 0.07359571121492059,
+                  "profile_mean": 0.5077553409423471,
+                  "profile_variance": 0.48596149984339226,
+                  "profile_maximum": 4,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 0.7359571121492059,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 1697.0,
+                  "expected_score": 1578.0699497940993,
+                  "z_score": 1.325019957083224,
+                  "two_sided_p": 0.18516453216298107,
+                  "profile_mean": 1.0169988276670574,
+                  "profile_variance": 0.9777232682484054,
+                  "profile_maximum": 5,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "同尾數至少兩個",
+              "pattern": "尾數 3（至少兩個）",
+              "baseline_probability": 0.10688956433637285,
+              "observed_draws": 369,
+              "expected_draws": 365.66919959473154,
+              "frequency_z_score": 0.18431124649989478,
+              "frequency_two_sided_p": 0.8537692916378908,
+              "windows": {
+                "5": {
+                  "observed_score": 352.0,
+                  "expected_score": 396.8205049308451,
+                  "z_score": -1.4563613777407365,
+                  "two_sided_p": 0.14529274641429069,
+                  "profile_mean": 0.5387767047117354,
+                  "profile_variance": 0.4546581049841028,
+                  "profile_maximum": 3,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 1671.0,
+                  "expected_score": 1784.8217972584196,
+                  "z_score": -1.2009480390059781,
+                  "two_sided_p": 0.22977135794621714,
+                  "profile_mean": 1.078546307151231,
+                  "profile_variance": 0.8950306624695015,
+                  "profile_maximum": 5,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "同尾數至少兩個",
+              "pattern": "尾數 9（至少兩個）",
+              "baseline_probability": 0.10688956433637285,
+              "observed_draws": 373,
+              "expected_draws": 365.66919959473154,
+              "frequency_z_score": 0.40565293507224176,
+              "frequency_two_sided_p": 0.684997628314829,
+              "windows": {
+                "5": {
+                  "observed_score": 440.0,
+                  "expected_score": 405.4821048528952,
+                  "z_score": 1.1110066819705888,
+                  "two_sided_p": 0.26656547314005075,
+                  "profile_mean": 0.5452151009657594,
+                  "profile_variance": 0.5056394223948448,
+                  "profile_maximum": 4,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 1918.0,
+                  "expected_score": 1823.7799966153325,
+                  "z_score": 0.984735370912789,
+                  "two_sided_p": 0.32475407371885456,
+                  "profile_mean": 1.0905627198124268,
+                  "profile_variance": 1.0258036117203049,
+                  "profile_maximum": 5,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "同尾數至少兩個",
+              "pattern": "尾數 4（至少兩個）",
+              "baseline_probability": 0.10688956433637285,
+              "observed_draws": 354,
+              "expected_draws": 365.66919959473154,
+              "frequency_z_score": -0.6457200856464064,
+              "frequency_two_sided_p": 0.5184606502634017,
+              "windows": {
+                "5": {
+                  "observed_score": 356.0,
+                  "expected_score": 365.17235136950825,
+                  "z_score": -0.3091683250512125,
+                  "two_sided_p": 0.7571934872870949,
+                  "profile_mean": 0.517998244073749,
+                  "profile_variance": 0.4581800667416464,
+                  "profile_maximum": 4,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 1732.0,
+                  "expected_score": 1642.4745303773905,
+                  "z_score": 0.979886809184246,
+                  "two_sided_p": 0.32714199488944584,
+                  "profile_mean": 1.0363423212192262,
+                  "profile_variance": 0.977863838220116,
+                  "profile_maximum": 5,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            }
+          ]
+        }
+      }
+    },
+    "奇偶精確分布": {
+      "tests": 7,
+      "frequency_significant_unadjusted": [],
+      "frequency_significant_holm": [],
+      "windows": {
+        "5": {
+          "significant": [],
+          "top_raw": [
+            {
+              "family": "奇偶精確分布",
+              "pattern": "3 奇 3 偶",
+              "baseline_probability": 0.33289911709364595,
+              "observed_draws": 1152,
+              "expected_draws": 1138.8478795773628,
+              "frequency_z_score": 0.4771634392594393,
+              "frequency_two_sided_p": 0.6332457432811717,
+              "windows": {
+                "5": {
+                  "observed_score": 3712.0,
+                  "expected_score": 3874.7860120924934,
+                  "z_score": -2.275717453346969,
+                  "two_sided_p": 0.02286292605332753,
+                  "profile_mean": 1.6833479660520925,
+                  "profile_variance": 1.0197255559919098,
+                  "profile_maximum": 5,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 0.16004048237329271,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 16783.0,
+                  "expected_score": 17428.03723134202,
+                  "z_score": -2.9240542930294584,
+                  "two_sided_p": 0.0034550447839190334,
+                  "profile_mean": 3.3672332942555685,
+                  "profile_variance": 1.8478031903540817,
+                  "profile_maximum": 8,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 0.024185313487433233,
+                  "significant_at_0_05": true
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "奇偶精確分布",
+              "pattern": "6 奇 0 偶",
+              "baseline_probability": 0.012664640324214792,
+              "observed_draws": 32,
+              "expected_draws": 43.3257345491388,
+              "frequency_z_score": -1.731653782336206,
+              "frequency_two_sided_p": 0.08333522421038998,
+              "windows": {
+                "5": {
+                  "observed_score": 8.0,
+                  "expected_score": 2.8988890427374097,
+                  "z_score": 1.7466794425824397,
+                  "two_sided_p": 0.08069295826077198,
+                  "profile_mean": 0.046824700029265434,
+                  "profile_variance": 0.049329053862797866,
+                  "profile_maximum": 2,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 0.48415774956463187,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 30.0,
+                  "expected_score": 13.038641620127489,
+                  "z_score": 1.8866480163222807,
+                  "two_sided_p": 0.05920768390072677,
+                  "profile_mean": 0.09378663540445487,
+                  "profile_variance": 0.10260576859295645,
+                  "profile_maximum": 2,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 0.3552461034043606,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 0.5833465694727299,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "奇偶精確分布",
+              "pattern": "4 奇 2 偶",
+              "baseline_probability": 0.2496743378202345,
+              "observed_draws": 823,
+              "expected_draws": 854.1359096830222,
+              "frequency_z_score": -1.229909534540586,
+              "frequency_two_sided_p": 0.2187309834124259,
+              "windows": {
+                "5": {
+                  "observed_score": 2053.0,
+                  "expected_score": 1976.9312809940666,
+                  "z_score": 1.3005785109893975,
+                  "two_sided_p": 0.1934027664947231,
+                  "profile_mean": 1.2016388645010243,
+                  "profile_variance": 0.9578661657959,
+                  "profile_maximum": 5,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 0.9670138324736155,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 9061.0,
+                  "expected_score": 8891.854120832628,
+                  "z_score": 0.9384054712339289,
+                  "two_sided_p": 0.3480360753087681,
+                  "profile_mean": 2.4032825322391558,
+                  "profile_variance": 1.9305433115329587,
+                  "profile_maximum": 7,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "奇偶精確分布",
+              "pattern": "1 奇 5 偶",
+              "baseline_probability": 0.07598784194528875,
+              "observed_draws": 271,
+              "expected_draws": 259.95440729483283,
+              "frequency_z_score": 0.7126915173556871,
+              "frequency_two_sided_p": 0.47603666667397326,
+              "windows": {
+                "5": {
+                  "observed_score": 233.0,
+                  "expected_score": 213.82228957368574,
+                  "z_score": 0.8225324544064903,
+                  "two_sided_p": 0.4107739234964961,
+                  "profile_mean": 0.39596136962247586,
+                  "profile_variance": 0.37566284159859187,
+                  "profile_maximum": 4,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 1041.0,
+                  "expected_score": 961.73125740396,
+                  "z_score": 1.1041281687455686,
+                  "two_sided_p": 0.269537543559891,
+                  "profile_mean": 0.7922039859320047,
+                  "profile_variance": 0.7750432793977693,
+                  "profile_maximum": 5,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "奇偶精確分布",
+              "pattern": "0 奇 6 偶",
+              "baseline_probability": 0.009625126646403243,
+              "observed_draws": 33,
+              "expected_draws": 32.927558257345495,
+              "frequency_z_score": 0.012685550514421004,
+              "frequency_two_sided_p": 0.9898786665595338,
+              "windows": {
+                "5": {
+                  "observed_score": 1.0,
+                  "expected_score": 3.085914142268855,
+                  "z_score": -0.6924632761627261,
+                  "two_sided_p": 0.48864644059802564,
+                  "profile_mean": 0.048287971905179985,
+                  "profile_variance": 0.046555177001067136,
+                  "profile_maximum": 2,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 6.0,
+                  "expected_score": 13.879844305297004,
+                  "z_score": -0.8497658989279568,
+                  "two_sided_p": 0.3954552523140834,
+                  "profile_mean": 0.09671746776084408,
+                  "profile_variance": 0.0909068412896281,
+                  "profile_maximum": 2,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            }
+          ]
+        },
+        "10": {
+          "significant": [
+            {
+              "family": "奇偶精確分布",
+              "pattern": "3 奇 3 偶",
+              "baseline_probability": 0.33289911709364595,
+              "observed_draws": 1152,
+              "expected_draws": 1138.8478795773628,
+              "frequency_z_score": 0.4771634392594393,
+              "frequency_two_sided_p": 0.6332457432811717,
+              "windows": {
+                "5": {
+                  "observed_score": 3712.0,
+                  "expected_score": 3874.7860120924934,
+                  "z_score": -2.275717453346969,
+                  "two_sided_p": 0.02286292605332753,
+                  "profile_mean": 1.6833479660520925,
+                  "profile_variance": 1.0197255559919098,
+                  "profile_maximum": 5,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 0.16004048237329271,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 16783.0,
+                  "expected_score": 17428.03723134202,
+                  "z_score": -2.9240542930294584,
+                  "two_sided_p": 0.0034550447839190334,
+                  "profile_mean": 3.3672332942555685,
+                  "profile_variance": 1.8478031903540817,
+                  "profile_maximum": 8,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 0.024185313487433233,
+                  "significant_at_0_05": true
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            }
+          ],
+          "top_raw": [
+            {
+              "family": "奇偶精確分布",
+              "pattern": "3 奇 3 偶",
+              "baseline_probability": 0.33289911709364595,
+              "observed_draws": 1152,
+              "expected_draws": 1138.8478795773628,
+              "frequency_z_score": 0.4771634392594393,
+              "frequency_two_sided_p": 0.6332457432811717,
+              "windows": {
+                "5": {
+                  "observed_score": 3712.0,
+                  "expected_score": 3874.7860120924934,
+                  "z_score": -2.275717453346969,
+                  "two_sided_p": 0.02286292605332753,
+                  "profile_mean": 1.6833479660520925,
+                  "profile_variance": 1.0197255559919098,
+                  "profile_maximum": 5,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 0.16004048237329271,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 16783.0,
+                  "expected_score": 17428.03723134202,
+                  "z_score": -2.9240542930294584,
+                  "two_sided_p": 0.0034550447839190334,
+                  "profile_mean": 3.3672332942555685,
+                  "profile_variance": 1.8478031903540817,
+                  "profile_maximum": 8,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 0.024185313487433233,
+                  "significant_at_0_05": true
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "奇偶精確分布",
+              "pattern": "6 奇 0 偶",
+              "baseline_probability": 0.012664640324214792,
+              "observed_draws": 32,
+              "expected_draws": 43.3257345491388,
+              "frequency_z_score": -1.731653782336206,
+              "frequency_two_sided_p": 0.08333522421038998,
+              "windows": {
+                "5": {
+                  "observed_score": 8.0,
+                  "expected_score": 2.8988890427374097,
+                  "z_score": 1.7466794425824397,
+                  "two_sided_p": 0.08069295826077198,
+                  "profile_mean": 0.046824700029265434,
+                  "profile_variance": 0.049329053862797866,
+                  "profile_maximum": 2,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 0.48415774956463187,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 30.0,
+                  "expected_score": 13.038641620127489,
+                  "z_score": 1.8866480163222807,
+                  "two_sided_p": 0.05920768390072677,
+                  "profile_mean": 0.09378663540445487,
+                  "profile_variance": 0.10260576859295645,
+                  "profile_maximum": 2,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 0.3552461034043606,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 0.5833465694727299,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "奇偶精確分布",
+              "pattern": "1 奇 5 偶",
+              "baseline_probability": 0.07598784194528875,
+              "observed_draws": 271,
+              "expected_draws": 259.95440729483283,
+              "frequency_z_score": 0.7126915173556871,
+              "frequency_two_sided_p": 0.47603666667397326,
+              "windows": {
+                "5": {
+                  "observed_score": 233.0,
+                  "expected_score": 213.82228957368574,
+                  "z_score": 0.8225324544064903,
+                  "two_sided_p": 0.4107739234964961,
+                  "profile_mean": 0.39596136962247586,
+                  "profile_variance": 0.37566284159859187,
+                  "profile_maximum": 4,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 1041.0,
+                  "expected_score": 961.73125740396,
+                  "z_score": 1.1041281687455686,
+                  "two_sided_p": 0.269537543559891,
+                  "profile_mean": 0.7922039859320047,
+                  "profile_variance": 0.7750432793977693,
+                  "profile_maximum": 5,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "奇偶精確分布",
+              "pattern": "4 奇 2 偶",
+              "baseline_probability": 0.2496743378202345,
+              "observed_draws": 823,
+              "expected_draws": 854.1359096830222,
+              "frequency_z_score": -1.229909534540586,
+              "frequency_two_sided_p": 0.2187309834124259,
+              "windows": {
+                "5": {
+                  "observed_score": 2053.0,
+                  "expected_score": 1976.9312809940666,
+                  "z_score": 1.3005785109893975,
+                  "two_sided_p": 0.1934027664947231,
+                  "profile_mean": 1.2016388645010243,
+                  "profile_variance": 0.9578661657959,
+                  "profile_maximum": 5,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 0.9670138324736155,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 9061.0,
+                  "expected_score": 8891.854120832628,
+                  "z_score": 0.9384054712339289,
+                  "two_sided_p": 0.3480360753087681,
+                  "profile_mean": 2.4032825322391558,
+                  "profile_variance": 1.9305433115329587,
+                  "profile_maximum": 7,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "奇偶精確分布",
+              "pattern": "0 奇 6 偶",
+              "baseline_probability": 0.009625126646403243,
+              "observed_draws": 33,
+              "expected_draws": 32.927558257345495,
+              "frequency_z_score": 0.012685550514421004,
+              "frequency_two_sided_p": 0.9898786665595338,
+              "windows": {
+                "5": {
+                  "observed_score": 1.0,
+                  "expected_score": 3.085914142268855,
+                  "z_score": -0.6924632761627261,
+                  "two_sided_p": 0.48864644059802564,
+                  "profile_mean": 0.048287971905179985,
+                  "profile_variance": 0.046555177001067136,
+                  "profile_maximum": 2,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 6.0,
+                  "expected_score": 13.879844305297004,
+                  "z_score": -0.8497658989279568,
+                  "two_sided_p": 0.3954552523140834,
+                  "profile_mean": 0.09671746776084408,
+                  "profile_variance": 0.0909068412896281,
+                  "profile_maximum": 2,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            }
+          ]
+        }
+      }
+    },
+    "所有指定號碼對": {
+      "tests": 1176,
+      "frequency_significant_unadjusted": [
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 01-04",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 63,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 2.9504072710215934,
+          "frequency_two_sided_p": 0.00317355291296741,
+          "windows": {
+            "5": {
+              "observed_score": 7.0,
+              "expected_score": 11.414375605778549,
+              "z_score": -0.7687641929877509,
+              "two_sided_p": 0.4420333091484212,
+              "profile_mean": 0.09218612818261633,
+              "profile_variance": 0.08781070539299646,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 45.0,
+              "expected_score": 51.33965137925198,
+              "z_score": -0.358638060194965,
+              "two_sided_p": 0.7198658704451695,
+              "profile_mean": 0.1846424384525205,
+              "profile_variance": 0.17697896915124955,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 01-26",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 30,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": -2.077450515559269,
+          "frequency_two_sided_p": 0.03775999794319884,
+          "windows": {
+            "5": {
+              "observed_score": 4.0,
+              "expected_score": 2.5423724467555915,
+              "z_score": 0.5326418997421213,
+              "two_sided_p": 0.5942814919881462,
+              "profile_mean": 0.043898156277436345,
+              "profile_variance": 0.04432531515175192,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 26.0,
+              "expected_score": 11.4350990015231,
+              "z_score": 1.7289365144721132,
+              "two_sided_p": 0.0838204579941811,
+              "profile_mean": 0.08792497069167643,
+              "profile_variance": 0.09546247692538758,
+              "profile_maximum": 3,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 01-34",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 57,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 2.0362513098250727,
+          "frequency_two_sided_p": 0.041725126340207336,
+          "windows": {
+            "5": {
+              "observed_score": 13.0,
+              "expected_score": 9.327876839130857,
+              "z_score": 0.706157364989748,
+              "two_sided_p": 0.4800902808677265,
+              "profile_mean": 0.08340649692712906,
+              "profile_variance": 0.08408347434887828,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 56.0,
+              "expected_score": 41.95498392282958,
+              "z_score": 0.877357298954742,
+              "two_sided_p": 0.3802925988551526,
+              "profile_mean": 0.16705744431418523,
+              "profile_variance": 0.17202499464699922,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 02-16",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 63,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 2.9504072710215934,
+          "frequency_two_sided_p": 0.00317355291296741,
+          "windows": {
+            "5": {
+              "observed_score": 5.0,
+              "expected_score": 11.414375605778549,
+              "z_score": -1.1170645016345346,
+              "two_sided_p": 0.263966747178922,
+              "profile_mean": 0.09218612818261633,
+              "profile_variance": 0.08663974520564283,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 34.0,
+              "expected_score": 51.33965137925198,
+              "z_score": -0.9809149688362868,
+              "two_sided_p": 0.32663467516169464,
+              "profile_mean": 0.1846424384525205,
+              "profile_variance": 0.1705292476619502,
+              "profile_maximum": 3,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 02-26",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 17,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": -4.058121764818397,
+          "frequency_two_sided_p": 4.946897430731847e-05,
+          "windows": {
+            "5": {
+              "observed_score": 0.0,
+              "expected_score": 0.7948566730086445,
+              "z_score": -0.5174794786439528,
+              "two_sided_p": 0.6048214906477641,
+              "profile_mean": 0.024875621890547265,
+              "profile_variance": 0.024263926270287912,
+              "profile_maximum": 1,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 0.0,
+              "expected_score": 3.5751114119704406,
+              "z_score": -0.7561060417878678,
+              "two_sided_p": 0.44958561984714795,
+              "profile_mean": 0.049824150058616644,
+              "profile_variance": 0.047355583257119666,
+              "profile_maximum": 1,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 0.058175513785406516,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 02-49",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 59,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 2.3409699635572463,
+          "frequency_two_sided_p": 0.0192337144170577,
+          "windows": {
+            "5": {
+              "observed_score": 6.0,
+              "expected_score": 9.999998290571993,
+              "z_score": -0.7433501633801196,
+              "two_sided_p": 0.4572697084949393,
+              "profile_mean": 0.08633304067895815,
+              "profile_variance": 0.0824156185596333,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 36.0,
+              "expected_score": 44.97805607265753,
+              "z_score": -0.5419821640257136,
+              "two_sided_p": 0.5878307929708777,
+              "profile_mean": 0.17291910902696367,
+              "profile_variance": 0.1641681986731432,
+              "profile_maximum": 3,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 03-12",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 30,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": -2.077450515559269,
+          "frequency_two_sided_p": 0.03775999794319884,
+          "windows": {
+            "5": {
+              "observed_score": 5.0,
+              "expected_score": 2.5423724467555915,
+              "z_score": 0.898058908055774,
+              "two_sided_p": 0.3691541447492477,
+              "profile_mean": 0.043898156277436345,
+              "profile_variance": 0.044910795245428736,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 17.0,
+              "expected_score": 11.4350990015231,
+              "z_score": 0.6605853714141394,
+              "two_sided_p": 0.5088782529227368,
+              "profile_mean": 0.08792497069167643,
+              "profile_variance": 0.09018543207050632,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 04-15",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 62,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 2.7980479441555066,
+          "frequency_two_sided_p": 0.005141248055883249,
+          "windows": {
+            "5": {
+              "observed_score": 6.0,
+              "expected_score": 11.052014475436374,
+              "z_score": -0.8938500387436509,
+              "two_sided_p": 0.37140213216092816,
+              "profile_mean": 0.09072285630670178,
+              "profile_variance": 0.08602924898856043,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 29.0,
+              "expected_score": 49.70982117673605,
+              "z_score": -1.1902660335024138,
+              "two_sided_p": 0.233941846523611,
+              "profile_mean": 0.1817116060961313,
+              "profile_variance": 0.1657399015597768,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 04-39",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 59,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 2.3409699635572463,
+          "frequency_two_sided_p": 0.0192337144170577,
+          "windows": {
+            "5": {
+              "observed_score": 16.0,
+              "expected_score": 9.999998290571993,
+              "z_score": 1.1150260392602616,
+              "two_sided_p": 0.26483926338792696,
+              "profile_mean": 0.08633304067895815,
+              "profile_variance": 0.08827041949640146,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 50.0,
+              "expected_score": 44.97805607265753,
+              "z_score": 0.3031618443157263,
+              "two_sided_p": 0.7617665253332607,
+              "profile_mean": 0.17291910902696367,
+              "profile_variance": 0.1723769351140696,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 05-47",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 29,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": -2.2298098424253556,
+          "frequency_two_sided_p": 0.025760069705032806,
+          "windows": {
+            "5": {
+              "observed_score": 0.0,
+              "expected_score": 2.3728809503052184,
+              "z_score": -0.8972602542837828,
+              "two_sided_p": 0.3695800597533794,
+              "profile_mean": 0.0424348844015218,
+              "profile_variance": 0.040646060234712914,
+              "profile_maximum": 1,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 2.0,
+              "expected_score": 10.672759068088226,
+              "z_score": -1.0653271190936449,
+              "two_sided_p": 0.28672792472508135,
+              "profile_mean": 0.08499413833528723,
+              "profile_variance": 0.07896561122332652,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 06-28",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 58,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 2.1886106366911595,
+          "frequency_two_sided_p": 0.028625152059053992,
+          "windows": {
+            "5": {
+              "observed_score": 10.0,
+              "expected_score": 9.661015297671245,
+              "z_score": 0.06407274389624029,
+              "two_sided_p": 0.9489123044593749,
+              "profile_mean": 0.0848697688030436,
+              "profile_variance": 0.08354442829248165,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 47.0,
+              "expected_score": 43.45337620578778,
+              "z_score": 0.21775988010367484,
+              "two_sided_p": 0.827616205428195,
+              "profile_mean": 0.16998827667057445,
+              "profile_variance": 0.16869152727383957,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 07-15",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 58,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 2.1886106366911595,
+          "frequency_two_sided_p": 0.028625152059053992,
+          "windows": {
+            "5": {
+              "observed_score": 3.0,
+              "expected_score": 9.661015297671245,
+              "z_score": -1.2590229716110264,
+              "two_sided_p": 0.20802203471576092,
+              "profile_mean": 0.08399180567749488,
+              "profile_variance": 0.07871614513189665,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 36.0,
+              "expected_score": 43.45337620578778,
+              "z_score": -0.45763137087970746,
+              "two_sided_p": 0.6472173014537527,
+              "profile_mean": 0.16764361078546308,
+              "profile_variance": 0.16068831856661248,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 07-29",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 61,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 2.64568861728942,
+          "frequency_two_sided_p": 0.008152482264236934,
+          "windows": {
+            "5": {
+              "observed_score": 2.0,
+              "expected_score": 10.695497879454557,
+              "z_score": -1.56345593228819,
+              "two_sided_p": 0.1179453931198906,
+              "profile_mean": 0.08925958443078724,
+              "profile_variance": 0.08248706872031905,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 21.0,
+              "expected_score": 48.10627855813166,
+              "z_score": -1.5831759358751454,
+              "two_sided_p": 0.11338136967670237,
+              "profile_mean": 0.17878077373974208,
+              "profile_variance": 0.15917435591285764,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 07-40",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 26,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": -2.686887823023616,
+          "frequency_two_sided_p": 0.00721211693313448,
+          "windows": {
+            "5": {
+              "observed_score": 3.0,
+              "expected_score": 1.8994736671162462,
+              "z_score": 0.4647087123854319,
+              "two_sided_p": 0.6421400683723524,
+              "profile_mean": 0.03687445127304653,
+              "profile_variance": 0.037281562979975445,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 9.0,
+              "expected_score": 8.543464771252891,
+              "z_score": 0.06262378254452637,
+              "two_sided_p": 0.9500660908524127,
+              "profile_mean": 0.07356389214536929,
+              "profile_variance": 0.07344927090926774,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 09-22",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 59,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 2.3409699635572463,
+          "frequency_two_sided_p": 0.0192337144170577,
+          "windows": {
+            "5": {
+              "observed_score": 4.0,
+              "expected_score": 9.999998290571993,
+              "z_score": -1.1150254039081957,
+              "two_sided_p": 0.2648395356450015,
+              "profile_mean": 0.08633304067895815,
+              "profile_variance": 0.08124465837227969,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 27.0,
+              "expected_score": 44.97805607265753,
+              "z_score": -1.085289026530925,
+              "two_sided_p": 0.2777936645394061,
+              "profile_mean": 0.17291910902696367,
+              "profile_variance": 0.1588911538182619,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 09-31",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 57,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 2.0362513098250727,
+          "frequency_two_sided_p": 0.041725126340207336,
+          "windows": {
+            "5": {
+              "observed_score": 13.0,
+              "expected_score": 9.327876839130857,
+              "z_score": 0.706157364989748,
+              "two_sided_p": 0.4800902808677265,
+              "profile_mean": 0.08340649692712906,
+              "profile_variance": 0.08408347434887828,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 58.0,
+              "expected_score": 41.95498392282958,
+              "z_score": 1.0022923355732973,
+              "two_sided_p": 0.3162024231711168,
+              "profile_mean": 0.1652989449003517,
+              "profile_variance": 0.17085059955326928,
+              "profile_maximum": 3,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 09-33",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 58,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 2.1886106366911595,
+          "frequency_two_sided_p": 0.028625152059053992,
+          "windows": {
+            "5": {
+              "observed_score": 7.0,
+              "expected_score": 9.661015297671245,
+              "z_score": -0.5029682770354454,
+              "two_sided_p": 0.6149865758673182,
+              "profile_mean": 0.0848697688030436,
+              "profile_variance": 0.0817879880114512,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 42.0,
+              "expected_score": 43.45337620578778,
+              "z_score": -0.08923614307058983,
+              "two_sided_p": 0.9288942419262955,
+              "profile_mean": 0.1694021101992966,
+              "profile_variance": 0.16537249495889958,
+              "profile_maximum": 3,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 10-20",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 57,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 2.0362513098250727,
+          "frequency_two_sided_p": 0.041725126340207336,
+          "windows": {
+            "5": {
+              "observed_score": 17.0,
+              "expected_score": 9.327876839130857,
+              "z_score": 1.475366167695167,
+              "two_sided_p": 0.14011412603398277,
+              "profile_mean": 0.08340649692712906,
+              "profile_variance": 0.08642539472358554,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 69.0,
+              "expected_score": 41.95498392282958,
+              "z_score": 1.6894350369753512,
+              "two_sided_p": 0.09113609135870382,
+              "profile_mean": 0.16705744431418523,
+              "profile_variance": 0.1796473927707166,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 10-28",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 59,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 2.3409699635572463,
+          "frequency_two_sided_p": 0.0192337144170577,
+          "windows": {
+            "5": {
+              "observed_score": 7.0,
+              "expected_score": 9.999998290571993,
+              "z_score": -0.5575125431160814,
+              "two_sided_p": 0.5771772915972915,
+              "profile_mean": 0.08574773192859234,
+              "profile_variance": 0.08251636842649955,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 38.0,
+              "expected_score": 44.97805607265753,
+              "z_score": -0.42124730569122226,
+              "two_sided_p": 0.6735745041417012,
+              "profile_mean": 0.1708675263774912,
+              "profile_variance": 0.16399420466781664,
+              "profile_maximum": 3,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 11-36",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 30,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": -2.077450515559269,
+          "frequency_two_sided_p": 0.03775999794319884,
+          "windows": {
+            "5": {
+              "observed_score": 1.0,
+              "expected_score": 2.5423724467555915,
+              "z_score": -0.5636091251988369,
+              "two_sided_p": 0.5730201751976204,
+              "profile_mean": 0.043898156277436345,
+              "profile_variance": 0.042568874870721474,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 18.0,
+              "expected_score": 11.4350990015231,
+              "z_score": 0.7792910539761365,
+              "two_sided_p": 0.43580828329594623,
+              "profile_mean": 0.08675263774912075,
+              "profile_variance": 0.08980393410327185,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 12-19",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 59,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 2.3409699635572463,
+          "frequency_two_sided_p": 0.0192337144170577,
+          "windows": {
+            "5": {
+              "observed_score": 4.0,
+              "expected_score": 9.999998290571993,
+              "z_score": -1.1150254039081957,
+              "two_sided_p": 0.2648395356450015,
+              "profile_mean": 0.08633304067895815,
+              "profile_variance": 0.08124465837227969,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 25.0,
+              "expected_score": 44.97805607265753,
+              "z_score": -1.2060238848654166,
+              "two_sided_p": 0.2278082810619323,
+              "profile_mean": 0.17291910902696367,
+              "profile_variance": 0.15771847718384385,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 14-33",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 28,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": -2.3821691692914424,
+          "frequency_two_sided_p": 0.017210988896616604,
+          "windows": {
+            "5": {
+              "observed_score": 0.0,
+              "expected_score": 2.2092339882152032,
+              "z_score": -0.8655127347769865,
+              "two_sided_p": 0.3867574293290468,
+              "profile_mean": 0.04097161252560726,
+              "profile_variance": 0.03930444210960627,
+              "profile_maximum": 1,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 0.0,
+              "expected_score": 9.936706718564901,
+              "z_score": -1.2646137705448728,
+              "two_sided_p": 0.20600981425991047,
+              "profile_mean": 0.08206330597889801,
+              "profile_variance": 0.07535100390674541,
+              "profile_maximum": 1,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 14-34",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 28,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": -2.3821691692914424,
+          "frequency_two_sided_p": 0.017210988896616604,
+          "windows": {
+            "5": {
+              "observed_score": 3.0,
+              "expected_score": 2.2092339882152032,
+              "z_score": 0.30979880677169835,
+              "two_sided_p": 0.756713959061857,
+              "profile_mean": 0.04097161252560726,
+              "profile_variance": 0.041060882390636724,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 8.0,
+              "expected_score": 9.936706718564901,
+              "z_score": -0.24647864279098586,
+              "two_sided_p": 0.8053117351425205,
+              "profile_mean": 0.08206330597889801,
+              "profile_variance": 0.08004171044441764,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 15-36",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 25,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": -2.8392471498897027,
+          "frequency_two_sided_p": 0.00452201173648714,
+          "windows": {
+            "5": {
+              "observed_score": 4.0,
+              "expected_score": 1.7533603081073044,
+              "z_score": 0.9871135609222783,
+              "two_sided_p": 0.32358697048221785,
+              "profile_mean": 0.036581796897863623,
+              "profile_variance": 0.03759580661234397,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 18.0,
+              "expected_score": 7.886275173464208,
+              "z_score": 1.4435436331167513,
+              "two_sided_p": 0.14886739033734667,
+              "profile_mean": 0.07327080890973037,
+              "profile_variance": 0.07847619401130679,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 15-45",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 60,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 2.493329290423333,
+          "frequency_two_sided_p": 0.01265514213613191,
+          "windows": {
+            "5": {
+              "observed_score": 9.0,
+              "expected_score": 10.344825817833096,
+              "z_score": -0.2457916210449092,
+              "two_sided_p": 0.8058435435683671,
+              "profile_mean": 0.08779631255487269,
+              "profile_variance": 0.08538088589974771,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 34.0,
+              "expected_score": 46.52902352343882,
+              "z_score": -0.7438525040394298,
+              "two_sided_p": 0.4569657121540897,
+              "profile_mean": 0.17584994138335286,
+              "profile_variance": 0.16490473033420944,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 17-21",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 28,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": -2.3821691692914424,
+          "frequency_two_sided_p": 0.017210988896616604,
+          "windows": {
+            "5": {
+              "observed_score": 2.0,
+              "expected_score": 2.2092339882152032,
+              "z_score": -0.08197170707786329,
+              "two_sided_p": 0.9346692122010422,
+              "profile_mean": 0.04009364940005853,
+              "profile_variance": 0.03966837530216393,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 11.0,
+              "expected_score": 9.936706718564901,
+              "z_score": 0.13532203011672178,
+              "two_sided_p": 0.8923572677679824,
+              "profile_mean": 0.07971864009378664,
+              "profile_variance": 0.07983480794326885,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 18-21",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 61,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 2.64568861728942,
+          "frequency_two_sided_p": 0.008152482264236934,
+          "windows": {
+            "5": {
+              "observed_score": 8.0,
+              "expected_score": 10.695497879454557,
+              "z_score": -0.4846521968639493,
+              "two_sided_p": 0.627923081057417,
+              "profile_mean": 0.0880889669300556,
+              "profile_variance": 0.08503665718795468,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 36.0,
+              "expected_score": 48.10627855813166,
+              "z_score": -0.7070822667571808,
+              "two_sided_p": 0.4795153554167481,
+              "profile_mean": 0.17614302461899178,
+              "profile_variance": 0.16626738264555432,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 18-22",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 57,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 2.0362513098250727,
+          "frequency_two_sided_p": 0.041725126340207336,
+          "windows": {
+            "5": {
+              "observed_score": 13.0,
+              "expected_score": 9.327876839130857,
+              "z_score": 0.706157364989748,
+              "two_sided_p": 0.4800902808677265,
+              "profile_mean": 0.08340649692712906,
+              "profile_variance": 0.08408347434887828,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 52.0,
+              "expected_score": 41.95498392282958,
+              "z_score": 0.6274872257176315,
+              "two_sided_p": 0.5303399071325203,
+              "profile_mean": 0.16705744431418523,
+              "profile_variance": 0.1696796413781631,
+              "profile_maximum": 3,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 18-24",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 57,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 2.0362513098250727,
+          "frequency_two_sided_p": 0.041725126340207336,
+          "windows": {
+            "5": {
+              "observed_score": 16.0,
+              "expected_score": 9.327876839130857,
+              "z_score": 1.2830639670188122,
+              "two_sided_p": 0.19946966644810254,
+              "profile_mean": 0.08340649692712906,
+              "profile_variance": 0.08583991462990873,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 66.0,
+              "expected_score": 41.95498392282958,
+              "z_score": 1.5020324820475184,
+              "two_sided_p": 0.1330887202608802,
+              "profile_mean": 0.16705744431418523,
+              "profile_variance": 0.1778883778190895,
+              "profile_maximum": 3,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 18-28",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 65,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 3.2551259247537665,
+          "frequency_two_sided_p": 0.0011334209899474066,
+          "windows": {
+            "5": {
+              "observed_score": 6.0,
+              "expected_score": 12.156631469543976,
+              "z_score": -1.0395487932574343,
+              "two_sided_p": 0.2985495777966608,
+              "profile_mean": 0.09511267193444542,
+              "profile_variance": 0.08960432717251327,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 36.0,
+              "expected_score": 54.6781745360185,
+              "z_score": -1.024477278015199,
+              "two_sided_p": 0.30560989771455627,
+              "profile_mean": 0.19050410316529895,
+              "profile_variance": 0.1753656795492687,
+              "profile_maximum": 3,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 19-23",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 27,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": -2.534528496157529,
+          "frequency_two_sided_p": 0.011259876856681703,
+          "windows": {
+            "5": {
+              "observed_score": 0.0,
+              "expected_score": 2.051431560485546,
+              "z_score": -0.8337835202324825,
+              "two_sided_p": 0.40440298347600945,
+              "profile_mean": 0.03950834064969271,
+              "profile_variance": 0.037958540401724666,
+              "profile_maximum": 1,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 0.0,
+              "expected_score": 9.226941952953123,
+              "z_score": -1.2182550470193787,
+              "two_sided_p": 0.22312706695839982,
+              "profile_mean": 0.07913247362250879,
+              "profile_variance": 0.0728918886314637,
+              "profile_maximum": 1,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 19-38",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 30,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": -2.077450515559269,
+          "frequency_two_sided_p": 0.03775999794319884,
+          "windows": {
+            "5": {
+              "observed_score": 7.0,
+              "expected_score": 2.5423724467555915,
+              "z_score": 1.6288929246830797,
+              "two_sided_p": 0.10333568816535021,
+              "profile_mean": 0.043898156277436345,
+              "profile_variance": 0.04608175543278237,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 17.0,
+              "expected_score": 11.4350990015231,
+              "z_score": 0.6605853714141394,
+              "two_sided_p": 0.5088782529227368,
+              "profile_mean": 0.08792497069167643,
+              "profile_variance": 0.09018543207050632,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 21-30",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 58,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 2.1886106366911595,
+          "frequency_two_sided_p": 0.028625152059053992,
+          "windows": {
+            "5": {
+              "observed_score": 9.0,
+              "expected_score": 9.661015297671245,
+              "z_score": -0.12494092974765494,
+              "two_sided_p": 0.9005703149765077,
+              "profile_mean": 0.0848697688030436,
+              "profile_variance": 0.08295894819880482,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 34.0,
+              "expected_score": 43.45337620578778,
+              "z_score": -0.5804297801494133,
+              "two_sided_p": 0.5616248274326632,
+              "profile_mean": 0.16998827667057445,
+              "profile_variance": 0.1610691291501222,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 21-39",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 28,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": -2.3821691692914424,
+          "frequency_two_sided_p": 0.017210988896616604,
+          "windows": {
+            "5": {
+              "observed_score": 0.0,
+              "expected_score": 2.2092339882152032,
+              "z_score": -0.8655127347769865,
+              "two_sided_p": 0.3867574293290468,
+              "profile_mean": 0.04097161252560726,
+              "profile_variance": 0.03930444210960628,
+              "profile_maximum": 1,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 6.0,
+              "expected_score": 9.936706718564901,
+              "z_score": -0.5010124247294576,
+              "two_sided_p": 0.6163623786910226,
+              "profile_mean": 0.08206330597889801,
+              "profile_variance": 0.07886903380999959,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 21-47",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 60,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 2.493329290423333,
+          "frequency_two_sided_p": 0.01265514213613191,
+          "windows": {
+            "5": {
+              "observed_score": 11.0,
+              "expected_score": 10.344825817833096,
+              "z_score": 0.11974511655424067,
+              "two_sided_p": 0.9046850596228249,
+              "profile_mean": 0.08779631255487269,
+              "profile_variance": 0.08655184608710134,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 52.0,
+              "expected_score": 46.52902352343882,
+              "z_score": 0.32481378489054596,
+              "two_sided_p": 0.7453220109382359,
+              "profile_mean": 0.17438452520515826,
+              "profile_variance": 0.17450636397036964,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 21-49",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 66,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 3.4074852516198533,
+          "frequency_two_sided_p": 0.0006556445165698954,
+          "windows": {
+            "5": {
+              "observed_score": 12.0,
+              "expected_score": 12.536526202967226,
+              "z_score": -0.08923596737722903,
+              "two_sided_p": 0.9288943815522814,
+              "profile_mean": 0.09657594381035997,
+              "profile_variance": 0.09430033329700856,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 50.0,
+              "expected_score": 56.38686749026908,
+              "z_score": -0.3450663475522321,
+              "two_sided_p": 0.7300444921556957,
+              "profile_mean": 0.19343493552168817,
+              "profile_variance": 0.1853805167269674,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 0.7697266624530572,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 23-41",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 28,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": -2.3821691692914424,
+          "frequency_two_sided_p": 0.017210988896616604,
+          "windows": {
+            "5": {
+              "observed_score": 0.0,
+              "expected_score": 2.2092339882152032,
+              "z_score": -0.8655127347769865,
+              "two_sided_p": 0.3867574293290468,
+              "profile_mean": 0.04097161252560726,
+              "profile_variance": 0.03930444210960628,
+              "profile_maximum": 1,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 5.0,
+              "expected_score": 9.936706718564901,
+              "z_score": -0.6282793156986934,
+              "two_sided_p": 0.529820979244974,
+              "profile_mean": 0.08206330597889801,
+              "profile_variance": 0.07828269549279056,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 25-31",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 30,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": -2.077450515559269,
+          "frequency_two_sided_p": 0.03775999794319884,
+          "windows": {
+            "5": {
+              "observed_score": 3.0,
+              "expected_score": 2.5423724467555915,
+              "z_score": 0.16722489142846858,
+              "two_sided_p": 0.8671930996503736,
+              "profile_mean": 0.043898156277436345,
+              "profile_variance": 0.043739835058075105,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 13.0,
+              "expected_score": 11.4350990015231,
+              "z_score": 0.18576264116615107,
+              "two_sided_p": 0.8526309025750596,
+              "profile_mean": 0.08792497069167643,
+              "profile_variance": 0.08784007880167019,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 25-46",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 29,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": -2.2298098424253556,
+          "frequency_two_sided_p": 0.025760069705032806,
+          "windows": {
+            "5": {
+              "observed_score": 7.0,
+              "expected_score": 2.3728809503052184,
+              "z_score": 1.7496579483249877,
+              "two_sided_p": 0.08017735399803101,
+              "profile_mean": 0.0424348844015218,
+              "profile_variance": 0.044744420890450616,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 30.0,
+              "expected_score": 10.672759068088226,
+              "z_score": 2.374081159222269,
+              "two_sided_p": 0.017592683069632117,
+              "profile_mean": 0.08499413833528723,
+              "profile_variance": 0.09538308410517933,
+              "profile_maximum": 3,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 26-30",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 62,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 2.7980479441555066,
+          "frequency_two_sided_p": 0.005141248055883249,
+          "windows": {
+            "5": {
+              "observed_score": 7.0,
+              "expected_score": 11.052014475436374,
+              "z_score": -0.7169206092874054,
+              "two_sided_p": 0.4734230845922843,
+              "profile_mean": 0.09072285630670178,
+              "profile_variance": 0.08661472908223723,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 48.0,
+              "expected_score": 49.70982117673605,
+              "z_score": -0.09826941781217224,
+              "two_sided_p": 0.9217183616669725,
+              "profile_mean": 0.1817116060961313,
+              "profile_variance": 0.17688032958674832,
+              "profile_maximum": 3,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 27-34",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 30,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": -2.077450515559269,
+          "frequency_two_sided_p": 0.03775999794319884,
+          "windows": {
+            "5": {
+              "observed_score": 2.0,
+              "expected_score": 2.5423724467555915,
+              "z_score": -0.19819211688518415,
+              "two_sided_p": 0.8428947549694217,
+              "profile_mean": 0.043898156277436345,
+              "profile_variance": 0.04315435496439829,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 16.0,
+              "expected_score": 11.4350990015231,
+              "z_score": 0.5418796888521423,
+              "two_sided_p": 0.5879013897585246,
+              "profile_mean": 0.08792497069167643,
+              "profile_variance": 0.08959909375329729,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 27-48",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 30,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": -2.077450515559269,
+          "frequency_two_sided_p": 0.03775999794319884,
+          "windows": {
+            "5": {
+              "observed_score": 0.0,
+              "expected_score": 2.5423724467555915,
+              "z_score": -0.9290261335124896,
+              "two_sided_p": 0.3528755429967545,
+              "profile_mean": 0.043898156277436345,
+              "profile_variance": 0.04198339477704466,
+              "profile_maximum": 1,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 0.0,
+              "expected_score": 11.4350990015231,
+              "z_score": -1.357411232139811,
+              "two_sided_p": 0.1746505812888401,
+              "profile_mean": 0.08645955451348183,
+              "profile_variance": 0.07900745570757045,
+              "profile_maximum": 1,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 28-37",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 66,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 3.4074852516198533,
+          "frequency_two_sided_p": 0.0006556445165698954,
+          "windows": {
+            "5": {
+              "observed_score": 14.0,
+              "expected_score": 12.536526202967226,
+              "z_score": 0.2434074967582221,
+              "two_sided_p": 0.8076897368510356,
+              "profile_mean": 0.09657594381035997,
+              "profile_variance": 0.09547129348436219,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 61.0,
+              "expected_score": 56.38686749026908,
+              "z_score": 0.24923591859900077,
+              "two_sided_p": 0.8031782968492416,
+              "profile_mean": 0.19343493552168817,
+              "profile_variance": 0.1918302382162667,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 0.7697266624530572,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 28-45",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 57,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 2.0362513098250727,
+          "frequency_two_sided_p": 0.041725126340207336,
+          "windows": {
+            "5": {
+              "observed_score": 13.0,
+              "expected_score": 9.327876839130857,
+              "z_score": 0.706157364989748,
+              "two_sided_p": 0.4800902808677265,
+              "profile_mean": 0.08340649692712906,
+              "profile_variance": 0.08408347434887828,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 57.0,
+              "expected_score": 41.95498392282958,
+              "z_score": 0.9398248172640197,
+              "two_sided_p": 0.34730742676190596,
+              "profile_mean": 0.16617819460726846,
+              "profile_variance": 0.17202490872403367,
+              "profile_maximum": 3,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 28-49",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 57,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 2.0362513098250727,
+          "frequency_two_sided_p": 0.041725126340207336,
+          "windows": {
+            "5": {
+              "observed_score": 7.0,
+              "expected_score": 9.327876839130857,
+              "z_score": -0.44765583906838047,
+              "two_sided_p": 0.6544015972882673,
+              "profile_mean": 0.08340649692712906,
+              "profile_variance": 0.08057059378681738,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 27.0,
+              "expected_score": 41.95498392282958,
+              "z_score": -0.9342007320143091,
+              "two_sided_p": 0.35020035820798434,
+              "profile_mean": 0.16705744431418523,
+              "profile_variance": 0.15502118344793742,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 30-34",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 67,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 3.55984457848594,
+          "frequency_two_sided_p": 0.00037107434418705954,
+          "windows": {
+            "5": {
+              "observed_score": 29.0,
+              "expected_score": 12.922265470750832,
+              "z_score": 2.6346469519535334,
+              "two_sided_p": 0.008422483669929925,
+              "profile_mean": 0.09803921568627451,
+              "profile_variance": 0.10543233686917389,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 96.0,
+              "expected_score": 58.1218480284312,
+              "z_score": 2.016283420736319,
+              "two_sided_p": 0.0437703475652035,
+              "profile_mean": 0.19636576787807739,
+              "profile_variance": 0.21414099546223636,
+              "profile_maximum": 3,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 0.43601235441979497,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 32-41",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 28,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": -2.3821691692914424,
+          "frequency_two_sided_p": 0.017210988896616604,
+          "windows": {
+            "5": {
+              "observed_score": 1.0,
+              "expected_score": 2.2092339882152032,
+              "z_score": -0.4737422209274249,
+              "two_sided_p": 0.635683741494342,
+              "profile_mean": 0.04097161252560726,
+              "profile_variance": 0.03988992220328309,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 6.0,
+              "expected_score": 9.936706718564901,
+              "z_score": -0.5010124247294576,
+              "two_sided_p": 0.6163623786910226,
+              "profile_mean": 0.08206330597889801,
+              "profile_variance": 0.07886903380999959,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 34-35",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 57,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 2.0362513098250727,
+          "frequency_two_sided_p": 0.041725126340207336,
+          "windows": {
+            "5": {
+              "observed_score": 3.0,
+              "expected_score": 9.327876839130857,
+              "z_score": -1.2168646417737994,
+              "two_sided_p": 0.22365572046807208,
+              "profile_mean": 0.08340649692712906,
+              "profile_variance": 0.07822867341211014,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 26.0,
+              "expected_score": 41.95498392282958,
+              "z_score": -0.9966682503235867,
+              "two_sided_p": 0.318925565633733,
+              "profile_mean": 0.16705744431418523,
+              "profile_variance": 0.15443484513072836,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 36-49",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 58,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 2.1886106366911595,
+          "frequency_two_sided_p": 0.028625152059053992,
+          "windows": {
+            "5": {
+              "observed_score": 6.0,
+              "expected_score": 9.661015297671245,
+              "z_score": -0.6919819506793407,
+              "two_sided_p": 0.4889486639411933,
+              "profile_mean": 0.0848697688030436,
+              "profile_variance": 0.08120250791777439,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 39.0,
+              "expected_score": 43.45337620578778,
+              "z_score": -0.27343375697514866,
+              "two_sided_p": 0.7845198067885186,
+              "profile_mean": 0.16998827667057445,
+              "profile_variance": 0.16400082073616737,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 37-46",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 30,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": -2.077450515559269,
+          "frequency_two_sided_p": 0.03775999794319884,
+          "windows": {
+            "5": {
+              "observed_score": 12.0,
+              "expected_score": 2.5423724467555915,
+              "z_score": 3.4559779662513432,
+              "two_sided_p": 0.0005483001390014859,
+              "profile_mean": 0.043898156277436345,
+              "profile_variance": 0.04900915590116644,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 0.64205946277074,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 37.0,
+              "expected_score": 11.4350990015231,
+              "z_score": 3.0346990226540815,
+              "two_sided_p": 0.002407758355632815,
+              "profile_mean": 0.08792497069167643,
+              "profile_variance": 0.10191219841468692,
+              "profile_maximum": 3,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 38-42",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 29,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": -2.2298098424253556,
+          "frequency_two_sided_p": 0.025760069705032806,
+          "windows": {
+            "5": {
+              "observed_score": 1.0,
+              "expected_score": 2.3728809503052184,
+              "z_score": -0.5191290824825299,
+              "two_sided_p": 0.6036707289579911,
+              "profile_mean": 0.0424348844015218,
+              "profile_variance": 0.04123154032838973,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 6.0,
+              "expected_score": 10.672759068088226,
+              "z_score": -0.5739830793342285,
+              "two_sided_p": 0.5659792515197197,
+              "profile_mean": 0.08499413833528723,
+              "profile_variance": 0.08131096449216263,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 46-48",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 29,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": -2.2298098424253556,
+          "frequency_two_sided_p": 0.025760069705032806,
+          "windows": {
+            "5": {
+              "observed_score": 0.0,
+              "expected_score": 2.3728809503052184,
+              "z_score": -0.8972602542837828,
+              "two_sided_p": 0.3695800597533794,
+              "profile_mean": 0.0424348844015218,
+              "profile_variance": 0.04064606023471292,
+              "profile_maximum": 1,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 9.0,
+              "expected_score": 10.672759068088226,
+              "z_score": -0.20547504951466633,
+              "two_sided_p": 0.8372009898099386,
+              "profile_mean": 0.08499413833528723,
+              "profile_variance": 0.08306997944378973,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "所有指定號碼對",
+          "pattern": "號碼對 48-49",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 59,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 2.3409699635572463,
+          "frequency_two_sided_p": 0.0192337144170577,
+          "windows": {
+            "5": {
+              "observed_score": 6.0,
+              "expected_score": 9.999998290571993,
+              "z_score": -0.7433501633801196,
+              "two_sided_p": 0.4572697084949393,
+              "profile_mean": 0.08633304067895815,
+              "profile_variance": 0.0824156185596333,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 48.0,
+              "expected_score": 44.97805607265753,
+              "z_score": 0.18242698598123486,
+              "two_sided_p": 0.8552476493743384,
+              "profile_mean": 0.17291910902696367,
+              "profile_variance": 0.17120425847965154,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        }
+      ],
+      "frequency_significant_holm": [],
+      "windows": {
+        "5": {
+          "significant": [
+            {
+              "family": "所有指定號碼對",
+              "pattern": "號碼對 33-34",
+              "baseline_probability": 0.012755102040816327,
+              "observed_draws": 41,
+              "expected_draws": 43.63520408163265,
+              "frequency_z_score": -0.40149792003231494,
+              "frequency_two_sided_p": 0.6880535692093936,
+              "windows": {
+                "5": {
+                  "observed_score": 21.0,
+                  "expected_score": 4.7925181754932975,
+                  "z_score": 4.3276414489283335,
+                  "two_sided_p": 1.507145543749261e-05,
+                  "profile_mean": 0.05999414691249634,
+                  "profile_variance": 0.06870644024676177,
+                  "profile_maximum": 3,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 0.017724031594491308,
+                  "significant_at_0_05": true
+                },
+                "10": {
+                  "observed_score": 55.0,
+                  "expected_score": 21.55581880746883,
+                  "z_score": 2.9009074716287886,
+                  "two_sided_p": 0.003720837296827516,
+                  "profile_mean": 0.1201641266119578,
+                  "profile_variance": 0.13800431195810534,
+                  "profile_maximum": 3,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            }
+          ],
+          "top_raw": [
+            {
+              "family": "所有指定號碼對",
+              "pattern": "號碼對 33-34",
+              "baseline_probability": 0.012755102040816327,
+              "observed_draws": 41,
+              "expected_draws": 43.63520408163265,
+              "frequency_z_score": -0.40149792003231494,
+              "frequency_two_sided_p": 0.6880535692093936,
+              "windows": {
+                "5": {
+                  "observed_score": 21.0,
+                  "expected_score": 4.7925181754932975,
+                  "z_score": 4.3276414489283335,
+                  "two_sided_p": 1.507145543749261e-05,
+                  "profile_mean": 0.05999414691249634,
+                  "profile_variance": 0.06870644024676177,
+                  "profile_maximum": 3,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 0.017724031594491308,
+                  "significant_at_0_05": true
+                },
+                "10": {
+                  "observed_score": 55.0,
+                  "expected_score": 21.55581880746883,
+                  "z_score": 2.9009074716287886,
+                  "two_sided_p": 0.003720837296827516,
+                  "profile_mean": 0.1201641266119578,
+                  "profile_variance": 0.13800431195810534,
+                  "profile_maximum": 3,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "所有指定號碼對",
+              "pattern": "號碼對 27-44",
+              "baseline_probability": 0.012755102040816327,
+              "observed_draws": 41,
+              "expected_draws": 43.63520408163265,
+              "frequency_z_score": -0.40149792003231494,
+              "frequency_two_sided_p": 0.6880535692093936,
+              "windows": {
+                "5": {
+                  "observed_score": 20.0,
+                  "expected_score": 4.7925181754932975,
+                  "z_score": 4.060626406382695,
+                  "two_sided_p": 4.894123105339619e-05,
+                  "profile_mean": 0.05999414691249634,
+                  "profile_variance": 0.06812096015308496,
+                  "profile_maximum": 2,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 0.057505946487740524,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 60.0,
+                  "expected_score": 21.55581880746883,
+                  "z_score": 3.3346013711637883,
+                  "two_sided_p": 0.0008542175857833377,
+                  "profile_mean": 0.11987104337631888,
+                  "profile_variance": 0.14071320529436693,
+                  "profile_maximum": 2,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "所有指定號碼對",
+              "pattern": "號碼對 07-09",
+              "baseline_probability": 0.012755102040816327,
+              "observed_draws": 45,
+              "expected_draws": 43.63520408163265,
+              "frequency_z_score": 0.207939387432032,
+              "frequency_two_sided_p": 0.835276294554973,
+              "windows": {
+                "5": {
+                  "observed_score": 22.0,
+                  "expected_score": 5.786089016754104,
+                  "z_score": 3.944813164831104,
+                  "two_sided_p": 7.98622216514973e-05,
+                  "profile_mean": 0.06321334503950835,
+                  "profile_variance": 0.0680169547633098,
+                  "profile_maximum": 3,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 0.09375824821885784,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 65.0,
+                  "expected_score": 26.024708072431885,
+                  "z_score": 3.08037594295773,
+                  "two_sided_p": 0.002067394600069873,
+                  "profile_mean": 0.12485345838218054,
+                  "profile_variance": 0.13450965310149254,
+                  "profile_maximum": 3,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "所有指定號碼對",
+              "pattern": "號碼對 28-44",
+              "baseline_probability": 0.012755102040816327,
+              "observed_draws": 41,
+              "expected_draws": 43.63520408163265,
+              "frequency_z_score": -0.40149792003231494,
+              "frequency_two_sided_p": 0.6880535692093936,
+              "windows": {
+                "5": {
+                  "observed_score": 19.0,
+                  "expected_score": 4.7925181754932975,
+                  "z_score": 3.793611363837055,
+                  "two_sided_p": 0.0001484719957634304,
+                  "profile_mean": 0.05999414691249634,
+                  "profile_variance": 0.06753548005940814,
+                  "profile_maximum": 3,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 0.17415765103050387,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 54.0,
+                  "expected_score": 21.55581880746883,
+                  "z_score": 2.8141686917217887,
+                  "two_sided_p": 0.004890355815579604,
+                  "profile_mean": 0.1201641266119578,
+                  "profile_variance": 0.1374179736408963,
+                  "profile_maximum": 3,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "所有指定號碼對",
+              "pattern": "號碼對 20-39",
+              "baseline_probability": 0.012755102040816327,
+              "observed_draws": 53,
+              "expected_draws": 43.63520408163265,
+              "frequency_z_score": 1.4268140023607259,
+              "frequency_two_sided_p": 0.15363351402272557,
+              "windows": {
+                "5": {
+                  "observed_score": 25.0,
+                  "expected_score": 8.053768348572884,
+                  "z_score": 3.5029488999013125,
+                  "two_sided_p": 0.0004601377275047742,
+                  "profile_mean": 0.07755340942347089,
+                  "profile_variance": 0.0861968227467155,
+                  "profile_maximum": 3,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 0.5392814166355954,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 70.0,
+                  "expected_score": 36.22429063011226,
+                  "z_score": 2.2679686283023868,
+                  "two_sided_p": 0.023331118845785516,
+                  "profile_mean": 0.15533411488862836,
+                  "profile_variance": 0.1722875752298525,
+                  "profile_maximum": 3,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            }
+          ]
+        },
+        "10": {
+          "significant": [],
+          "top_raw": [
+            {
+              "family": "所有指定號碼對",
+              "pattern": "號碼對 05-07",
+              "baseline_probability": 0.012755102040816327,
+              "observed_draws": 40,
+              "expected_draws": 43.63520408163265,
+              "frequency_z_score": -0.5538572468984017,
+              "frequency_two_sided_p": 0.5796765462429941,
+              "windows": {
+                "5": {
+                  "observed_score": 13.0,
+                  "expected_score": 4.55873680107899,
+                  "z_score": 2.3103325168297224,
+                  "two_sided_p": 0.020869752018702482,
+                  "profile_mean": 0.058530875036581796,
+                  "profile_variance": 0.0627323843655397,
+                  "profile_maximum": 2,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 63.0,
+                  "expected_score": 20.50431545100694,
+                  "z_score": 3.7782433826766506,
+                  "two_sided_p": 0.0001579384866731853,
+                  "profile_mean": 0.11723329425556858,
+                  "profile_variance": 0.1404593029310386,
+                  "profile_maximum": 3,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 0.18573566032766592,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "所有指定號碼對",
+              "pattern": "號碼對 20-37",
+              "baseline_probability": 0.012755102040816327,
+              "observed_draws": 36,
+              "expected_draws": 43.63520408163265,
+              "frequency_z_score": -1.1632945543627486,
+              "frequency_two_sided_p": 0.24471001436434975,
+              "windows": {
+                "5": {
+                  "observed_score": 14.0,
+                  "expected_score": 3.682056647025339,
+                  "z_score": 3.1385162065124654,
+                  "two_sided_p": 0.0016980554480657824,
+                  "profile_mean": 0.05267778753292362,
+                  "profile_variance": 0.05811416810423704,
+                  "profile_maximum": 3,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 52.0,
+                  "expected_score": 16.561177864274836,
+                  "z_score": 3.501792841984263,
+                  "two_sided_p": 0.00046213879255747143,
+                  "profile_mean": 0.10550996483001172,
+                  "profile_variance": 0.12489487325159654,
+                  "profile_maximum": 4,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 0.5430130812550289,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "所有指定號碼對",
+              "pattern": "號碼對 27-44",
+              "baseline_probability": 0.012755102040816327,
+              "observed_draws": 41,
+              "expected_draws": 43.63520408163265,
+              "frequency_z_score": -0.40149792003231494,
+              "frequency_two_sided_p": 0.6880535692093936,
+              "windows": {
+                "5": {
+                  "observed_score": 20.0,
+                  "expected_score": 4.7925181754932975,
+                  "z_score": 4.060626406382695,
+                  "two_sided_p": 4.894123105339619e-05,
+                  "profile_mean": 0.05999414691249634,
+                  "profile_variance": 0.06812096015308496,
+                  "profile_maximum": 2,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 0.057505946487740524,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 60.0,
+                  "expected_score": 21.55581880746883,
+                  "z_score": 3.3346013711637883,
+                  "two_sided_p": 0.0008542175857833377,
+                  "profile_mean": 0.11987104337631888,
+                  "profile_variance": 0.14071320529436693,
+                  "profile_maximum": 2,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "所有指定號碼對",
+              "pattern": "號碼對 05-28",
+              "baseline_probability": 0.012755102040816327,
+              "observed_draws": 39,
+              "expected_draws": 43.63520408163265,
+              "frequency_z_score": -0.7062165737644884,
+              "frequency_two_sided_p": 0.48005346502054924,
+              "windows": {
+                "5": {
+                  "observed_score": 11.0,
+                  "expected_score": 4.330799961025042,
+                  "z_score": 1.8721934593933491,
+                  "two_sided_p": 0.06117984364629388,
+                  "profile_mean": 0.05706760316066725,
+                  "profile_variance": 0.060266925463603606,
+                  "profile_maximum": 2,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 55.0,
+                  "expected_score": 19.479099678456592,
+                  "z_score": 3.2392127100879886,
+                  "two_sided_p": 0.0011986014813473564,
+                  "profile_mean": 0.11430246189917936,
+                  "profile_variance": 0.13351569623550869,
+                  "profile_maximum": 3,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "所有指定號碼對",
+              "pattern": "號碼對 21-25",
+              "baseline_probability": 0.012755102040816327,
+              "observed_draws": 37,
+              "expected_draws": 43.63520408163265,
+              "frequency_z_score": -1.0109352274966619,
+              "frequency_two_sided_p": 0.3120474321129795,
+              "windows": {
+                "5": {
+                  "observed_score": 10.0,
+                  "expected_score": 3.892459883998215,
+                  "z_score": 1.8074191430638082,
+                  "two_sided_p": 0.07069695139594012,
+                  "profile_mean": 0.05414105940883816,
+                  "profile_variance": 0.05707959719243705,
+                  "profile_maximum": 3,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 50.0,
+                  "expected_score": 17.50753088509054,
+                  "z_score": 3.1235950734757623,
+                  "two_sided_p": 0.0017865613655195767,
+                  "profile_mean": 0.10844079718640094,
+                  "profile_variance": 0.12602665055439216,
+                  "profile_maximum": 4,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            }
+          ]
+        }
+      }
+    },
+    "連號對": {
+      "tests": 48,
+      "frequency_significant_unadjusted": [
+        {
+          "family": "連號對",
+          "pattern": "連號 34-35",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 57,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 2.0362513098250727,
+          "frequency_two_sided_p": 0.041725126340207336,
+          "windows": {
+            "5": {
+              "observed_score": 3.0,
+              "expected_score": 9.327876839130857,
+              "z_score": -1.2168646417737994,
+              "two_sided_p": 0.22365572046807208,
+              "profile_mean": 0.08340649692712906,
+              "profile_variance": 0.07822867341211014,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 26.0,
+              "expected_score": 41.95498392282958,
+              "z_score": -0.9966682503235867,
+              "two_sided_p": 0.318925565633733,
+              "profile_mean": 0.16705744431418523,
+              "profile_variance": 0.15443484513072836,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 1.0,
+          "frequency_significant_at_0_05": false
+        },
+        {
+          "family": "連號對",
+          "pattern": "連號 48-49",
+          "baseline_probability": 0.012755102040816327,
+          "observed_draws": 59,
+          "expected_draws": 43.63520408163265,
+          "frequency_z_score": 2.3409699635572463,
+          "frequency_two_sided_p": 0.0192337144170577,
+          "windows": {
+            "5": {
+              "observed_score": 6.0,
+              "expected_score": 9.999998290571993,
+              "z_score": -0.7433501633801196,
+              "two_sided_p": 0.4572697084949393,
+              "profile_mean": 0.08633304067895815,
+              "profile_variance": 0.0824156185596333,
+              "profile_maximum": 2,
+              "interpretation": "較分散",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            },
+            "10": {
+              "observed_score": 48.0,
+              "expected_score": 44.97805607265753,
+              "z_score": 0.18242698598123486,
+              "two_sided_p": 0.8552476493743384,
+              "profile_mean": 0.17291910902696367,
+              "profile_variance": 0.17120425847965154,
+              "profile_maximum": 2,
+              "interpretation": "較集中",
+              "holm_adjusted_p_within_window": 1.0,
+              "significant_at_0_05": false
+            }
+          },
+          "frequency_holm_adjusted_p": 0.9232182920187696,
+          "frequency_significant_at_0_05": false
+        }
+      ],
+      "frequency_significant_holm": [],
+      "windows": {
+        "5": {
+          "significant": [
+            {
+              "family": "連號對",
+              "pattern": "連號 33-34",
+              "baseline_probability": 0.012755102040816327,
+              "observed_draws": 41,
+              "expected_draws": 43.63520408163265,
+              "frequency_z_score": -0.40149792003231494,
+              "frequency_two_sided_p": 0.6880535692093936,
+              "windows": {
+                "5": {
+                  "observed_score": 21.0,
+                  "expected_score": 4.7925181754932975,
+                  "z_score": 4.3276414489283335,
+                  "two_sided_p": 1.507145543749261e-05,
+                  "profile_mean": 0.05999414691249634,
+                  "profile_variance": 0.06870644024676177,
+                  "profile_maximum": 3,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 0.0007234298609996453,
+                  "significant_at_0_05": true
+                },
+                "10": {
+                  "observed_score": 55.0,
+                  "expected_score": 21.55581880746883,
+                  "z_score": 2.9009074716287886,
+                  "two_sided_p": 0.003720837296827516,
+                  "profile_mean": 0.1201641266119578,
+                  "profile_variance": 0.13800431195810534,
+                  "profile_maximum": 3,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 0.17860019024772078,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            }
+          ],
+          "top_raw": [
+            {
+              "family": "連號對",
+              "pattern": "連號 33-34",
+              "baseline_probability": 0.012755102040816327,
+              "observed_draws": 41,
+              "expected_draws": 43.63520408163265,
+              "frequency_z_score": -0.40149792003231494,
+              "frequency_two_sided_p": 0.6880535692093936,
+              "windows": {
+                "5": {
+                  "observed_score": 21.0,
+                  "expected_score": 4.7925181754932975,
+                  "z_score": 4.3276414489283335,
+                  "two_sided_p": 1.507145543749261e-05,
+                  "profile_mean": 0.05999414691249634,
+                  "profile_variance": 0.06870644024676177,
+                  "profile_maximum": 3,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 0.0007234298609996453,
+                  "significant_at_0_05": true
+                },
+                "10": {
+                  "observed_score": 55.0,
+                  "expected_score": 21.55581880746883,
+                  "z_score": 2.9009074716287886,
+                  "two_sided_p": 0.003720837296827516,
+                  "profile_mean": 0.1201641266119578,
+                  "profile_variance": 0.13800431195810534,
+                  "profile_maximum": 3,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 0.17860019024772078,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "連號對",
+              "pattern": "連號 11-12",
+              "baseline_probability": 0.012755102040816327,
+              "observed_draws": 45,
+              "expected_draws": 43.63520408163265,
+              "frequency_z_score": 0.207939387432032,
+              "frequency_two_sided_p": 0.835276294554973,
+              "windows": {
+                "5": {
+                  "observed_score": 16.0,
+                  "expected_score": 5.786089016754104,
+                  "z_score": 2.4850247761169886,
+                  "two_sided_p": 0.01295424183682809,
+                  "profile_mean": 0.06584723441615452,
+                  "profile_variance": 0.07089706447785867,
+                  "profile_maximum": 3,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 0.6088493663309202,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 51.0,
+                  "expected_score": 26.024708072431885,
+                  "z_score": 1.973898965657536,
+                  "two_sided_p": 0.04839323241351268,
+                  "profile_mean": 0.13188745603751464,
+                  "profile_variance": 0.14442997501703855,
+                  "profile_maximum": 3,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "連號對",
+              "pattern": "連號 17-18",
+              "baseline_probability": 0.012755102040816327,
+              "observed_draws": 46,
+              "expected_draws": 43.63520408163265,
+              "frequency_z_score": 0.3602987142981187,
+              "frequency_two_sided_p": 0.7186237606899093,
+              "windows": {
+                "5": {
+                  "observed_score": 13.0,
+                  "expected_score": 6.0490930629702,
+                  "z_score": 1.6544591370776514,
+                  "two_sided_p": 0.09803425937859975,
+                  "profile_mean": 0.06731050629206907,
+                  "profile_variance": 0.07040942141476114,
+                  "profile_maximum": 2,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 53.0,
+                  "expected_score": 27.207649348451515,
+                  "z_score": 1.9942551142104117,
+                  "two_sided_p": 0.04612418182023094,
+                  "profile_mean": 0.13481828839390386,
+                  "profile_variance": 0.14775244425060224,
+                  "profile_maximum": 3,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "連號對",
+              "pattern": "連號 38-39",
+              "baseline_probability": 0.012755102040816327,
+              "observed_draws": 46,
+              "expected_draws": 43.63520408163265,
+              "frequency_z_score": 0.3602987142981187,
+              "frequency_two_sided_p": 0.7186237606899093,
+              "windows": {
+                "5": {
+                  "observed_score": 0.0,
+                  "expected_score": 6.0490930629702,
+                  "z_score": -1.4398088450513198,
+                  "two_sided_p": 0.149921488057121,
+                  "profile_mean": 0.06731050629206907,
+                  "profile_variance": 0.06279818019696255,
+                  "profile_maximum": 1,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 3.0,
+                  "expected_score": 27.207649348451515,
+                  "z_score": -1.8717265893430086,
+                  "two_sided_p": 0.061244438998300184,
+                  "profile_mean": 0.13481828839390386,
+                  "profile_variance": 0.11843552839015076,
+                  "profile_maximum": 2,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "連號對",
+              "pattern": "連號 10-11",
+              "baseline_probability": 0.012755102040816327,
+              "observed_draws": 45,
+              "expected_draws": 43.63520408163265,
+              "frequency_z_score": 0.207939387432032,
+              "frequency_two_sided_p": 0.835276294554973,
+              "windows": {
+                "5": {
+                  "observed_score": 0.0,
+                  "expected_score": 5.786089016754104,
+                  "z_score": -1.4077442604539856,
+                  "two_sided_p": 0.15920681073429693,
+                  "profile_mean": 0.06584723441615452,
+                  "profile_variance": 0.06152938297902962,
+                  "profile_maximum": 1,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 3.0,
+                  "expected_score": 26.024708072431885,
+                  "z_score": -1.8197363850859865,
+                  "two_sided_p": 0.06879915952831958,
+                  "profile_mean": 0.13188745603751464,
+                  "profile_variance": 0.11628573579100512,
+                  "profile_maximum": 2,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            }
+          ]
+        },
+        "10": {
+          "significant": [],
+          "top_raw": [
+            {
+              "family": "連號對",
+              "pattern": "連號 33-34",
+              "baseline_probability": 0.012755102040816327,
+              "observed_draws": 41,
+              "expected_draws": 43.63520408163265,
+              "frequency_z_score": -0.40149792003231494,
+              "frequency_two_sided_p": 0.6880535692093936,
+              "windows": {
+                "5": {
+                  "observed_score": 21.0,
+                  "expected_score": 4.7925181754932975,
+                  "z_score": 4.3276414489283335,
+                  "two_sided_p": 1.507145543749261e-05,
+                  "profile_mean": 0.05999414691249634,
+                  "profile_variance": 0.06870644024676177,
+                  "profile_maximum": 3,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 0.0007234298609996453,
+                  "significant_at_0_05": true
+                },
+                "10": {
+                  "observed_score": 55.0,
+                  "expected_score": 21.55581880746883,
+                  "z_score": 2.9009074716287886,
+                  "two_sided_p": 0.003720837296827516,
+                  "profile_mean": 0.1201641266119578,
+                  "profile_variance": 0.13800431195810534,
+                  "profile_maximum": 3,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 0.17860019024772078,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "連號對",
+              "pattern": "連號 39-40",
+              "baseline_probability": 0.012755102040816327,
+              "observed_draws": 48,
+              "expected_draws": 43.63520408163265,
+              "frequency_z_score": 0.6650173680302922,
+              "frequency_two_sided_p": 0.5060393844532358,
+              "windows": {
+                "5": {
+                  "observed_score": 11.0,
+                  "expected_score": 6.592634758483463,
+                  "z_score": 1.0054635730969095,
+                  "two_sided_p": 0.31467368132438034,
+                  "profile_mean": 0.07023705004389816,
+                  "profile_variance": 0.0717632049149486,
+                  "profile_maximum": 2,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 58.0,
+                  "expected_score": 29.652394652225418,
+                  "z_score": 2.100767301462645,
+                  "two_sided_p": 0.03566139812835568,
+                  "profile_mean": 0.1406799531066823,
+                  "profile_variance": 0.15493216725558268,
+                  "profile_maximum": 3,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "連號對",
+              "pattern": "連號 17-18",
+              "baseline_probability": 0.012755102040816327,
+              "observed_draws": 46,
+              "expected_draws": 43.63520408163265,
+              "frequency_z_score": 0.3602987142981187,
+              "frequency_two_sided_p": 0.7186237606899093,
+              "windows": {
+                "5": {
+                  "observed_score": 13.0,
+                  "expected_score": 6.0490930629702,
+                  "z_score": 1.6544591370776514,
+                  "two_sided_p": 0.09803425937859975,
+                  "profile_mean": 0.06731050629206907,
+                  "profile_variance": 0.07040942141476114,
+                  "profile_maximum": 2,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 53.0,
+                  "expected_score": 27.207649348451515,
+                  "z_score": 1.9942551142104117,
+                  "two_sided_p": 0.04612418182023094,
+                  "profile_mean": 0.13481828839390386,
+                  "profile_variance": 0.14775244425060224,
+                  "profile_maximum": 3,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "連號對",
+              "pattern": "連號 11-12",
+              "baseline_probability": 0.012755102040816327,
+              "observed_draws": 45,
+              "expected_draws": 43.63520408163265,
+              "frequency_z_score": 0.207939387432032,
+              "frequency_two_sided_p": 0.835276294554973,
+              "windows": {
+                "5": {
+                  "observed_score": 16.0,
+                  "expected_score": 5.786089016754104,
+                  "z_score": 2.4850247761169886,
+                  "two_sided_p": 0.01295424183682809,
+                  "profile_mean": 0.06584723441615452,
+                  "profile_variance": 0.07089706447785867,
+                  "profile_maximum": 3,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 0.6088493663309202,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 51.0,
+                  "expected_score": 26.024708072431885,
+                  "z_score": 1.973898965657536,
+                  "two_sided_p": 0.04839323241351268,
+                  "profile_mean": 0.13188745603751464,
+                  "profile_variance": 0.14442997501703855,
+                  "profile_maximum": 3,
+                  "interpretation": "較集中",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            },
+            {
+              "family": "連號對",
+              "pattern": "連號 38-39",
+              "baseline_probability": 0.012755102040816327,
+              "observed_draws": 46,
+              "expected_draws": 43.63520408163265,
+              "frequency_z_score": 0.3602987142981187,
+              "frequency_two_sided_p": 0.7186237606899093,
+              "windows": {
+                "5": {
+                  "observed_score": 0.0,
+                  "expected_score": 6.0490930629702,
+                  "z_score": -1.4398088450513198,
+                  "two_sided_p": 0.149921488057121,
+                  "profile_mean": 0.06731050629206907,
+                  "profile_variance": 0.06279818019696255,
+                  "profile_maximum": 1,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                },
+                "10": {
+                  "observed_score": 3.0,
+                  "expected_score": 27.207649348451515,
+                  "z_score": -1.8717265893430086,
+                  "two_sided_p": 0.061244438998300184,
+                  "profile_mean": 0.13481828839390386,
+                  "profile_variance": 0.11843552839015076,
+                  "profile_maximum": 2,
+                  "interpretation": "較分散",
+                  "holm_adjusted_p_within_window": 1.0,
+                  "significant_at_0_05": false
+                }
+              },
+              "frequency_holm_adjusted_p": 1.0,
+              "frequency_significant_at_0_05": false
+            }
+          ]
+        }
+      }
+    }
+  },
+  "temporal_holdout": {
+    "training_draws": 2565,
+    "holdout_draws": 856,
+    "selection_rule": "For each family and each window length, select the smallest raw conditional window p-value from the earlier 75% of draws. Test that one selected candidate on the final 25%; Holm-correct across the five family candidates for that same window length.",
+    "candidates": [
+      {
+        "family": "三區精確分布",
+        "pattern": "低中高 = 1-5-0",
+        "baseline_probability": 0.007080184693505693,
+        "observed_draws": 8,
+        "expected_draws": 6.060638097640873,
+        "frequency_z_score": 0.7905741235014837,
+        "frequency_two_sided_p": 0.4291925519067109,
+        "windows": {
+          "5": {
+            "observed_score": 0.0,
+            "expected_score": 0.653440454719353,
+            "z_score": -0.4717360352456657,
+            "two_sided_p": 0.6371152125474313,
+            "profile_mean": 0.046948356807511735,
+            "profile_variance": 0.044796786989071115,
+            "profile_maximum": 1,
+            "interpretation": "較分散",
+            "holm_adjusted_p_across_selected_families": 1.0,
+            "significant_at_0_05": false
+          },
+          "10": {
+            "observed_score": 0.0,
+            "expected_score": 2.9347434005574686,
+            "z_score": -0.6908664495965052,
+            "two_sided_p": 0.4896494718974164,
+            "profile_mean": 0.09445100354191263,
+            "profile_variance": 0.08563111077617845,
+            "profile_maximum": 1,
+            "interpretation": "較分散"
+          }
+        },
+        "selected_from": {
+          "family": "三區精確分布",
+          "window": 5
+        }
+      },
+      {
+        "family": "三區精確分布",
+        "pattern": "低中高 = 1-5-0",
+        "baseline_probability": 0.007080184693505693,
+        "observed_draws": 8,
+        "expected_draws": 6.060638097640873,
+        "frequency_z_score": 0.7905741235014837,
+        "frequency_two_sided_p": 0.4291925519067109,
+        "windows": {
+          "5": {
+            "observed_score": 0.0,
+            "expected_score": 0.653440454719353,
+            "z_score": -0.4717360352456657,
+            "two_sided_p": 0.6371152125474313,
+            "profile_mean": 0.046948356807511735,
+            "profile_variance": 0.044796786989071115,
+            "profile_maximum": 1,
+            "interpretation": "較分散"
+          },
+          "10": {
+            "observed_score": 0.0,
+            "expected_score": 2.9347434005574686,
+            "z_score": -0.6908664495965052,
+            "two_sided_p": 0.4896494718974164,
+            "profile_mean": 0.09445100354191263,
+            "profile_variance": 0.08563111077617845,
+            "profile_maximum": 1,
+            "interpretation": "較分散",
+            "holm_adjusted_p_across_selected_families": 0.9329817959502619,
+            "significant_at_0_05": false
+          }
+        },
+        "selected_from": {
+          "family": "三區精確分布",
+          "window": 10
+        }
+      },
+      {
+        "family": "同尾數至少兩個",
+        "pattern": "尾數 5（至少兩個）",
+        "baseline_probability": 0.10688956433637285,
+        "observed_draws": 87,
+        "expected_draws": 91.49746707193516,
+        "frequency_z_score": -0.49752037889776685,
+        "frequency_two_sided_p": 0.6188221356762653,
+        "windows": {
+          "5": {
+            "observed_score": 89.0,
+            "expected_score": 87.30431218232498,
+            "z_score": 0.11672489216737653,
+            "two_sided_p": 0.9070780640126771,
+            "profile_mean": 0.5105633802816901,
+            "profile_variance": 0.45934774333427125,
+            "profile_maximum": 3,
+            "interpretation": "較集中",
+            "holm_adjusted_p_across_selected_families": 1.0,
+            "significant_at_0_05": false
+          },
+          "10": {
+            "observed_score": 415.0,
+            "expected_score": 392.10268076733894,
+            "z_score": 0.5131905144421144,
+            "two_sided_p": 0.6078180605365072,
+            "profile_mean": 1.0212514757969304,
+            "profile_variance": 0.9593587156449825,
+            "profile_maximum": 5,
+            "interpretation": "較集中"
+          }
+        },
+        "selected_from": {
+          "family": "同尾數至少兩個",
+          "window": 5
+        }
+      },
+      {
+        "family": "同尾數至少兩個",
+        "pattern": "尾數 0（至少兩個）",
+        "baseline_probability": 0.06805867582925862,
+        "observed_draws": 71,
+        "expected_draws": 58.25822650984538,
+        "frequency_z_score": 1.7292467402606484,
+        "frequency_two_sided_p": 0.08376494427903938,
+        "windows": {
+          "5": {
+            "observed_score": 79.0,
+            "expected_score": 57.99284035634257,
+            "z_score": 1.7382914157904186,
+            "two_sided_p": 0.08215947817463368,
+            "profile_mean": 0.4166666666666667,
+            "profile_variance": 0.4290050920485703,
+            "profile_maximum": 4,
+            "interpretation": "較集中"
+          },
+          "10": {
+            "observed_score": 312.0,
+            "expected_score": 260.4584767994753,
+            "z_score": 1.389094572630088,
+            "two_sided_p": 0.16480399392922243,
+            "profile_mean": 0.8382526564344747,
+            "profile_variance": 0.8733340590207127,
+            "profile_maximum": 5,
+            "interpretation": "較集中",
+            "holm_adjusted_p_across_selected_families": 0.6592159757168897,
+            "significant_at_0_05": false
+          }
+        },
+        "selected_from": {
+          "family": "同尾數至少兩個",
+          "window": 10
+        }
+      },
+      {
+        "family": "奇偶精確分布",
+        "pattern": "3 奇 3 偶",
+        "baseline_probability": 0.33289911709364595,
+        "observed_draws": 297,
+        "expected_draws": 284.96164423216095,
+        "frequency_z_score": 0.873128595965676,
+        "frequency_two_sided_p": 0.3825929888891897,
+        "windows": {
+          "5": {
+            "observed_score": 957.0,
+            "expected_score": 1025.8081652729957,
+            "z_score": -1.8968427898962974,
+            "two_sided_p": 0.05784868996391758,
+            "profile_mean": 1.732394366197183,
+            "profile_variance": 0.9670809817778587,
+            "profile_maximum": 5,
+            "interpretation": "較分散",
+            "holm_adjusted_p_across_selected_families": 0.2892434498195879,
+            "significant_at_0_05": false
+          },
+          "10": {
+            "observed_score": 4337.0,
+            "expected_score": 4607.1278898180035,
+            "z_score": -2.410079831040362,
+            "two_sided_p": 0.015949030266265814,
+            "profile_mean": 3.4639905548996457,
+            "profile_variance": 1.6248838202416538,
+            "profile_maximum": 7,
+            "interpretation": "較分散"
+          }
+        },
+        "selected_from": {
+          "family": "奇偶精確分布",
+          "window": 5
+        }
+      },
+      {
+        "family": "奇偶精確分布",
+        "pattern": "3 奇 3 偶",
+        "baseline_probability": 0.33289911709364595,
+        "observed_draws": 297,
+        "expected_draws": 284.96164423216095,
+        "frequency_z_score": 0.873128595965676,
+        "frequency_two_sided_p": 0.3825929888891897,
+        "windows": {
+          "5": {
+            "observed_score": 957.0,
+            "expected_score": 1025.8081652729957,
+            "z_score": -1.8968427898962974,
+            "two_sided_p": 0.05784868996391758,
+            "profile_mean": 1.732394366197183,
+            "profile_variance": 0.9670809817778587,
+            "profile_maximum": 5,
+            "interpretation": "較分散"
+          },
+          "10": {
+            "observed_score": 4337.0,
+            "expected_score": 4607.1278898180035,
+            "z_score": -2.410079831040362,
+            "two_sided_p": 0.015949030266265814,
+            "profile_mean": 3.4639905548996457,
+            "profile_variance": 1.6248838202416538,
+            "profile_maximum": 7,
+            "interpretation": "較分散",
+            "holm_adjusted_p_across_selected_families": 0.07974515133132908,
+            "significant_at_0_05": false
+          }
+        },
+        "selected_from": {
+          "family": "奇偶精確分布",
+          "window": 10
+        }
+      },
+      {
+        "family": "所有指定號碼對",
+        "pattern": "號碼對 33-34",
+        "baseline_probability": 0.012755102040816327,
+        "observed_draws": 14,
+        "expected_draws": 10.918367346938776,
+        "frequency_z_score": 0.938619488648626,
+        "frequency_two_sided_p": 0.3479261431762336,
+        "windows": {
+          "5": {
+            "observed_score": 0.0,
+            "expected_score": 2.1236814778378967,
+            "z_score": -0.856462837406012,
+            "two_sided_p": 0.3917418201725566,
+            "profile_mean": 0.08215962441314555,
+            "profile_variance": 0.07549803324451211,
+            "profile_maximum": 1,
+            "interpretation": "較分散",
+            "holm_adjusted_p_across_selected_families": 1.0,
+            "significant_at_0_05": false
+          },
+          "10": {
+            "observed_score": 4.0,
+            "expected_score": 9.537916051811772,
+            "z_score": -0.7282004376953826,
+            "two_sided_p": 0.46649089797513094,
+            "profile_mean": 0.1652892561983471,
+            "profile_variance": 0.14758806635015534,
+            "profile_maximum": 2,
+            "interpretation": "較分散"
+          }
+        },
+        "selected_from": {
+          "family": "所有指定號碼對",
+          "window": 5
+        }
+      },
+      {
+        "family": "所有指定號碼對",
+        "pattern": "號碼對 28-44",
+        "baseline_probability": 0.012755102040816327,
+        "observed_draws": 14,
+        "expected_draws": 10.918367346938776,
+        "frequency_z_score": 0.938619488648626,
+        "frequency_two_sided_p": 0.3479261431762336,
+        "windows": {
+          "5": {
+            "observed_score": 0.0,
+            "expected_score": 2.1236814778378967,
+            "z_score": -0.856462837406012,
+            "two_sided_p": 0.3917418201725566,
+            "profile_mean": 0.08215962441314555,
+            "profile_variance": 0.07549803324451212,
+            "profile_maximum": 1,
+            "interpretation": "較分散"
+          },
+          "10": {
+            "observed_score": 0.0,
+            "expected_score": 9.537916051811772,
+            "z_score": -1.2541747795831735,
+            "two_sided_p": 0.20977848467789825,
+            "profile_mean": 0.1652892561983471,
+            "profile_variance": 0.1381318015747416,
+            "profile_maximum": 1,
+            "interpretation": "較分散",
+            "holm_adjusted_p_across_selected_families": 0.6592159757168897,
+            "significant_at_0_05": false
+          }
+        },
+        "selected_from": {
+          "family": "所有指定號碼對",
+          "window": 10
+        }
+      },
+      {
+        "family": "連號對",
+        "pattern": "連號 33-34",
+        "baseline_probability": 0.012755102040816327,
+        "observed_draws": 14,
+        "expected_draws": 10.918367346938776,
+        "frequency_z_score": 0.938619488648626,
+        "frequency_two_sided_p": 0.3479261431762336,
+        "windows": {
+          "5": {
+            "observed_score": 0.0,
+            "expected_score": 2.1236814778378967,
+            "z_score": -0.856462837406012,
+            "two_sided_p": 0.3917418201725566,
+            "profile_mean": 0.08215962441314555,
+            "profile_variance": 0.07549803324451211,
+            "profile_maximum": 1,
+            "interpretation": "較分散",
+            "holm_adjusted_p_across_selected_families": 1.0,
+            "significant_at_0_05": false
+          },
+          "10": {
+            "observed_score": 4.0,
+            "expected_score": 9.537916051811772,
+            "z_score": -0.7282004376953826,
+            "two_sided_p": 0.46649089797513094,
+            "profile_mean": 0.1652892561983471,
+            "profile_variance": 0.14758806635015534,
+            "profile_maximum": 2,
+            "interpretation": "較分散"
+          }
+        },
+        "selected_from": {
+          "family": "連號對",
+          "window": 5
+        }
+      },
+      {
+        "family": "連號對",
+        "pattern": "連號 33-34",
+        "baseline_probability": 0.012755102040816327,
+        "observed_draws": 14,
+        "expected_draws": 10.918367346938776,
+        "frequency_z_score": 0.938619488648626,
+        "frequency_two_sided_p": 0.3479261431762336,
+        "windows": {
+          "5": {
+            "observed_score": 0.0,
+            "expected_score": 2.1236814778378967,
+            "z_score": -0.856462837406012,
+            "two_sided_p": 0.3917418201725566,
+            "profile_mean": 0.08215962441314555,
+            "profile_variance": 0.07549803324451211,
+            "profile_maximum": 1,
+            "interpretation": "較分散"
+          },
+          "10": {
+            "observed_score": 4.0,
+            "expected_score": 9.537916051811772,
+            "z_score": -0.7282004376953826,
+            "two_sided_p": 0.46649089797513094,
+            "profile_mean": 0.1652892561983471,
+            "profile_variance": 0.14758806635015534,
+            "profile_maximum": 2,
+            "interpretation": "較分散",
+            "holm_adjusted_p_across_selected_families": 0.9329817959502619,
+            "significant_at_0_05": false
+          }
+        },
+        "selected_from": {
+          "family": "連號對",
+          "window": 10
+        }
+      }
+    ]
+  }
+}

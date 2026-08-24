@@ -38,6 +38,7 @@ from weight_monitor import (
     build_weight_monitor_state,
     load_weight_adjustment_history,
 )
+from long_window_research import build_long_window_research_state
 
 
 st.set_page_config(page_title="六合彩資料分析實驗室", page_icon="🎱", layout="wide")
@@ -70,8 +71,8 @@ if validated_upload is None and uploaded_file is not None:
     st.error("上傳檔案未通過驗證，因此系統不會用它訓練模型；目前會使用專案內真實歷史資料（如不可用才回退模擬資料）。")
 
 st.info(f"目前資料來源：**{source_label}**；共 {len(draws):,} 期紀錄。")
-overview_tab, model_tab, backtest_tab, hit_rate_tab, blind_test_tab, inference_tab, weight_tab, data_tab = st.tabs(
-    ["資料概覽", "模型實驗", "模型回測", "命中率與回測分析", "三配置盲測追蹤", "Brier 統計檢定", "權重演變與凍結", "歷史資料預覽"]
+overview_tab, model_tab, backtest_tab, hit_rate_tab, blind_test_tab, inference_tab, weight_tab, data_tab, window_research_tab = st.tabs(
+    ["資料概覽", "模型實驗", "模型回測", "命中率與回測分析", "三配置盲測追蹤", "Brier 統計檢定", "權重演變與凍結", "歷史資料預覽", "5／10期窗口研究"]
 )
 
 with overview_tab:
@@ -255,7 +256,11 @@ with inference_tab:
     if brier_frame.empty:
         st.info("目前尚無共同已結算的四配置完整機率紀錄，因此沒有可視覺化的長期 Brier 走勢或可執行的檢定。當未來每期在開獎前鎖定四組完整機率並在結果寫入後結算，此頁會自動開始累積。")
     else:
-        visible_periods = st.slider("顯示最近共同已結算期數", min_value=1, max_value=len(brier_frame), value=len(brier_frame))
+        if len(brier_frame) == 1:
+            visible_periods = 1
+            st.caption("目前只有 1 期共同已結算完整機率紀錄，因此顯示全部可用資料。")
+        else:
+            visible_periods = st.slider("顯示最近共同已結算期數", min_value=1, max_value=len(brier_frame), value=len(brier_frame))
         visible = brier_frame.tail(visible_periods).copy()
         metric_a, metric_b, metric_c, metric_d = st.columns(4)
         for metric, key in zip((metric_a, metric_b, metric_c, metric_d), CONFIG_LABELS, strict=True):
@@ -264,28 +269,31 @@ with inference_tab:
         st.line_chart(chart)
         st.dataframe(visible.rename(columns=CONFIG_LABELS), width="stretch", hide_index=True)
 
-        max_block = max(1, min(10, len(visible)))
-        controls_a, controls_b = st.columns(2)
-        with controls_a:
-            block_length = st.slider("Bootstrap 區塊長度", min_value=1, max_value=max_block, value=min(5, max_block))
-        with controls_b:
-            bootstrap_runs = st.select_slider("Bootstrap 重抽次數", options=[500, 1_000, 2_000, 5_000], value=2_000)
-        inference, inference_error = run_four_configuration_inference(visible, block_length=block_length, n_bootstrap=bootstrap_runs)
-        if inference_error:
-            st.info(inference_error)
+        if len(visible) < 2:
+            st.info("共同已結算完整機率紀錄不足 2 期，暫不執行 Bootstrap 或 Diebold–Mariano 比較。系統會在後續期數自動累積研究樣本。")
         else:
-            display = inference.loc[:, [
-                "配置", "candidate_mean_brier", "baseline_mean_brier", "mean_difference", "ci95_lower", "ci95_upper",
-                "brier_skill_score_vs_baseline", "bootstrap_p_value_holm", "dm_dm_statistic", "dm_p_value_holm",
-                "inference_methods_agree", "both_methods_support_candidate",
-            ]].rename(columns={
-                "candidate_mean_brier": "候選平均 Brier", "baseline_mean_brier": "基準平均 Brier", "mean_difference": "平均差（候選−基準）",
-                "ci95_lower": "Bootstrap 95% CI 下界", "ci95_upper": "Bootstrap 95% CI 上界", "brier_skill_score_vs_baseline": "Brier Skill Score",
-                "bootstrap_p_value_holm": "Bootstrap Holm p", "dm_dm_statistic": "DM 統計量", "dm_p_value_holm": "DM Holm p",
-                "inference_methods_agree": "兩方法拒絕結論一致", "both_methods_support_candidate": "雙方法支持候選",
-            })
-            st.dataframe(display, width="stretch", hide_index=True)
-            st.caption("Bootstrap 是主要推論，Diebold–Mariano 是敏感度／交叉驗證。四配置共同已結算期數少於 100 時，所有結果均只屬描述性與探索性，不可宣稱長期優勢。")
+            max_block = min(10, len(visible))
+            controls_a, controls_b = st.columns(2)
+            with controls_a:
+                block_length = st.slider("Bootstrap 區塊長度", min_value=1, max_value=max_block, value=min(5, max_block))
+            with controls_b:
+                bootstrap_runs = st.select_slider("Bootstrap 重抽次數", options=[500, 1_000, 2_000, 5_000], value=2_000)
+            inference, inference_error = run_four_configuration_inference(visible, block_length=block_length, n_bootstrap=bootstrap_runs)
+            if inference_error:
+                st.info(inference_error)
+            else:
+                display = inference.loc[:, [
+                    "配置", "candidate_mean_brier", "baseline_mean_brier", "mean_difference", "ci95_lower", "ci95_upper",
+                    "brier_skill_score_vs_baseline", "bootstrap_p_value_holm", "dm_dm_statistic", "dm_p_value_holm",
+                    "inference_methods_agree", "both_methods_support_candidate",
+                ]].rename(columns={
+                    "candidate_mean_brier": "候選平均 Brier", "baseline_mean_brier": "基準平均 Brier", "mean_difference": "平均差（候選−基準）",
+                    "ci95_lower": "Bootstrap 95% CI 下界", "ci95_upper": "Bootstrap 95% CI 上界", "brier_skill_score_vs_baseline": "Brier Skill Score",
+                    "bootstrap_p_value_holm": "Bootstrap Holm p", "dm_dm_statistic": "DM 統計量", "dm_p_value_holm": "DM Holm p",
+                    "inference_methods_agree": "兩方法拒絕結論一致", "both_methods_support_candidate": "雙方法支持候選",
+                })
+                st.dataframe(display, width="stretch", hide_index=True)
+                st.caption("Bootstrap 是主要推論，Diebold–Mariano 是敏感度／交叉驗證。四配置共同已結算期數少於 100 時，所有結果均只屬描述性與探索性，不可宣稱長期優勢。")
 
 with weight_tab:
     st.subheader("受約束 Brier 權重演變與 50 期凍結監控")
@@ -330,3 +338,34 @@ with data_tab:
     st.dataframe(filtered_history, width="stretch", hide_index=True)
     st.markdown("#### CSV 欄位規格")
     st.code(", ".join(REQUIRED_COLUMNS), language=None)
+
+with window_research_tab:
+    st.subheader("5／10 期窗口頻率研究")
+    st.caption("本區展示已封存的長期真實資料研究快照；資料以均勻 49 選 6 為基準，並對同一組合家族作 Holm 多重比較校正。它不會修改模型、盲測紀錄或權重。")
+    research = build_long_window_research_state()
+    if not research["available"]:
+        st.warning(research["message"])
+    else:
+        start_date, end_date = research["date_range"]
+        metric_a, metric_b, metric_c, metric_d = st.columns(4)
+        metric_a.metric("研究樣本", f"{research['draw_count']:,} 期")
+        metric_b.metric("預先定義檢驗", f"{research['total_tests']:,}")
+        metric_c.metric("5 期全樣本候選", research["initial_signals"]["5"])
+        metric_d.metric("留出驗證通過", f"{research['passed_holdout']}/10")
+        st.info(f"資料範圍：{start_date} 至 {end_date}。全樣本的少數表面偏離，在按時間保留的後 {research['holdout_draws']:,} 期均未通過驗證；因此不列為模型訊號。")
+
+        st.markdown("#### 家族摘要：總頻率與窗口偏離")
+        st.dataframe(research["family_table"], width="stretch", hide_index=True)
+
+        st.markdown("#### 時間留出驗證")
+        st.caption(f"先以前 {research['training_draws']:,} 期選出每個家族在 5 期與 10 期窗口最突出的候選，再以前述以外的 {research['holdout_draws']:,} 期獨立檢驗。跨五個家族的候選再作 Holm 校正。")
+        st.dataframe(research["holdout_table"], width="stretch", hide_index=True)
+
+        with st.expander("研究方法與判讀限制"):
+            st.markdown("""
+            - **總頻率**：比較組合實際出現次數與均勻 49 選 6 的理論期望；原始 p 值會因大量同時檢驗而自然出現少數偏離，故必須配合 Holm 校正。
+            - **5／10 期窗口**：固定組合的實際出現總數，只檢查其在相鄰窗口中是否異常集中或分散，避免把「總出現較多」錯當成跨期週期。
+            - **留出驗證**：探索期選出的候選，必須在之後未參與篩選的新期數重現，才可成為未來盲測的研究候選。
+
+            六合彩攪珠應視為獨立隨機事件。本區只供統計教育與模型治理研究，不構成投注建議或中獎保證。
+            """)
