@@ -141,6 +141,11 @@ def append_reconstructed_daily_report(
         existing = records[existing_index]
         if not refresh_reconstruction or existing.get("delivery_status") != "sent_reconstructed":
             return existing, False
+        record["prepared_at_utc"] = existing.get("prepared_at_utc", record["prepared_at_utc"])
+        existing_without_refresh_time = dict(existing)
+        existing_without_refresh_time.pop("reconstructed_at_utc", None)
+        if existing_without_refresh_time == record:
+            return existing, False
         record["reconstructed_at_utc"] = _utc_now()
         records[existing_index] = record
     else:

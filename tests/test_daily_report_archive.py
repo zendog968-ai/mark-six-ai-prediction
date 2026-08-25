@@ -103,6 +103,12 @@ class DailyReportArchiveTests(unittest.TestCase):
             self.assertEqual(refreshed["source_revision"], "new")
             self.assertIn("reconstructed_at_utc", refreshed)
 
+            unchanged, changed_again = append_reconstructed_daily_report(
+                "legacy-refresh", refreshed_snapshot, "new", "<p>new</p>", source_revision="new", source_event_sent_at_utc="2026-08-22T17:00:00+00:00", refresh_reconstruction=True, path=path
+            )
+            self.assertFalse(changed_again)
+            self.assertEqual(unchanged["prepared_at_utc"], refreshed["prepared_at_utc"])
+
     def test_dispatch_archives_only_after_successful_submission(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
