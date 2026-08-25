@@ -107,6 +107,7 @@ def append_reconstructed_daily_report(
     *,
     source_revision: str,
     source_event_sent_at_utc: str,
+    refresh_reconstruction: bool = False,
     path: Path = DEFAULT_DAILY_REPORT_ARCHIVE_PATH,
 ) -> tuple[dict[str, Any], bool]:
     """Append a clearly labelled reconstruction of a previously sent legacy report.
@@ -116,9 +117,11 @@ def append_reconstructed_daily_report(
     available at the time, without sending mail or touching formal ledgers.
     """
     records = load_daily_report_archive(path)
-    for record in records:
+    existing_index: int | None = None
+    for index, record in enumerate(records):
         if str(record.get("archive_id")) == archive_id:
-            return record, False
+            existing_index = index
+            break
     latest_draw = snapshot.get("latest_official_draw") if isinstance(snapshot.get("latest_official_draw"), dict) else {}
     record = {
         "archive_id": archive_id,
@@ -134,7 +137,14 @@ def append_reconstructed_daily_report(
         "plain_body": plain_body,
         "html_body": html_body,
     }
-    records.append(record)
+    if existing_index is not None:
+        existing = records[existing_index]
+        if not refresh_reconstruction or existing.get("delivery_status") != "sent_reconstructed":
+            return existing, False
+        record["reconstructed_at_utc"] = _utc_now()
+        records[existing_index] = record
+    else:
+        records.append(record)
     _write_daily_report_archive(records, path)
     return record, True
 

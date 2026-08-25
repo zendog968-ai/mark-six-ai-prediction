@@ -13,6 +13,7 @@ from daily_report_archive import (
     search_daily_report_archive,
 )
 from smtp_notifications import dispatch_daily_status
+from scripts.backfill_daily_report_archive import event_timestamp_hkt
 
 
 def _snapshot() -> dict:
@@ -35,6 +36,11 @@ def _snapshot() -> dict:
 
 
 class DailyReportArchiveTests(unittest.TestCase):
+    def test_historical_event_timestamp_converts_to_hong_kong_date(self) -> None:
+        report_date, display_time = event_timestamp_hkt("2026-08-22T17:21:42+00:00")
+        self.assertEqual(report_date, "2026-08-23")
+        self.assertTrue(display_time.endswith("+08:00"))
+
     def test_prepare_deduplicates_and_marks_sent_without_rewriting_content(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "daily_report_archive.json"
@@ -80,6 +86,22 @@ class DailyReportArchiveTests(unittest.TestCase):
             self.assertEqual(found[0]["delivery_status"], "sent_reconstructed")
             self.assertIn("Git", found[0]["content_provenance"])
             self.assertEqual(daily_report_archive_index(found)[0]["內容來源"], "歷史可追溯重建")
+
+    def test_reconstructed_report_can_refresh_derived_metadata_only(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "daily_report_archive.json"
+            append_reconstructed_daily_report(
+                "legacy-refresh", _snapshot(), "old", "<p>old</p>", source_revision="old", source_event_sent_at_utc="2026-08-22T17:00:00+00:00", path=path
+            )
+            refreshed_snapshot = _snapshot()
+            refreshed_snapshot["report_date_hkt"] = "2026-08-23"
+            refreshed, changed = append_reconstructed_daily_report(
+                "legacy-refresh", refreshed_snapshot, "new", "<p>new</p>", source_revision="new", source_event_sent_at_utc="2026-08-22T17:00:00+00:00", refresh_reconstruction=True, path=path
+            )
+            self.assertTrue(changed)
+            self.assertEqual(refreshed["report_date_hkt"], "2026-08-23")
+            self.assertEqual(refreshed["source_revision"], "new")
+            self.assertIn("reconstructed_at_utc", refreshed)
 
     def test_dispatch_archives_only_after_successful_submission(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

@@ -14,6 +14,8 @@ import sys
 import tempfile
 from pathlib import Path
 from typing import Any
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
@@ -39,6 +41,7 @@ HISTORICAL_DATA_FILES = (
     "data/weight_adjustment_history.json",
     "data/latest_prediction.json",
 )
+HONG_KONG_TZ = ZoneInfo("Asia/Hong_Kong")
 
 
 def _git_text(*args: str) -> str:
@@ -51,6 +54,12 @@ def _git_text(*args: str) -> str:
 def _commit_for_timestamp(timestamp: str) -> str | None:
     commit = _git_text("rev-list", "-1", f"--before={timestamp}", "HEAD").strip()
     return commit or None
+
+
+def event_timestamp_hkt(timestamp: str) -> tuple[str, str]:
+    """Return HKT report date and display timestamp from a UTC ledger event."""
+    converted = datetime.fromisoformat(timestamp).astimezone(HONG_KONG_TZ)
+    return converted.date().isoformat(), converted.isoformat()
 
 
 def _sent_daily_events(ledger_path: Path) -> list[dict[str, Any]]:
@@ -86,8 +95,9 @@ def _snapshot_at_revision(revision: str, event_timestamp: str) -> dict[str, Any]
             weight_history_path=root / "data/weight_adjustment_history.json",
             latest_prediction_path=root / "data/latest_prediction.json",
         )
-    snapshot["report_date_hkt"] = event_timestamp[:10]
-    snapshot["generated_at_hkt"] = event_timestamp
+    report_date_hkt, generated_at_hkt = event_timestamp_hkt(event_timestamp)
+    snapshot["report_date_hkt"] = report_date_hkt
+    snapshot["generated_at_hkt"] = generated_at_hkt
     return snapshot
 
 
@@ -109,6 +119,7 @@ def backfill(ledger_path: Path = DEFAULT_EVENT_LEDGER_PATH, archive_path: Path =
             render_daily_status_html(snapshot),
             source_revision=revision,
             source_event_sent_at_utc=sent_at,
+            refresh_reconstruction=True,
             path=archive_path,
         )
         if created:
