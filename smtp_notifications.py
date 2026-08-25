@@ -15,6 +15,7 @@ import os
 import smtplib
 from datetime import UTC, datetime
 from email.message import EmailMessage
+from html import escape
 from pathlib import Path
 from typing import Any, Callable
 from zoneinfo import ZoneInfo
@@ -190,12 +191,26 @@ def smtp_settings_from_environment() -> dict[str, Any]:
     }
 
 
-def send_email(settings: dict[str, Any], subject: str, body: str) -> None:
+def build_email_message(
+    settings: dict[str, Any],
+    subject: str,
+    body: str,
+    *,
+    html_body: str | None = None,
+) -> EmailMessage:
+    """Build a multipart email while preserving a readable plain-text fallback."""
     message = EmailMessage()
     message["From"] = settings["sender"]
     message["To"] = settings["recipient"]
     message["Subject"] = subject
     message.set_content(body)
+    if html_body:
+        message.add_alternative(html_body, subtype="html")
+    return message
+
+
+def send_email(settings: dict[str, Any], subject: str, body: str, *, html_body: str | None = None) -> None:
+    message = build_email_message(settings, subject, body, html_body=html_body)
     timeout = 25
     if int(settings["port"]) == 465:
         with smtplib.SMTP_SSL(settings["host"], int(settings["port"]), timeout=timeout) as client:
@@ -330,12 +345,129 @@ def _recommendation_text(item: Any) -> str:
     return f"- 組合 {set_index if set_index else '？'}：{main_text}"
 
 
+def _recommendation_html(item: Any) -> str:
+    """Render one recommendation with conservative inline styles for email clients."""
+    if not isinstance(item, dict):
+        return ""
+    try:
+        set_index = int(item.get("set_index", 0))
+        numbers = [int(number) for number in item.get("numbers", [])]
+    except (TypeError, ValueError):
+        return ""
+    if len(numbers) != 6 or any(number < 1 or number > 49 for number in numbers):
+        return ""
+    main_text = escape(_number_text(numbers))
+    if set_index == 1:
+        try:
+            special = int(item.get("special_number"))
+        except (TypeError, ValueError):
+            special = None
+        if special is not None and 1 <= special <= 49 and special not in numbers:
+            return (
+                '<tr><td style="padding:12px 0;border-bottom:1px solid #e5e7eb;">'
+                '<div style="font-weight:700;color:#111827;">6+1 推薦組合</div>'
+                f'<div style="margin-top:5px;color:#1f2937;">{main_text} '
+                '<span style="display:inline-block;margin-left:5px;padding:4px 8px;'
+                'background:#fef3c7;color:#92400e;border:1px solid #f59e0b;border-radius:4px;'
+                'font-weight:700;">'
+                f'<strong>特別號碼：{special:02d}</strong></span></div></td></tr>'
+            )
+    label = escape(f"組合 {set_index if set_index else '？'}")
+    return (
+        '<tr><td style="padding:10px 0;border-bottom:1px solid #e5e7eb;">'
+        f'<span style="font-weight:700;color:#374151;">{label}</span>'
+        f'<span style="color:#1f2937;">：{main_text}</span></td></tr>'
+    )
+
+
 def _load_latest_prediction(path: Path = DEFAULT_LATEST_PREDICTION_PATH) -> dict[str, Any] | None:
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         return None
     return payload if isinstance(payload, dict) else None
+
+
+def _html_section(title: str, content: str) -> str:
+    return (
+        '<section style="margin:18px 0;padding:18px;background:#ffffff;border:1px solid #e5e7eb;border-radius:8px;">'
+        f'<h2 style="margin:0 0 12px;font-size:16px;line-height:1.35;color:#111827;">{escape(title)}</h2>'
+        f'{content}</section>'
+    )
+
+
+def render_daily_status_html(snapshot: dict[str, Any], *, simulation: bool = False) -> str:
+    """Render a table-based, email-client-compatible daily status report."""
+    latest = snapshot.get("latest_official_draw") or {}
+    blind = snapshot.get("latest_blind") or {}
+    brier = snapshot.get("latest_brier") or {}
+    weights = snapshot.get("weight_version") or {}
+    latest_prediction = snapshot.get("latest_prediction") or {}
+    variants = blind.get("variants", []) if isinstance(blind.get("variants"), list) else []
+    recommendations = latest_prediction.get("top_5_recommendations", []) if isinstance(latest_prediction, dict) else []
+    weight_values = _weights(weights.get("proposed_weights")) if isinstance(weights, dict) else None
+    official_content = (
+        f'<p style="margin:0 0 6px;color:#374151;">最新期數：<strong>{escape(str(latest.get("draw", "未知")))}</strong>；'
+        f'日期：{escape(str(latest.get("date", "未知")))}</p>'
+        f'<p style="margin:0;color:#374151;">六個正選：{escape(_number_text(latest.get("numbers")))}</p>'
+    )
+    recommendation_rows = "".join(_recommendation_html(item) for item in recommendations if isinstance(item, dict))
+    recommendation_content = (
+        '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">'
+        f'{recommendation_rows or "<tr><td style=\"color:#6b7280;\">目前沒有可呈現的最新研究組合</td></tr>"}'
+        '</table>'
+        '<p style="margin:12px 0 0;font-size:12px;line-height:1.5;color:#6b7280;">'
+        '第一組特別號碼沿用主號模型排序，只作不重複的研究展示；不計入六個正選命中統計。</p>'
+    )
+    variant_rows = "<br>".join(
+        f"{escape(str(item.get('label', item.get('key', '未命名'))))}：{escape(_number_text(item.get('numbers')))}"
+        for item in variants
+        if isinstance(item, dict)
+    ) or "目前沒有可呈現的三配置盲測記錄"
+    blind_content = (
+        f'<p style="margin:0 0 6px;color:#374151;">目標期數：{escape(str(blind.get("target_draw", "尚未鎖定")))}；'
+        f'狀態：{escape(str(blind.get("status", "無記錄")))}</p>'
+        f'<p style="margin:0;color:#374151;">{variant_rows}</p>'
+    )
+    brier_content = (
+        f'<p style="margin:0;color:#374151;">目標期數：{escape(str(brier.get("target_draw", "尚未鎖定")))}；'
+        f'狀態：{escape(str(brier.get("status", "無記錄")))}<br>'
+        f'共同已結算期數：{escape(str(snapshot.get("common_brier_draws", 0)))}；'
+        f'正式閘門：{escape(str(snapshot.get("formal_gate", "")))}</p>'
+    )
+    weight_content = (
+        f'<p style="margin:0;color:#374151;">權重版本：{escape(str(weights.get("version", "baseline-equal-v1（觀察期）") if isinstance(weights, dict) else "baseline-equal-v1（觀察期）"))}<br>'
+        f'凍結進度：{escape(str(weights.get("freeze_completed_draws", 0) if isinstance(weights, dict) else 0))}/50 期<br>'
+        f'權重：{escape(_format_weights(weight_values) if weight_values else "四配置等權重 25.0%／25.0%／25.0%／25.0%")}</p>'
+    )
+    simulation_note = (
+        '<div style="margin:0 0 18px;padding:12px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:6px;color:#1d4ed8;">'
+        '<strong>受控模擬通知</strong><br>本信只驗證格式，沒有建立、結算或改寫任何正式盲測與權重版本。</div>'
+        if simulation
+        else ""
+    )
+    sections = "".join(
+        [
+            _html_section("一、最新官方結果資料", official_content),
+            _html_section("二、最新模型研究組合", recommendation_content),
+            _html_section("三、三配置盲測狀態", blind_content),
+            _html_section("四、四配置 Brier 追蹤", brier_content),
+            _html_section("五、模型權重與凍結狀態", weight_content),
+        ]
+    )
+    return (
+        '<!doctype html><html><body style="margin:0;padding:0;background:#f3f4f6;font-family:Arial,\'Noto Sans TC\',sans-serif;">'
+        '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"><tr><td align="center" style="padding:24px 12px;">'
+        '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:680px;">'
+        '<tr><td style="padding:24px;background:#111827;color:#ffffff;border-radius:10px 10px 0 0;">'
+        '<h1 style="margin:0;font-size:21px;">Mark Six 每日盲測結果與模型權重狀態摘要</h1>'
+        f'<p style="margin:8px 0 0;color:#d1d5db;font-size:13px;">報告時間（香港）：{escape(str(snapshot.get("generated_at_hkt", "未知")))}</p>'
+        '</td></tr><tr><td style="padding:0 18px 18px;background:#f9fafb;border-radius:0 0 10px 10px;">'
+        f'{simulation_note}{sections}'
+        '<p style="margin:20px 0 0;font-size:12px;line-height:1.55;color:#6b7280;">'
+        '本報告僅供統計實驗、盲測治理與系統審計用途，不構成投注建議或中獎保證。</p>'
+        '</td></tr></table></td></tr></table></body></html>'
+    )
 
 
 def render_daily_status_body(snapshot: dict[str, Any], *, simulation: bool = False) -> str:
@@ -405,7 +537,12 @@ def dispatch_daily_status(
         return {"sent": 0, "skipped": 0, "failed": 1}
     entry = prior or {"event_id": daily_event, "event_type": "daily_summary", "created_at": utc_now(), "attempts": 0}
     try:
-        send_func(settings, f"[Mark Six] 每日盲測與權重狀態 — {report_date}", render_daily_status_body(snapshot))
+        subject = f"[Mark Six] 每日盲測與權重狀態 — {report_date}"
+        plain_body = render_daily_status_body(snapshot)
+        if send_func is send_email:
+            send_email(settings, subject, plain_body, html_body=render_daily_status_html(snapshot))
+        else:
+            send_func(settings, subject, plain_body)
         entry.update({"status": "sent", "attempts": attempts + 1, "sent_at": utc_now(), "last_error": None})
         result = {"sent": 1, "skipped": 0, "failed": 0}
     except Exception as error:  # noqa: BLE001
@@ -424,6 +561,7 @@ def send_simulated_daily_status(settings: dict[str, Any]) -> None:
         settings,
         f"[模擬] Mark Six 盲測與權重凍結狀態 — {snapshot['report_date_hkt']}",
         render_daily_status_body(snapshot, simulation=True),
+        html_body=render_daily_status_html(snapshot, simulation=True),
     )
 
 
