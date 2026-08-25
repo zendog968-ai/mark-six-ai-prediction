@@ -360,7 +360,9 @@ with window_research_tab:
         st.session_state[language_widget_key] = language_label_from_code(load_window_research_language())
 
     def persist_window_research_language() -> None:
-        save_window_research_language(language_code_from_label(st.session_state[language_widget_key]))
+        saved_language = language_code_from_label(st.session_state[language_widget_key])
+        save_window_research_language(saved_language)
+        st.session_state["window_research_language_saved"] = saved_language
 
     language_choice = st.selectbox(
         "Language / 語言",
@@ -370,6 +372,11 @@ with window_research_tab:
         help="This selector changes only the 5/10-draw window research view and remembers the last selection on this dashboard.",
     )
     language = language_code_from_label(language_choice)
+    saved_language = st.session_state.pop("window_research_language_saved", None)
+    if saved_language == "en":
+        st.toast("Language preference saved: English", icon="✅", duration="long")
+    elif saved_language == "zh":
+        st.toast("已儲存語言偏好：繁體中文", icon="✅", duration="long")
     copy = research_copy(language)
     field = {
         "family": "Combination family" if language == "en" else "組合家族",

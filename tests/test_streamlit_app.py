@@ -37,13 +37,17 @@ class StreamlitApplicationTests(unittest.TestCase):
         source = (PROJECT_ROOT / "app.py").read_text(encoding="utf-8")
         self.assertIn("st.altair_chart(frequency_chart", source)
         self.assertIn("st.altair_chart(window_trend_chart", source)
+        self.assertIn("duration=\"long\"", source)
         self.assertIn("總頻率 Holm 狀態", source)
         self.assertIn("窗口 Holm 狀態", source)
         self.assertEqual(len(app.selectbox), 1)
         self.assertEqual(app.selectbox[0].label, "Language / 語言")
+        self.assertEqual(len(app.toast), 0)
 
         app.selectbox[0].set_value("English").run(timeout=30)
         self.assertFalse(app.exception)
+        self.assertEqual(len(app.toast), 1)
+        self.assertIn("Language preference saved: English", app.toast[0].value)
         english_subheaders = " ".join(item.value for item in app.subheader)
         english_captions = " ".join(item.value for item in app.caption)
         self.assertIn("5/10-draw window frequency research", english_subheaders)
@@ -56,9 +60,12 @@ class StreamlitApplicationTests(unittest.TestCase):
         reopened.run(timeout=30)
         self.assertFalse(reopened.exception)
         self.assertEqual(reopened.selectbox[0].value, "English")
+        self.assertEqual(len(reopened.toast), 0)
 
         reopened.selectbox[0].set_value("繁體中文").run(timeout=30)
         self.assertFalse(reopened.exception)
+        self.assertEqual(len(reopened.toast), 1)
+        self.assertIn("已儲存語言偏好：繁體中文", reopened.toast[0].value)
         self.assertEqual(ui_preferences.load_window_research_language(self.preference_path), "zh")
 
 
