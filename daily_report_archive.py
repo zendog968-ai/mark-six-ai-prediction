@@ -17,6 +17,7 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parent
 DEFAULT_DAILY_REPORT_ARCHIVE_PATH = PROJECT_ROOT / "data" / "daily_report_archive.json"
 ARCHIVE_SCHEMA_VERSION = 1
+DISPLAYABLE_DELIVERY_STATUSES = {"sent", "sent_reconstructed"}
 
 
 def _utc_now() -> str:
@@ -98,6 +99,46 @@ def mark_daily_report_sent(
     return changed
 
 
+def append_reconstructed_daily_report(
+    archive_id: str,
+    snapshot: dict[str, Any],
+    plain_body: str,
+    html_body: str,
+    *,
+    source_revision: str,
+    source_event_sent_at_utc: str,
+    path: Path = DEFAULT_DAILY_REPORT_ARCHIVE_PATH,
+) -> tuple[dict[str, Any], bool]:
+    """Append a clearly labelled reconstruction of a previously sent legacy report.
+
+    Legacy events recorded successful submission but did not preserve the MIME
+    content. This helper stores a reproducible rendering from the Git revision
+    available at the time, without sending mail or touching formal ledgers.
+    """
+    records = load_daily_report_archive(path)
+    for record in records:
+        if str(record.get("archive_id")) == archive_id:
+            return record, False
+    latest_draw = snapshot.get("latest_official_draw") if isinstance(snapshot.get("latest_official_draw"), dict) else {}
+    record = {
+        "archive_id": archive_id,
+        "report_date_hkt": str(snapshot.get("report_date_hkt", "")),
+        "generated_at_hkt": str(snapshot.get("generated_at_hkt", "")),
+        "prepared_at_utc": _utc_now(),
+        "delivery_status": "sent_reconstructed",
+        "content_provenance": "依既有成功提交事件及當時 Git 修訂重建；非原始 MIME 保存檔。",
+        "source_revision": source_revision,
+        "source_event_sent_at_utc": source_event_sent_at_utc,
+        "latest_draw": str(latest_draw.get("draw", "未知")),
+        "snapshot": snapshot,
+        "plain_body": plain_body,
+        "html_body": html_body,
+    }
+    records.append(record)
+    _write_daily_report_archive(records, path)
+    return record, True
+
+
 def search_daily_report_archive(
     records: list[dict[str, Any]],
     *,
@@ -110,7 +151,7 @@ def search_daily_report_archive(
     normalized_draw = latest_draw.strip()
     matched: list[dict[str, Any]] = []
     for record in records:
-        if record.get("delivery_status") != "sent":
+        if record.get("delivery_status") not in DISPLAYABLE_DELIVERY_STATUSES:
             continue
         if report_date and str(record.get("report_date_hkt", "")) != report_date:
             continue
@@ -134,7 +175,7 @@ def daily_report_archive_index(records: list[dict[str, Any]]) -> list[dict[str, 
     """Build compact, user-facing rows without exposing the full stored HTML."""
     rows: list[dict[str, Any]] = []
     for record in sorted(records, key=lambda item: str(item.get("generated_at_hkt", "")), reverse=True):
-        if record.get("delivery_status") != "sent":
+        if record.get("delivery_status") not in DISPLAYABLE_DELIVERY_STATUSES:
             continue
         snapshot = record.get("snapshot") if isinstance(record.get("snapshot"), dict) else {}
         summary = snapshot.get("recent_blind_hit_summary") if isinstance(snapshot.get("recent_blind_hit_summary"), dict) else {}
@@ -149,6 +190,7 @@ def daily_report_archive_index(records: list[dict[str, Any]]) -> list[dict[str, 
                 "近期已結算盲測期數": summary.get("settled_draws", 0),
                 "近期平均最高命中": f"{float(summary.get('average_best_hits', 0.0)):.2f}/6",
                 "第一組相對強度": f"{int(first.get('relative_strength_percent', 0))}%" if first else "—",
+                "內容來源": "原始提交快照" if record.get("delivery_status") == "sent" else "歷史可追溯重建",
                 "歸檔 ID": record.get("archive_id", "—"),
             }
         )

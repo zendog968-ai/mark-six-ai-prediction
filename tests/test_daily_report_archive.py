@@ -5,6 +5,7 @@ import unittest
 from pathlib import Path
 
 from daily_report_archive import (
+    append_reconstructed_daily_report,
     daily_report_archive_index,
     load_daily_report_archive,
     mark_daily_report_sent,
@@ -62,6 +63,23 @@ class DailyReportArchiveTests(unittest.TestCase):
             index = daily_report_archive_index(found)
             self.assertEqual(index[0]["最新官方期數"], "26091")
             self.assertEqual(index[0]["第一組相對強度"], "100%")
+
+    def test_reconstructed_sent_report_is_searchable_and_labelled(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "daily_report_archive.json"
+            append_reconstructed_daily_report(
+                "legacy-sent",
+                _snapshot(),
+                "legacy 6+1 report",
+                "<p>legacy</p>",
+                source_revision="a028343",
+                source_event_sent_at_utc="2026-08-22T17:21:42+00:00",
+                path=path,
+            )
+            found = search_daily_report_archive(load_daily_report_archive(path), query="legacy")
+            self.assertEqual(found[0]["delivery_status"], "sent_reconstructed")
+            self.assertIn("Git", found[0]["content_provenance"])
+            self.assertEqual(daily_report_archive_index(found)[0]["內容來源"], "歷史可追溯重建")
 
     def test_dispatch_archives_only_after_successful_submission(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

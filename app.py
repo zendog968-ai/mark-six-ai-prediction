@@ -546,7 +546,7 @@ with email_preview_tab:
 
 with report_archive_tab:
     st.subheader("歷史報告歸檔")
-    st.caption("只顯示已成功提交的每日 Email 唯讀快照。搜尋和預覽不會寄送 Email、更新開獎資料或改寫任何正式盲測、Brier、權重帳本。")
+    st.caption("顯示已成功提交的每日 Email 唯讀快照，以及明確標示來源的歷史可追溯重建。搜尋和預覽不會寄送 Email、更新開獎資料或改寫任何正式盲測、Brier、權重帳本。")
     archive_records = load_daily_report_archive()
     archive_filter_left, archive_filter_middle, archive_filter_right = st.columns([1.2, 1, 1])
     with archive_filter_left:
@@ -574,7 +574,8 @@ with report_archive_tab:
         archive_options = {f"{row['歸檔日期']}｜期數 {row['最新官方期數']}｜{row['歸檔 ID']}": record for row, record in zip(archive_rows, matched_archives)}
         selected_archive_label = st.selectbox("選擇要預覽的歸檔報告", list(archive_options))
         selected_archive = archive_options[selected_archive_label]
-        st.caption(f"歸檔 ID：`{selected_archive.get('archive_id', '—')}`；成功提交時間：{selected_archive.get('sent_at_utc', '—')}")
+        provenance = selected_archive.get("content_provenance", "原始提交後保存的快照。")
+        st.caption(f"歸檔 ID：`{selected_archive.get('archive_id', '—')}`；來源：{provenance}")
         st.iframe(str(selected_archive.get("html_body", "<p>歸檔 HTML 不可用。</p>")), height=1260)
         with st.expander("檢視此份歸檔的純文字後備內容"):
             st.code(str(selected_archive.get("plain_body", "")), language=None)
