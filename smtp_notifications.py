@@ -22,6 +22,11 @@ from zoneinfo import ZoneInfo
 
 from weight_monitor import CONFIG_LABELS, DEFAULT_WEIGHT_HISTORY_PATH, load_weight_adjustment_history
 from recommendation_strengths import recommendation_strengths
+from daily_report_archive import (
+    DEFAULT_DAILY_REPORT_ARCHIVE_PATH,
+    mark_daily_report_sent,
+    prepare_daily_report_archive,
+)
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent
@@ -660,6 +665,7 @@ def dispatch_daily_status(
     settings: dict[str, Any],
     *,
     ledger_path: Path = DEFAULT_EVENT_LEDGER_PATH,
+    archive_path: Path = DEFAULT_DAILY_REPORT_ARCHIVE_PATH,
     snapshot: dict[str, Any] | None = None,
     send_func: Callable[[dict[str, Any], str, str], None] = send_email,
 ) -> dict[str, int]:
@@ -678,10 +684,15 @@ def dispatch_daily_status(
     try:
         subject = f"[Mark Six] 每日盲測與權重狀態 — {report_date}"
         plain_body = render_daily_status_body(snapshot)
+        html_body = render_daily_status_html(snapshot)
+        archived_report, _ = prepare_daily_report_archive(daily_event, snapshot, plain_body, html_body, path=archive_path)
+        archived_plain = str(archived_report.get("plain_body", plain_body))
+        archived_html = str(archived_report.get("html_body", html_body))
         if send_func is send_email:
-            send_email(settings, subject, plain_body, html_body=render_daily_status_html(snapshot))
+            send_email(settings, subject, archived_plain, html_body=archived_html)
         else:
-            send_func(settings, subject, plain_body)
+            send_func(settings, subject, archived_plain)
+        mark_daily_report_sent(daily_event, path=archive_path)
         entry.update({"status": "sent", "attempts": attempts + 1, "sent_at": utc_now(), "last_error": None})
         result = {"sent": 1, "skipped": 0, "failed": 0}
     except Exception as error:  # noqa: BLE001

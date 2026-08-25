@@ -56,6 +56,7 @@ from ui_preferences import (
     save_window_research_language,
 )
 from smtp_notifications import build_daily_status_snapshot, render_daily_status_body, render_daily_status_html
+from daily_report_archive import daily_report_archive_index, load_daily_report_archive, search_daily_report_archive
 
 
 st.set_page_config(page_title="六合彩資料分析實驗室", page_icon="🎱", layout="wide")
@@ -88,8 +89,8 @@ if validated_upload is None and uploaded_file is not None:
     st.error("上傳檔案未通過驗證，因此系統不會用它訓練模型；目前會使用專案內真實歷史資料（如不可用才回退模擬資料）。")
 
 st.info(f"目前資料來源：**{source_label}**；共 {len(draws):,} 期紀錄。")
-overview_tab, model_tab, backtest_tab, hit_rate_tab, blind_test_tab, inference_tab, weight_tab, data_tab, window_research_tab, email_preview_tab = st.tabs(
-    ["資料概覽", "模型實驗", "模型回測", "命中率與回測分析", "三配置盲測追蹤", "Brier 統計檢定", "權重演變與凍結", "歷史資料預覽", "5／10期窗口研究", "HTML 每日報告預覽"]
+overview_tab, model_tab, backtest_tab, hit_rate_tab, blind_test_tab, inference_tab, weight_tab, data_tab, window_research_tab, email_preview_tab, report_archive_tab = st.tabs(
+    ["資料概覽", "模型實驗", "模型回測", "命中率與回測分析", "三配置盲測追蹤", "Brier 統計檢定", "權重演變與凍結", "歷史資料預覽", "5／10期窗口研究", "HTML 每日報告預覽", "歷史報告歸檔"]
 )
 
 with overview_tab:
@@ -542,3 +543,38 @@ with email_preview_tab:
     st.iframe(render_daily_status_html(report_snapshot), height=1260)
     with st.expander("檢視純文字後備內容"):
         st.code(render_daily_status_body(report_snapshot), language=None)
+
+with report_archive_tab:
+    st.subheader("歷史報告歸檔")
+    st.caption("只顯示已成功提交的每日 Email 唯讀快照。搜尋和預覽不會寄送 Email、更新開獎資料或改寫任何正式盲測、Brier、權重帳本。")
+    archive_records = load_daily_report_archive()
+    archive_filter_left, archive_filter_middle, archive_filter_right = st.columns([1.2, 1, 1])
+    with archive_filter_left:
+        archive_query = st.text_input("搜尋報告內容", placeholder="例如：26092、6+1、相對推薦強度")
+    with archive_filter_middle:
+        archive_date = st.date_input("歸檔日期（可選）", value=None)
+    with archive_filter_right:
+        archive_draw = st.text_input("最新官方期數（可選）", placeholder="例如：26092")
+    selected_date = archive_date.isoformat() if archive_date else None
+    matched_archives = search_daily_report_archive(
+        archive_records,
+        query=archive_query,
+        report_date=selected_date,
+        latest_draw=archive_draw,
+    )
+    archive_rows = daily_report_archive_index(matched_archives)
+    metric_archive, metric_matches, metric_latest = st.columns(3)
+    metric_archive.metric("已歸檔報告", len(daily_report_archive_index(archive_records)))
+    metric_matches.metric("符合搜尋結果", len(matched_archives))
+    metric_latest.metric("最新歸檔期數", archive_rows[0]["最新官方期數"] if archive_rows else "—")
+    if not matched_archives:
+        st.info("目前沒有符合條件的已提交每日報告。每日排程成功提交下一份報告後會自動追加歸檔。")
+    else:
+        st.dataframe(archive_rows, width="stretch", hide_index=True, height=260)
+        archive_options = {f"{row['歸檔日期']}｜期數 {row['最新官方期數']}｜{row['歸檔 ID']}": record for row, record in zip(archive_rows, matched_archives)}
+        selected_archive_label = st.selectbox("選擇要預覽的歸檔報告", list(archive_options))
+        selected_archive = archive_options[selected_archive_label]
+        st.caption(f"歸檔 ID：`{selected_archive.get('archive_id', '—')}`；成功提交時間：{selected_archive.get('sent_at_utc', '—')}")
+        st.iframe(str(selected_archive.get("html_body", "<p>歸檔 HTML 不可用。</p>")), height=1260)
+        with st.expander("檢視此份歸檔的純文字後備內容"):
+            st.code(str(selected_archive.get("plain_body", "")), language=None)

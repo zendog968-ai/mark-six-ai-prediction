@@ -116,6 +116,7 @@ __pycache__/
 data/weight_notification_events.json
 data/runtime_prediction_verification.json
 data/dashboard_preferences.json
+data/daily_report_archive.json
 
 # Local inspection artefacts
 .tmp-source/
