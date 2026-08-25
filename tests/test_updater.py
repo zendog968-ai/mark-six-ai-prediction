@@ -60,6 +60,11 @@ class UpdaterTests(unittest.TestCase):
             self.assertEqual(len(written), 61)
             self.assertTrue(payload["latest_draw"]["appended_to_history"])
             self.assertEqual(len(payload["top_5_recommendations"]), 5)
+            first_recommendation = payload["top_5_recommendations"][0]
+            self.assertEqual(first_recommendation["recommendation_format"], "6+1")
+            self.assertNotIn(first_recommendation["special_number"], first_recommendation["numbers"])
+            self.assertTrue(1 <= first_recommendation["special_number"] <= 49)
+            self.assertTrue(all(item["recommendation_format"] == "6" and "special_number" not in item for item in payload["top_5_recommendations"][1:]))
             self.assertEqual(len(payload["top_weights"]), 25)
             self.assertEqual(payload["model"]["name"], "Random Forest + XGBoost Ensemble")
             self.assertIn("kmeans_cluster", payload["model"]["features"])

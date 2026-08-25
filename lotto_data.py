@@ -345,10 +345,15 @@ def filter_history(
 
 
 def generate_filtered_combinations(sorted_probs, n_groups: int = 5, seed: int = 20260817):
-    """以相對權重在前 25 個候選號碼內抽樣，排除 6 單／6 雙。"""
+    """以相對權重在前 25 個候選號碼內抽樣，排除 6 單／6 雙。
+
+    產生後按組合內的模型相對權重總和降序排列，令第一組是本次候選中
+    權重最高的一組，供 6+1 研究格式使用。
+    """
     rng = np.random.default_rng(seed)
     top_pool = [number for number, _probability in sorted_probs[:25]]
     top_weights = np.array([max(float(probability), 0.0001) for _number, probability in sorted_probs[:25]], dtype=float)
+    weight_by_number = {int(number): float(probability) for number, probability in sorted_probs}
     top_weights /= top_weights.sum()
     combinations = []
     attempts = 0
@@ -360,4 +365,20 @@ def generate_filtered_combinations(sorted_probs, n_groups: int = 5, seed: int = 
             combinations.append(combination)
     if len(combinations) != n_groups:
         raise RuntimeError("無法產生足夠的合法組合。")
-    return combinations
+    return sorted(combinations, key=lambda values: (-sum(weight_by_number[number] for number in values), values))
+
+
+def select_special_number(sorted_probs, main_numbers: Iterable[int]) -> int:
+    """從模型排序中選出第一組以外最高分的研究用特別號碼。
+
+    此欄位只是沿用同一個主號模型的相對排序，並非獨立訓練的特別號模型；
+    因此必須與第一組六個主號不重複，也不參與 Top-6 主號命中統計。
+    """
+    main_set = {int(number) for number in main_numbers}
+    if len(main_set) != 6 or any(number < NUMBER_MIN or number > NUMBER_MAX for number in main_set):
+        raise ValueError("6+1 推薦組合必須先提供 6 個不重複且介乎 1 至 49 的主號。")
+    for raw_number, _score in sorted_probs:
+        number = int(raw_number)
+        if NUMBER_MIN <= number <= NUMBER_MAX and number not in main_set:
+            return number
+    raise RuntimeError("找不到與第一組六個主號不重複的研究用特別號碼。")

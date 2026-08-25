@@ -28,6 +28,7 @@ DEFAULT_DRAW_HISTORY_PATH = PROJECT_ROOT / "data" / "lotto_history_real.csv"
 DEFAULT_BLIND_HISTORY_PATH = PROJECT_ROOT / "data" / "blind_test_history.json"
 DEFAULT_BRIER_HISTORY_PATH = PROJECT_ROOT / "data" / "brier_tracking_history.json"
 DEFAULT_PREDICTION_VERIFICATION_PATH = PROJECT_ROOT / "data" / "runtime_prediction_verification.json"
+DEFAULT_LATEST_PREDICTION_PATH = PROJECT_ROOT / "data" / "latest_prediction.json"
 MAX_ATTEMPTS = 3
 FORMAL_STATUSES = {"frozen", "confirmed", "activated", "rolled_back"}
 HONG_KONG_TZ = ZoneInfo("Asia/Hong_Kong")
@@ -280,6 +281,7 @@ def build_daily_status_snapshot(
     blind_history_path: Path = DEFAULT_BLIND_HISTORY_PATH,
     brier_history_path: Path = DEFAULT_BRIER_HISTORY_PATH,
     weight_history_path: Path = DEFAULT_WEIGHT_HISTORY_PATH,
+    latest_prediction_path: Path = DEFAULT_LATEST_PREDICTION_PATH,
 ) -> dict[str, Any]:
     """Read-only daily status snapshot; never alters blind or weight records."""
     blind_records = _load_json(blind_history_path, "blind_tests")
@@ -296,6 +298,7 @@ def build_daily_status_snapshot(
         "latest_blind": pending_blind[-1] if pending_blind else (blind_records[-1] if blind_records else None),
         "latest_brier": pending_brier[-1] if pending_brier else (brier_records[-1] if brier_records else None),
         "weight_version": latest_weight,
+        "latest_prediction": _load_latest_prediction(latest_prediction_path),
         "common_brier_draws": 0,
         "formal_gate": "等待四配置共同已結算盲測期數達 100 期",
     }
@@ -307,17 +310,48 @@ def _number_text(values: Any) -> str:
     return "、".join(str(value).zfill(2) for value in values)
 
 
+def _recommendation_text(item: Any) -> str:
+    """Format a recommendation safely, preserving legacy six-number entries."""
+    if not isinstance(item, dict):
+        return "- 未提供推薦組合"
+    try:
+        set_index = int(item.get("set_index", 0))
+        numbers = [int(number) for number in item.get("numbers", [])]
+    except (TypeError, ValueError):
+        return "- 未提供推薦組合"
+    main_text = _number_text(numbers)
+    if set_index == 1:
+        try:
+            special = int(item.get("special_number"))
+        except (TypeError, ValueError):
+            special = None
+        if special is not None and 1 <= special <= 49 and special not in numbers:
+            return f"- 6+1 推薦組合：{main_text} + [特別號碼：{special:02d}]"
+    return f"- 組合 {set_index if set_index else '？'}：{main_text}"
+
+
+def _load_latest_prediction(path: Path = DEFAULT_LATEST_PREDICTION_PATH) -> dict[str, Any] | None:
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    return payload if isinstance(payload, dict) else None
+
+
 def render_daily_status_body(snapshot: dict[str, Any], *, simulation: bool = False) -> str:
     latest = snapshot.get("latest_official_draw") or {}
     blind = snapshot.get("latest_blind") or {}
     brier = snapshot.get("latest_brier") or {}
     weights = snapshot.get("weight_version") or {}
+    latest_prediction = snapshot.get("latest_prediction") or {}
     variants = blind.get("variants", []) if isinstance(blind.get("variants"), list) else []
+    recommendations = latest_prediction.get("top_5_recommendations", []) if isinstance(latest_prediction, dict) else []
     variant_lines = [
         f"- {item.get('label', item.get('key', '未命名'))}：{_number_text(item.get('numbers'))}"
         for item in variants
         if isinstance(item, dict)
     ]
+    recommendation_lines = [_recommendation_text(item) for item in recommendations if isinstance(item, dict)]
     weight_values = _weights(weights.get("proposed_weights")) if isinstance(weights, dict) else None
     simulation_heading = "【受控模擬通知】\n本信只驗證格式，沒有建立、結算或改寫任何正式盲測與權重版本。\n\n" if simulation else ""
     return "\n".join(
@@ -329,15 +363,19 @@ def render_daily_status_body(snapshot: dict[str, Any], *, simulation: bool = Fal
             f"最新期數：{latest.get('draw', '未知')}；日期：{latest.get('date', '未知')}",
             f"六個正選：{_number_text(latest.get('numbers'))}",
             "",
-            "二、三配置盲測狀態",
+            "二、最新模型研究組合",
+            *(recommendation_lines or ["- 目前沒有可呈現的最新研究組合"]),
+            "第一組的特別號碼沿用主號模型排序，只作不重複的研究展示；不計入六個正選命中統計。",
+            "",
+            "三、三配置盲測狀態",
             f"目標期數：{blind.get('target_draw', '尚未鎖定')}；狀態：{blind.get('status', '無記錄')}",
             *(variant_lines or ["- 目前沒有可呈現的三配置盲測記錄"]),
             "",
-            "三、四配置 Brier 追蹤",
+            "四、四配置 Brier 追蹤",
             f"目標期數：{brier.get('target_draw', '尚未鎖定')}；狀態：{brier.get('status', '無記錄')}",
             f"共同已結算期數：{snapshot.get('common_brier_draws', 0)}；正式閘門：{snapshot.get('formal_gate')}",
             "",
-            "四、模型權重與凍結狀態",
+            "五、模型權重與凍結狀態",
             f"權重版本：{weights.get('version', 'baseline-equal-v1（觀察期）') if isinstance(weights, dict) else 'baseline-equal-v1（觀察期）'}",
             f"凍結進度：{weights.get('freeze_completed_draws', 0) if isinstance(weights, dict) else 0}/50 期",
             f"權重：{_format_weights(weight_values) if weight_values else '四配置等權重 25.0%／25.0%／25.0%／25.0%'}",
@@ -403,11 +441,7 @@ def render_prediction_verification_body(path: Path = DEFAULT_PREDICTION_VERIFICA
         for item in top_weights[:6]
         if isinstance(item, dict)
     ]
-    set_lines = [
-        f"- 組合 {item.get('set_index', '?')}：{_number_text(item.get('numbers'))}"
-        for item in recommendations
-        if isinstance(item, dict)
-    ]
+    set_lines = [_recommendation_text(item) for item in recommendations if isinstance(item, dict)]
     subject = f"[模擬] Mark Six {target_draw} 受控預測重建驗證"
     body = "\n".join(
         [

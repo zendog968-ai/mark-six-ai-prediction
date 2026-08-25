@@ -20,13 +20,13 @@ def run() -> None:
         "top_weights_match_locked": True,
         "recommendations_match_locked": True,
         "rebuilt_top_weights": [{"number": 7, "relative_weight": 0.679232}],
-        "rebuilt_recommendations": [{"set_index": 1, "numbers": [1, 18, 30, 31, 45, 48]}],
+        "rebuilt_recommendations": [{"set_index": 1, "numbers": [1, 18, 30, 31, 45, 48], "special_number": 8, "recommendation_format": "6+1"}],
     }
     with tempfile.TemporaryDirectory() as temporary:
         path = Path(temporary) / "report.json"
         path.write_text(json.dumps(report), encoding="utf-8")
         subject, body = render_prediction_verification_body(path)
-        assert "26092" in subject and "受控預測重建" in body and "01、18、30、31、45、48" in body
+        assert "26092" in subject and "受控預測重建" in body and "6+1 推薦組合" in body and "[特別號碼：08]" in body
 
 
 if __name__ == "__main__":

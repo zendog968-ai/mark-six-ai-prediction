@@ -9,6 +9,7 @@ from lotto_data import (
     generate_filtered_combinations,
     read_csv_with_validation,
     rolling_backtest,
+    select_special_number,
     select_data_source,
     train_fusion_model,
 )
@@ -126,7 +127,14 @@ with model_tab:
         st.markdown("#### 經奇偶過濾的實驗性組合")
         for index, combination in enumerate(generate_filtered_combinations(ranked_probabilities), start=1):
             odd_count = sum(number % 2 for number in combination)
-            st.write(f"組合 {index:02d}：{' · '.join(f'{number:02d}' for number in combination)}　|　{odd_count} 單 / {6 - odd_count} 雙　|　總和 {sum(combination)}")
+            if index == 1:
+                special_number = select_special_number(ranked_probabilities, combination)
+                st.write(
+                    f"6+1 推薦組合：{' · '.join(f'{number:02d}' for number in combination)} "
+                    f"+ [特別號碼：{special_number:02d}]　|　{odd_count} 單 / {6 - odd_count} 雙　|　總和 {sum(combination)}"
+                )
+            else:
+                st.write(f"組合 {index:02d}：{' · '.join(f'{number:02d}' for number in combination)}　|　{odd_count} 單 / {6 - odd_count} 雙　|　總和 {sum(combination)}")
 
 with backtest_tab:
     st.subheader("模型回測（滾動樣本外評估）")

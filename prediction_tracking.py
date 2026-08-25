@@ -14,7 +14,7 @@ from lotto_data import MAIN_COLUMNS, REQUIRED_COLUMNS, ValidationResult, validat
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 DEFAULT_PREDICTION_HISTORY_PATH = PROJECT_ROOT / "data" / "prediction_history.json"
-PREDICTION_HISTORY_SCHEMA_VERSION = 1
+PREDICTION_HISTORY_SCHEMA_VERSION = 2
 DRAW_DAYS = {1, 3, 5}  # Tuesday, Thursday, Saturday
 
 
@@ -62,21 +62,34 @@ def build_prediction_record(
     combinations = model_payload.get("top_5_recommendations", [])
     normalized_combinations = []
     for item in combinations:
+        set_index = int(item.get("set_index", len(normalized_combinations) + 1))
         numbers = sorted(int(number) for number in item.get("numbers", []))
         if len(numbers) != 6 or len(set(numbers)) != 6:
             raise ValueError("預測組合必須包含 6 個不重複號碼。")
-        normalized_combinations.append(
-            {
-                "set_index": int(item.get("set_index", len(normalized_combinations) + 1)),
-                "numbers": numbers,
-                "odd_count": int(item.get("odd_count", sum(number % 2 for number in numbers))),
-                "number_sum": int(item.get("number_sum", sum(numbers))),
-                "consecutive_pairs": int(
-                    item.get("consecutive_pairs", sum(right == left + 1 for left, right in zip(numbers, numbers[1:])))
-                ),
-            }
-        )
-    if len(normalized_combinations) != 5:
+        normalized = {
+            "set_index": set_index,
+            "numbers": numbers,
+            "odd_count": int(item.get("odd_count", sum(number % 2 for number in numbers))),
+            "number_sum": int(item.get("number_sum", sum(numbers))),
+            "consecutive_pairs": int(
+                item.get("consecutive_pairs", sum(right == left + 1 for left, right in zip(numbers, numbers[1:])))
+            ),
+        }
+        if set_index == 1:
+            try:
+                special_number = int(item.get("special_number"))
+            except (TypeError, ValueError) as error:
+                raise ValueError("第一組 6+1 推薦組合必須包含研究用特別號碼。") from error
+            if not 1 <= special_number <= 49 or special_number in numbers:
+                raise ValueError("第一組研究用特別號碼必須介乎 1 至 49 且不可與六個主號重複。")
+            normalized["recommendation_format"] = "6+1"
+            normalized["special_number"] = special_number
+        elif item.get("special_number") is not None:
+            raise ValueError("只有第一組可以包含研究用特別號碼。")
+        else:
+            normalized["recommendation_format"] = "6"
+        normalized_combinations.append(normalized)
+    if len(normalized_combinations) != 5 or {item["set_index"] for item in normalized_combinations} != {1, 2, 3, 4, 5}:
         raise ValueError("每次預測必須保存 5 組組合。")
     model = model_payload.get("model", {})
     return {
@@ -153,7 +166,13 @@ def build_hit_rate_table(
             numbers = [int(number) for number in combination.get("numbers", [])]
             hits = set(numbers) & actual_set
             set_index = int(combination.get("set_index", len(combination_text) + 1))
-            combination_text.append(f"組{set_index}：" + _formatted_numbers(numbers))
+            special_number = combination.get("special_number") if set_index == 1 else None
+            special_suffix = ""
+            if special_number is not None:
+                special_value = int(special_number)
+                special_suffix = f" + [特別號碼：{special_value:02d}]"
+            label = f"組{set_index}（6+1）" if special_number is not None else f"組{set_index}"
+            combination_text.append(f"{label}：" + _formatted_numbers(numbers) + special_suffix)
             hit_text.append(f"組{set_index}：" + (_formatted_numbers(sorted(hits), hits) if hits else "—"))
             hit_counts.append(len(hits))
         rows.append(

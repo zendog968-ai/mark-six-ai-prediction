@@ -27,6 +27,7 @@ from lotto_data import (
     FUSION_FEATURE_NAMES,
     FUSION_MODEL_NAME,
     generate_filtered_combinations,
+    select_special_number,
     train_fusion_model,
     validate_lotto_dataframe,
 )
@@ -201,6 +202,22 @@ def build_prediction_payload(history: pd.DataFrame, latest: DrawResult, appended
         raise UpdateError(error or "模型訓練失敗。")
     combinations = generate_filtered_combinations(ranked, n_groups=5)
     top_details = model_details.head(25)
+    recommendations = []
+    for index, combination in enumerate(combinations, start=1):
+        recommendation = {
+            "set_index": index,
+            "numbers": combination,
+            "odd_count": sum(number % 2 for number in combination),
+            "number_sum": sum(combination),
+            "consecutive_pairs": sum(right == left + 1 for left, right in zip(combination, combination[1:])),
+        }
+        if index == 1:
+            recommendation["recommendation_format"] = "6+1"
+            recommendation["special_number"] = select_special_number(ranked, combination)
+            recommendation["special_number_note"] = "以同一主號模型排序選出的不重複研究用特別號碼"
+        else:
+            recommendation["recommendation_format"] = "6"
+        recommendations.append(recommendation)
     return {
         "generated_at_utc": datetime.now(UTC).isoformat(),
         "purpose": "僅供統計教育與實驗用途，無法可靠預測真實開獎結果。",
@@ -222,16 +239,7 @@ def build_prediction_payload(history: pd.DataFrame, latest: DrawResult, appended
             }
             for row in top_details.itertuples(index=False)
         ],
-        "top_5_recommendations": [
-            {
-                "set_index": index,
-                "numbers": combination,
-                "odd_count": sum(number % 2 for number in combination),
-                "number_sum": sum(combination),
-                "consecutive_pairs": sum(right == left + 1 for left, right in zip(combination, combination[1:])),
-            }
-            for index, combination in enumerate(combinations, start=1)
-        ],
+        "top_5_recommendations": recommendations,
     }
 
 
@@ -240,6 +248,17 @@ def cached_prediction_matches(history: pd.DataFrame, latest: DrawResult, payload
     cached_draw = payload.get("latest_draw")
     cached_model = payload.get("model")
     if not isinstance(cached_draw, dict) or not isinstance(cached_model, dict):
+        return False
+    recommendations = payload.get("top_5_recommendations")
+    first_recommendation = recommendations[0] if isinstance(recommendations, list) and recommendations else None
+    if not isinstance(first_recommendation, dict):
+        return False
+    try:
+        special_number = int(first_recommendation.get("special_number"))
+        first_numbers = {int(number) for number in first_recommendation.get("numbers", [])}
+    except (TypeError, ValueError):
+        return False
+    if first_recommendation.get("recommendation_format") != "6+1" or special_number in first_numbers or not 1 <= special_number <= 49:
         return False
     try:
         return (
