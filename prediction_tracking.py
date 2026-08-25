@@ -75,6 +75,16 @@ def build_prediction_record(
                 item.get("consecutive_pairs", sum(right == left + 1 for left, right in zip(numbers, numbers[1:])))
             ),
         }
+        try:
+            strength_score = float(item.get("strength_score"))
+            relative_strength_percent = int(item.get("relative_strength_percent"))
+        except (TypeError, ValueError):
+            strength_score = None
+            relative_strength_percent = None
+        if strength_score is not None and relative_strength_percent is not None and 0 <= relative_strength_percent <= 100:
+            normalized["strength_score"] = round(strength_score, 6)
+            normalized["relative_strength_percent"] = relative_strength_percent
+            normalized["strength_label"] = str(item.get("strength_label", f"相對推薦強度 {relative_strength_percent}%"))
         if set_index == 1:
             try:
                 special_number = int(item.get("special_number"))

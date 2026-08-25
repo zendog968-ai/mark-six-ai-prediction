@@ -21,6 +21,7 @@ from typing import Any, Callable
 from zoneinfo import ZoneInfo
 
 from weight_monitor import CONFIG_LABELS, DEFAULT_WEIGHT_HISTORY_PATH, load_weight_adjustment_history
+from recommendation_strengths import recommendation_strengths
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent
@@ -290,6 +291,93 @@ def _latest_official_draw(path: Path = DEFAULT_DRAW_HISTORY_PATH) -> dict[str, A
     return {"draw": latest.get("Draw", "未知"), "date": latest.get("Date", "未知"), "numbers": numbers}
 
 
+def _official_main_numbers_by_draw(path: Path) -> dict[int, list[int]]:
+    """Read official main-number outcomes without changing any blind-test record."""
+    try:
+        with path.open(encoding="utf-8", newline="") as handle:
+            rows = list(csv.DictReader(handle))
+    except OSError:
+        return {}
+    outcomes: dict[int, list[int]] = {}
+    for row in rows:
+        try:
+            draw = int(row.get("Draw", ""))
+            numbers = [int(row.get(f"N{index}", "")) for index in range(1, 7)]
+        except (TypeError, ValueError):
+            continue
+        if len(numbers) == 6 and len(set(numbers)) == 6 and all(1 <= number <= 49 for number in numbers):
+            outcomes[draw] = numbers
+    return outcomes
+
+
+def build_recent_blind_hit_summary(
+    records: list[dict[str, Any]],
+    *,
+    draw_history_path: Path = DEFAULT_DRAW_HISTORY_PATH,
+    limit: int = 3,
+) -> dict[str, Any]:
+    """Summarise only locked candidates with now-available official main outcomes."""
+    outcomes = _official_main_numbers_by_draw(draw_history_path)
+    settled: list[dict[str, Any]] = []
+    for record in sorted(records, key=lambda item: int(item.get("target_draw", -1)), reverse=True):
+        try:
+            target_draw = int(record.get("target_draw"))
+        except (TypeError, ValueError):
+            continue
+        actual_numbers = outcomes.get(target_draw)
+        variants = record.get("variants", [])
+        if actual_numbers is None or not isinstance(variants, list):
+            continue
+        variant_hits: list[dict[str, Any]] = []
+        for variant in variants:
+            if not isinstance(variant, dict):
+                continue
+            try:
+                predicted = [int(number) for number in variant.get("numbers", [])]
+            except (TypeError, ValueError):
+                continue
+            if len(predicted) != 6 or len(set(predicted)) != 6:
+                continue
+            variant_hits.append(
+                {
+                    "label": str(variant.get("label", variant.get("key", "未標示"))),
+                    "hits": len(set(predicted) & set(actual_numbers)),
+                }
+            )
+        if not variant_hits:
+            continue
+        best_hits = max(item["hits"] for item in variant_hits)
+        settled.append(
+            {
+                "target_draw": target_draw,
+                "target_date": str(record.get("target_date", "—")),
+                "best_hits": best_hits,
+                "average_hits": round(sum(item["hits"] for item in variant_hits) / len(variant_hits), 2),
+                "best_labels": [item["label"] for item in variant_hits if item["hits"] == best_hits],
+                "variant_count": len(variant_hits),
+            }
+        )
+        if len(settled) >= limit:
+            break
+    return {
+        "settled_draws": len(settled),
+        "average_best_hits": round(sum(item["best_hits"] for item in settled) / len(settled), 2) if settled else 0.0,
+        "recent": settled,
+        "note": "只統計開獎前已鎖定且其後已有官方六個正選結果的三配置紀錄。",
+    }
+
+
+def _with_recommendation_strengths(payload: dict[str, Any] | None) -> dict[str, Any] | None:
+    if not isinstance(payload, dict):
+        return payload
+    copied = dict(payload)
+    copied["top_5_recommendations"] = recommendation_strengths(
+        payload.get("top_5_recommendations", []),
+        payload.get("top_weights", []),
+    )
+    return copied
+
+
 def build_daily_status_snapshot(
     *,
     draw_history_path: Path = DEFAULT_DRAW_HISTORY_PATH,
@@ -313,7 +401,8 @@ def build_daily_status_snapshot(
         "latest_blind": pending_blind[-1] if pending_blind else (blind_records[-1] if blind_records else None),
         "latest_brier": pending_brier[-1] if pending_brier else (brier_records[-1] if brier_records else None),
         "weight_version": latest_weight,
-        "latest_prediction": _load_latest_prediction(latest_prediction_path),
+        "latest_prediction": _with_recommendation_strengths(_load_latest_prediction(latest_prediction_path)),
+        "recent_blind_hit_summary": build_recent_blind_hit_summary(blind_records, draw_history_path=draw_history_path),
         "common_brier_draws": 0,
         "formal_gate": "等待四配置共同已結算盲測期數達 100 期",
     }
@@ -335,14 +424,20 @@ def _recommendation_text(item: Any) -> str:
     except (TypeError, ValueError):
         return "- 未提供推薦組合"
     main_text = _number_text(numbers)
+    strength = item.get("strength_label") or (
+        f"相對推薦強度 {int(item['relative_strength_percent'])}%"
+        if item.get("relative_strength_percent") is not None
+        else "相對推薦強度未提供"
+    )
+    strength_suffix = f"　[{strength}]"
     if set_index == 1:
         try:
             special = int(item.get("special_number"))
         except (TypeError, ValueError):
             special = None
         if special is not None and 1 <= special <= 49 and special not in numbers:
-            return f"- 6+1 推薦組合：{main_text} + [特別號碼：{special:02d}]"
-    return f"- 組合 {set_index if set_index else '？'}：{main_text}"
+            return f"- 6+1 推薦組合：{main_text} + [特別號碼：{special:02d}]{strength_suffix}"
+    return f"- 組合 {set_index if set_index else '？'}：{main_text}{strength_suffix}"
 
 
 def _recommendation_html(item: Any) -> str:
@@ -357,6 +452,17 @@ def _recommendation_html(item: Any) -> str:
     if len(numbers) != 6 or any(number < 1 or number > 49 for number in numbers):
         return ""
     main_text = escape(_number_text(numbers))
+    strength_text = escape(
+        str(
+            item.get("strength_label")
+            or (f"相對推薦強度 {int(item['relative_strength_percent'])}%" if item.get("relative_strength_percent") is not None else "相對推薦強度未提供")
+        )
+    )
+    strength_badge = (
+        '<span style="display:inline-block;margin-left:7px;padding:3px 7px;background:#e0f2fe;color:#075985;'
+        'border:1px solid #7dd3fc;border-radius:999px;font-size:12px;font-weight:700;">'
+        f'{strength_text}</span>'
+    )
     if set_index == 1:
         try:
             special = int(item.get("special_number"))
@@ -365,7 +471,7 @@ def _recommendation_html(item: Any) -> str:
         if special is not None and 1 <= special <= 49 and special not in numbers:
             return (
                 '<tr><td style="padding:12px 0;border-bottom:1px solid #e5e7eb;">'
-                '<div style="font-weight:700;color:#111827;">6+1 推薦組合</div>'
+                f'<div style="font-weight:700;color:#111827;">6+1 推薦組合{strength_badge}</div>'
                 f'<div style="margin-top:5px;color:#1f2937;">{main_text} '
                 '<span style="display:inline-block;margin-left:5px;padding:4px 8px;'
                 'background:#fef3c7;color:#92400e;border:1px solid #f59e0b;border-radius:4px;'
@@ -375,7 +481,7 @@ def _recommendation_html(item: Any) -> str:
     label = escape(f"組合 {set_index if set_index else '？'}")
     return (
         '<tr><td style="padding:10px 0;border-bottom:1px solid #e5e7eb;">'
-        f'<span style="font-weight:700;color:#374151;">{label}</span>'
+        f'<span style="font-weight:700;color:#374151;">{label}</span>{strength_badge}'
         f'<span style="color:#1f2937;">：{main_text}</span></td></tr>'
     )
 
@@ -386,6 +492,22 @@ def _load_latest_prediction(path: Path = DEFAULT_LATEST_PREDICTION_PATH) -> dict
     except (OSError, json.JSONDecodeError):
         return None
     return payload if isinstance(payload, dict) else None
+
+
+def _recent_blind_summary_lines(summary: Any) -> list[str]:
+    if not isinstance(summary, dict) or not isinstance(summary.get("recent"), list):
+        return ["- 目前尚無可呈現的已結算盲測期數。"]
+    rows: list[str] = []
+    for item in summary["recent"]:
+        if not isinstance(item, dict):
+            continue
+        labels = "、".join(str(label) for label in item.get("best_labels", []) if label)
+        rows.append(
+            f"- {item.get('target_draw', '—')}：最高 {item.get('best_hits', 0)}/6；"
+            f"三配置平均 {float(item.get('average_hits', 0)):.2f}/6"
+            + (f"；最高配置：{labels}" if labels else "")
+        )
+    return rows or ["- 目前尚無可呈現的已結算盲測期數。"]
 
 
 def _html_section(title: str, content: str) -> str:
@@ -405,11 +527,21 @@ def render_daily_status_html(snapshot: dict[str, Any], *, simulation: bool = Fal
     latest_prediction = snapshot.get("latest_prediction") or {}
     variants = blind.get("variants", []) if isinstance(blind.get("variants"), list) else []
     recommendations = latest_prediction.get("top_5_recommendations", []) if isinstance(latest_prediction, dict) else []
+    blind_summary = snapshot.get("recent_blind_hit_summary") or {}
     weight_values = _weights(weights.get("proposed_weights")) if isinstance(weights, dict) else None
     official_content = (
         f'<p style="margin:0 0 6px;color:#374151;">最新期數：<strong>{escape(str(latest.get("draw", "未知")))}</strong>；'
         f'日期：{escape(str(latest.get("date", "未知")))}</p>'
         f'<p style="margin:0;color:#374151;">六個正選：{escape(_number_text(latest.get("numbers")))}</p>'
+    )
+    recent_blind_content = (
+        f'<p style="margin:0 0 8px;color:#374151;">已結算期數：{escape(str(blind_summary.get("settled_draws", 0)))}；'
+        f'近期平均最高命中：{escape(str(blind_summary.get("average_best_hits", 0.0)))}/6</p>'
+        '<ul style="margin:0;padding-left:20px;color:#374151;line-height:1.6;">'
+        + "".join(f'<li>{escape(line.lstrip("- "))}</li>' for line in _recent_blind_summary_lines(blind_summary))
+        + '</ul><p style="margin:10px 0 0;font-size:12px;line-height:1.5;color:#6b7280;">'
+        + escape(str(blind_summary.get("note", "只作已鎖定盲測的事後統計展示。")))
+        + "</p>"
     )
     recommendation_rows = "".join(_recommendation_html(item) for item in recommendations if isinstance(item, dict))
     recommendation_content = (
@@ -448,6 +580,7 @@ def render_daily_status_html(snapshot: dict[str, Any], *, simulation: bool = Fal
     )
     sections = "".join(
         [
+            _html_section("近期盲測命中摘要", recent_blind_content),
             _html_section("一、最新官方結果資料", official_content),
             _html_section("二、最新模型研究組合", recommendation_content),
             _html_section("三、三配置盲測狀態", blind_content),
@@ -478,6 +611,7 @@ def render_daily_status_body(snapshot: dict[str, Any], *, simulation: bool = Fal
     latest_prediction = snapshot.get("latest_prediction") or {}
     variants = blind.get("variants", []) if isinstance(blind.get("variants"), list) else []
     recommendations = latest_prediction.get("top_5_recommendations", []) if isinstance(latest_prediction, dict) else []
+    blind_summary = snapshot.get("recent_blind_hit_summary") or {}
     variant_lines = [
         f"- {item.get('label', item.get('key', '未命名'))}：{_number_text(item.get('numbers'))}"
         for item in variants
@@ -490,6 +624,11 @@ def render_daily_status_body(snapshot: dict[str, Any], *, simulation: bool = Fal
         [
             simulation_heading + "Mark Six 每日盲測結果與模型權重狀態摘要",
             f"報告時間（香港）：{snapshot.get('generated_at_hkt', '未知')}",
+            "",
+            "近期盲測命中摘要",
+            f"已結算期數：{blind_summary.get('settled_draws', 0)}；近期平均最高命中：{blind_summary.get('average_best_hits', 0.0)}/6",
+            *_recent_blind_summary_lines(blind_summary),
+            str(blind_summary.get("note", "只作已鎖定盲測的事後統計展示。")),
             "",
             "一、最新官方結果資料",
             f"最新期數：{latest.get('draw', '未知')}；日期：{latest.get('date', '未知')}",

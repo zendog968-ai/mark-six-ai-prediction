@@ -40,6 +40,8 @@ class StreamlitApplicationTests(unittest.TestCase):
         self.assertIn("duration=\"long\"", source)
         self.assertIn("總頻率 Holm 狀態", source)
         self.assertIn("窗口 Holm 狀態", source)
+        self.assertIn("HTML 每日報告預覽", source)
+        self.assertIn("render_daily_status_html(report_snapshot)", source)
         self.assertEqual(len(app.selectbox), 1)
         self.assertEqual(app.selectbox[0].label, "Language / 語言")
         self.assertEqual(len(app.toast), 0)

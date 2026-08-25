@@ -65,6 +65,10 @@ class UpdaterTests(unittest.TestCase):
             self.assertNotIn(first_recommendation["special_number"], first_recommendation["numbers"])
             self.assertTrue(1 <= first_recommendation["special_number"] <= 49)
             self.assertTrue(all(item["recommendation_format"] == "6" and "special_number" not in item for item in payload["top_5_recommendations"][1:]))
+            strengths = [item["relative_strength_percent"] for item in payload["top_5_recommendations"]]
+            self.assertEqual(strengths[0], 100)
+            self.assertTrue(all(isinstance(value, int) and 0 <= value <= 100 for value in strengths))
+            self.assertTrue(all(item["strength_label"].startswith("相對推薦強度 ") for item in payload["top_5_recommendations"]))
             self.assertEqual(len(payload["top_weights"]), 25)
             self.assertEqual(payload["model"]["name"], "Random Forest + XGBoost Ensemble")
             self.assertIn("kmeans_cluster", payload["model"]["features"])

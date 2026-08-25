@@ -55,6 +55,7 @@ from ui_preferences import (
     load_window_research_language,
     save_window_research_language,
 )
+from smtp_notifications import build_daily_status_snapshot, render_daily_status_body, render_daily_status_html
 
 
 st.set_page_config(page_title="六合彩資料分析實驗室", page_icon="🎱", layout="wide")
@@ -87,8 +88,8 @@ if validated_upload is None and uploaded_file is not None:
     st.error("上傳檔案未通過驗證，因此系統不會用它訓練模型；目前會使用專案內真實歷史資料（如不可用才回退模擬資料）。")
 
 st.info(f"目前資料來源：**{source_label}**；共 {len(draws):,} 期紀錄。")
-overview_tab, model_tab, backtest_tab, hit_rate_tab, blind_test_tab, inference_tab, weight_tab, data_tab, window_research_tab = st.tabs(
-    ["資料概覽", "模型實驗", "模型回測", "命中率與回測分析", "三配置盲測追蹤", "Brier 統計檢定", "權重演變與凍結", "歷史資料預覽", "5／10期窗口研究"]
+overview_tab, model_tab, backtest_tab, hit_rate_tab, blind_test_tab, inference_tab, weight_tab, data_tab, window_research_tab, email_preview_tab = st.tabs(
+    ["資料概覽", "模型實驗", "模型回測", "命中率與回測分析", "三配置盲測追蹤", "Brier 統計檢定", "權重演變與凍結", "歷史資料預覽", "5／10期窗口研究", "HTML 每日報告預覽"]
 )
 
 with overview_tab:
@@ -519,3 +520,25 @@ with window_research_tab:
 
         with st.expander(copy["methods_title"]):
             st.markdown(copy["methods_text"])
+
+with email_preview_tab:
+    st.subheader("HTML 每日報告預覽")
+    st.caption("此頁以排程每日 Email 相同的唯讀快照渲染，只供預覽；不會寄送 Email、更新開獎資料或改寫任何盲測、Brier、權重帳本。")
+    report_snapshot = build_daily_status_snapshot()
+    blind_summary = report_snapshot.get("recent_blind_hit_summary") or {}
+    latest_report_prediction = report_snapshot.get("latest_prediction") or {}
+    preview_recommendations = latest_report_prediction.get("top_5_recommendations", []) if isinstance(latest_report_prediction, dict) else []
+    preview_a, preview_b, preview_c = st.columns(3)
+    preview_a.metric("近期已結算盲測期數", blind_summary.get("settled_draws", 0))
+    preview_b.metric("近期平均最高命中", f"{float(blind_summary.get('average_best_hits', 0.0)):.2f}/6")
+    first_strength_value = "未提供"
+    if preview_recommendations and isinstance(preview_recommendations[0], dict):
+        relative_strength = preview_recommendations[0].get("relative_strength_percent")
+        try:
+            first_strength_value = f"{int(relative_strength)}%"
+        except (TypeError, ValueError):
+            pass
+    preview_c.metric("第一組相對強度", first_strength_value)
+    st.components.v1.html(render_daily_status_html(report_snapshot), height=1260, scrolling=True)
+    with st.expander("檢視純文字後備內容"):
+        st.code(render_daily_status_body(report_snapshot), language=None)

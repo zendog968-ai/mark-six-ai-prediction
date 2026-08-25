@@ -31,6 +31,7 @@ from lotto_data import (
     train_fusion_model,
     validate_lotto_dataframe,
 )
+from recommendation_strengths import recommendation_strengths, sort_recommendations_by_strength
 from blind_test_tracking import DEFAULT_BLIND_TEST_HISTORY_PATH, record_blind_test
 from four_config_tracking import DEFAULT_EXTENDED_HISTORY_PATH, DEFAULT_FOUR_CONFIG_HISTORY_PATH, record_four_config
 from prediction_tracking import DEFAULT_PREDICTION_HISTORY_PATH, record_prediction
@@ -200,7 +201,9 @@ def build_prediction_payload(history: pd.DataFrame, latest: DrawResult, appended
     ranked, model_details, error = train_fusion_model(history)
     if error or ranked is None or model_details is None:
         raise UpdateError(error or "模型訓練失敗。")
-    combinations = generate_filtered_combinations(ranked, n_groups=5)
+    raw_combinations = generate_filtered_combinations(ranked, n_groups=5)
+    all_weights = {int(row.number): float(row.fused_score) for row in model_details.itertuples(index=False)}
+    combinations = sort_recommendations_by_strength(raw_combinations, all_weights)
     top_details = model_details.head(25)
     recommendations = []
     for index, combination in enumerate(combinations, start=1):
@@ -218,6 +221,7 @@ def build_prediction_payload(history: pd.DataFrame, latest: DrawResult, appended
         else:
             recommendation["recommendation_format"] = "6"
         recommendations.append(recommendation)
+    recommendations = recommendation_strengths(recommendations, all_weights)
     return {
         "generated_at_utc": datetime.now(UTC).isoformat(),
         "purpose": "僅供統計教育與實驗用途，無法可靠預測真實開獎結果。",
