@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "purpose": "預測紀錄僅供統計教育與回測分析，無法可靠預測真實開獎結果。",
   "predictions": [
     {
@@ -375,6 +375,121 @@
           "odd_count": 5,
           "number_sum": 93,
           "consecutive_pairs": 0
+        }
+      ]
+    },
+    {
+      "target_draw": 26094,
+      "target_date": "2026-08-27",
+      "generated_at_utc": "2026-08-25T16:10:29.993040+00:00",
+      "source_history_records": 227,
+      "source_latest_draw": 26093,
+      "source_latest_date": "2026-08-25",
+      "model": {
+        "name": "Random Forest + XGBoost Ensemble",
+        "features": [
+          "frequency_50",
+          "frequency_10",
+          "gap",
+          "kmeans_cluster"
+        ],
+        "fusion": {
+          "random_forest_weight": 0.5,
+          "xgboost_weight": 0.5
+        },
+        "kmeans_clusters": 4
+      },
+      "combinations": [
+        {
+          "set_index": 1,
+          "numbers": [
+            7,
+            11,
+            15,
+            28,
+            30,
+            31
+          ],
+          "odd_count": 4,
+          "number_sum": 122,
+          "consecutive_pairs": 1,
+          "strength_score": 0.554684,
+          "relative_strength_percent": 100,
+          "strength_label": "相對推薦強度 100%",
+          "recommendation_format": "6+1",
+          "special_number": 13
+        },
+        {
+          "set_index": 2,
+          "numbers": [
+            4,
+            7,
+            13,
+            25,
+            38,
+            45
+          ],
+          "odd_count": 4,
+          "number_sum": 132,
+          "consecutive_pairs": 0,
+          "strength_score": 0.551191,
+          "relative_strength_percent": 99,
+          "strength_label": "相對推薦強度 99%",
+          "recommendation_format": "6"
+        },
+        {
+          "set_index": 3,
+          "numbers": [
+            6,
+            7,
+            19,
+            40,
+            45,
+            48
+          ],
+          "odd_count": 3,
+          "number_sum": 165,
+          "consecutive_pairs": 1,
+          "strength_score": 0.545999,
+          "relative_strength_percent": 98,
+          "strength_label": "相對推薦強度 98%",
+          "recommendation_format": "6"
+        },
+        {
+          "set_index": 4,
+          "numbers": [
+            6,
+            13,
+            17,
+            31,
+            37,
+            48
+          ],
+          "odd_count": 4,
+          "number_sum": 152,
+          "consecutive_pairs": 0,
+          "strength_score": 0.524315,
+          "relative_strength_percent": 95,
+          "strength_label": "相對推薦強度 95%",
+          "recommendation_format": "6"
+        },
+        {
+          "set_index": 5,
+          "numbers": [
+            11,
+            16,
+            33,
+            37,
+            38,
+            43
+          ],
+          "odd_count": 4,
+          "number_sum": 178,
+          "consecutive_pairs": 1,
+          "strength_score": 0.509013,
+          "relative_strength_percent": 92,
+          "strength_label": "相對推薦強度 92%",
+          "recommendation_format": "6"
         }
       ]
     }

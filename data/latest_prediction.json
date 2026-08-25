@@ -1,21 +1,21 @@
 {
-  "generated_at_utc": "2026-08-25T08:29:15.700821+00:00",
+  "generated_at_utc": "2026-08-25T16:10:29.990518+00:00",
   "purpose": "僅供統計教育與實驗用途，無法可靠預測真實開獎結果。",
-  "history_records": 226,
+  "history_records": 227,
   "latest_draw": {
-    "draw": 26092,
-    "date": "2026-08-22",
+    "draw": 26093,
+    "date": "2026-08-25",
     "main_numbers": [
-      7,
-      9,
-      12,
+      1,
+      18,
+      19,
       25,
       34,
-      40
+      38
     ],
-    "special": 29,
-    "source_url": "local-history-rebuild",
-    "appended_to_history": false
+    "special": 7,
+    "source_url": "https://www.lotteryextreme.com/marksix/results",
+    "appended_to_history": true
   },
   "model": {
     "name": "Random Forest + XGBoost Ensemble",
@@ -34,198 +34,198 @@
   "top_weights": [
     {
       "number": 7,
-      "relative_weight": 0.635288,
-      "random_forest_weight": 0.680007,
-      "xgboost_weight": 0.59057,
-      "kmeans_cluster": 1
+      "relative_weight": 0.725932,
+      "random_forest_weight": 0.681053,
+      "xgboost_weight": 0.770811,
+      "kmeans_cluster": 2
     },
     {
       "number": 13,
-      "relative_weight": 0.555604,
-      "random_forest_weight": 0.552854,
-      "xgboost_weight": 0.558354,
-      "kmeans_cluster": 2
-    },
-    {
-      "number": 48,
-      "relative_weight": 0.549427,
-      "random_forest_weight": 0.548215,
-      "xgboost_weight": 0.550638,
-      "kmeans_cluster": 1
-    },
-    {
-      "number": 16,
-      "relative_weight": 0.542589,
-      "random_forest_weight": 0.543126,
-      "xgboost_weight": 0.542051,
-      "kmeans_cluster": 1
+      "relative_weight": 0.561711,
+      "random_forest_weight": 0.56358,
+      "xgboost_weight": 0.559841,
+      "kmeans_cluster": 3
     },
     {
       "number": 11,
-      "relative_weight": 0.540174,
-      "random_forest_weight": 0.532291,
-      "xgboost_weight": 0.548056,
-      "kmeans_cluster": 1
+      "relative_weight": 0.549702,
+      "random_forest_weight": 0.538017,
+      "xgboost_weight": 0.561386,
+      "kmeans_cluster": 3
+    },
+    {
+      "number": 48,
+      "relative_weight": 0.545507,
+      "random_forest_weight": 0.53386,
+      "xgboost_weight": 0.557153,
+      "kmeans_cluster": 2
     },
     {
       "number": 31,
-      "relative_weight": 0.53968,
-      "random_forest_weight": 0.533571,
-      "xgboost_weight": 0.54579,
-      "kmeans_cluster": 1
-    },
-    {
-      "number": 32,
-      "relative_weight": 0.53919,
-      "random_forest_weight": 0.528632,
-      "xgboost_weight": 0.549748,
-      "kmeans_cluster": 1
-    },
-    {
-      "number": 1,
-      "relative_weight": 0.53919,
-      "random_forest_weight": 0.528632,
-      "xgboost_weight": 0.549748,
-      "kmeans_cluster": 1
-    },
-    {
-      "number": 27,
-      "relative_weight": 0.531683,
-      "random_forest_weight": 0.52831,
-      "xgboost_weight": 0.535056,
+      "relative_weight": 0.543687,
+      "random_forest_weight": 0.53564,
+      "xgboost_weight": 0.551735,
       "kmeans_cluster": 2
-    },
-    {
-      "number": 25,
-      "relative_weight": 0.525524,
-      "random_forest_weight": 0.527905,
-      "xgboost_weight": 0.523142,
-      "kmeans_cluster": 2
-    },
-    {
-      "number": 28,
-      "relative_weight": 0.521756,
-      "random_forest_weight": 0.520008,
-      "xgboost_weight": 0.523504,
-      "kmeans_cluster": 1
-    },
-    {
-      "number": 4,
-      "relative_weight": 0.514859,
-      "random_forest_weight": 0.512045,
-      "xgboost_weight": 0.517673,
-      "kmeans_cluster": 1
-    },
-    {
-      "number": 33,
-      "relative_weight": 0.512856,
-      "random_forest_weight": 0.504066,
-      "xgboost_weight": 0.521647,
-      "kmeans_cluster": 2
-    },
-    {
-      "number": 30,
-      "relative_weight": 0.505871,
-      "random_forest_weight": 0.509836,
-      "xgboost_weight": 0.501905,
-      "kmeans_cluster": 2
-    },
-    {
-      "number": 15,
-      "relative_weight": 0.502786,
-      "random_forest_weight": 0.498855,
-      "xgboost_weight": 0.506716,
-      "kmeans_cluster": 2
-    },
-    {
-      "number": 17,
-      "relative_weight": 0.501314,
-      "random_forest_weight": 0.506333,
-      "xgboost_weight": 0.496296,
-      "kmeans_cluster": 3
-    },
-    {
-      "number": 23,
-      "relative_weight": 0.500613,
-      "random_forest_weight": 0.504931,
-      "xgboost_weight": 0.496296,
-      "kmeans_cluster": 3
-    },
-    {
-      "number": 37,
-      "relative_weight": 0.500179,
-      "random_forest_weight": 0.506766,
-      "xgboost_weight": 0.493592,
-      "kmeans_cluster": 0
     },
     {
       "number": 9,
-      "relative_weight": 0.497461,
-      "random_forest_weight": 0.485836,
-      "xgboost_weight": 0.509087,
-      "kmeans_cluster": 1
+      "relative_weight": 0.531507,
+      "random_forest_weight": 0.521419,
+      "xgboost_weight": 0.541595,
+      "kmeans_cluster": 2
     },
     {
-      "number": 19,
-      "relative_weight": 0.496694,
-      "random_forest_weight": 0.499112,
-      "xgboost_weight": 0.494276,
+      "number": 27,
+      "relative_weight": 0.529677,
+      "random_forest_weight": 0.526638,
+      "xgboost_weight": 0.532716,
+      "kmeans_cluster": 3
+    },
+    {
+      "number": 28,
+      "relative_weight": 0.518763,
+      "random_forest_weight": 0.518504,
+      "xgboost_weight": 0.519022,
       "kmeans_cluster": 2
     },
     {
       "number": 18,
-      "relative_weight": 0.493626,
-      "random_forest_weight": 0.491201,
-      "xgboost_weight": 0.496052,
+      "relative_weight": 0.512388,
+      "random_forest_weight": 0.510624,
+      "xgboost_weight": 0.514152,
       "kmeans_cluster": 3
     },
     {
-      "number": 45,
-      "relative_weight": 0.492387,
-      "random_forest_weight": 0.489133,
-      "xgboost_weight": 0.495641,
+      "number": 16,
+      "relative_weight": 0.510777,
+      "random_forest_weight": 0.506694,
+      "xgboost_weight": 0.514859,
+      "kmeans_cluster": 2
+    },
+    {
+      "number": 4,
+      "relative_weight": 0.50971,
+      "random_forest_weight": 0.506292,
+      "xgboost_weight": 0.513129,
+      "kmeans_cluster": 2
+    },
+    {
+      "number": 38,
+      "relative_weight": 0.508687,
+      "random_forest_weight": 0.522481,
+      "xgboost_weight": 0.494893,
+      "kmeans_cluster": 3
+    },
+    {
+      "number": 40,
+      "relative_weight": 0.506366,
+      "random_forest_weight": 0.505659,
+      "xgboost_weight": 0.507073,
+      "kmeans_cluster": 2
+    },
+    {
+      "number": 33,
+      "relative_weight": 0.505706,
+      "random_forest_weight": 0.498975,
+      "xgboost_weight": 0.512437,
       "kmeans_cluster": 3
     },
     {
       "number": 6,
-      "relative_weight": 0.492387,
-      "random_forest_weight": 0.489133,
-      "xgboost_weight": 0.495641,
+      "relative_weight": 0.502979,
+      "random_forest_weight": 0.499523,
+      "xgboost_weight": 0.506435,
+      "kmeans_cluster": 1
+    },
+    {
+      "number": 45,
+      "relative_weight": 0.502979,
+      "random_forest_weight": 0.499523,
+      "xgboost_weight": 0.506435,
+      "kmeans_cluster": 1
+    },
+    {
+      "number": 15,
+      "relative_weight": 0.498791,
+      "random_forest_weight": 0.502329,
+      "xgboost_weight": 0.495253,
       "kmeans_cluster": 3
     },
     {
-      "number": 3,
-      "relative_weight": 0.487217,
-      "random_forest_weight": 0.489617,
-      "xgboost_weight": 0.484817,
+      "number": 17,
+      "relative_weight": 0.498217,
+      "random_forest_weight": 0.505232,
+      "xgboost_weight": 0.491201,
+      "kmeans_cluster": 1
+    },
+    {
+      "number": 25,
+      "relative_weight": 0.498127,
+      "random_forest_weight": 0.492723,
+      "xgboost_weight": 0.503531,
       "kmeans_cluster": 2
     },
     {
-      "number": 46,
-      "relative_weight": 0.486266,
-      "random_forest_weight": 0.485373,
-      "xgboost_weight": 0.487159,
+      "number": 23,
+      "relative_weight": 0.494482,
+      "random_forest_weight": 0.497762,
+      "xgboost_weight": 0.491201,
+      "kmeans_cluster": 1
+    },
+    {
+      "number": 2,
+      "relative_weight": 0.494007,
+      "random_forest_weight": 0.498967,
+      "xgboost_weight": 0.489048,
+      "kmeans_cluster": 0
+    },
+    {
+      "number": 37,
+      "relative_weight": 0.493789,
+      "random_forest_weight": 0.495245,
+      "xgboost_weight": 0.492333,
+      "kmeans_cluster": 0
+    },
+    {
+      "number": 19,
+      "relative_weight": 0.492234,
+      "random_forest_weight": 0.492559,
+      "xgboost_weight": 0.491909,
       "kmeans_cluster": 2
+    },
+    {
+      "number": 30,
+      "relative_weight": 0.491228,
+      "random_forest_weight": 0.47886,
+      "xgboost_weight": 0.503597,
+      "kmeans_cluster": 3
+    },
+    {
+      "number": 43,
+      "relative_weight": 0.48542,
+      "random_forest_weight": 0.48279,
+      "xgboost_weight": 0.488049,
+      "kmeans_cluster": 3
     }
   ],
   "top_5_recommendations": [
     {
       "set_index": 1,
       "numbers": [
-        1,
-        3,
         7,
         11,
-        23,
-        48
+        15,
+        28,
+        30,
+        31
       ],
-      "odd_count": 5,
-      "number_sum": 93,
-      "consecutive_pairs": 0,
+      "odd_count": 4,
+      "number_sum": 122,
+      "consecutive_pairs": 1,
       "recommendation_format": "6+1",
       "special_number": 13,
       "special_number_note": "以同一主號模型排序選出的不重複研究用特別號碼",
-      "strength_score": 0.541985,
+      "strength_score": 0.554684,
       "relative_strength_percent": 100,
       "strength_label": "相對推薦強度 100%"
     },
@@ -234,16 +234,16 @@
       "numbers": [
         4,
         7,
-        9,
         13,
-        17,
-        28
+        25,
+        38,
+        45
       ],
       "odd_count": 4,
-      "number_sum": 78,
+      "number_sum": 132,
       "consecutive_pairs": 0,
       "recommendation_format": "6",
-      "strength_score": 0.537714,
+      "strength_score": 0.551191,
       "relative_strength_percent": 99,
       "strength_label": "相對推薦強度 99%"
     },
@@ -252,54 +252,73 @@
       "numbers": [
         6,
         7,
-        15,
-        16,
-        17,
-        33
+        19,
+        40,
+        45,
+        48
       ],
-      "odd_count": 4,
-      "number_sum": 94,
-      "consecutive_pairs": 3,
+      "odd_count": 3,
+      "number_sum": 165,
+      "consecutive_pairs": 1,
       "recommendation_format": "6",
-      "strength_score": 0.531203,
+      "strength_score": 0.545999,
       "relative_strength_percent": 98,
       "strength_label": "相對推薦強度 98%"
     },
     {
       "set_index": 4,
       "numbers": [
-        11,
-        15,
-        16,
+        6,
+        13,
+        17,
+        31,
         37,
-        45,
         48
       ],
       "odd_count": 4,
-      "number_sum": 172,
-      "consecutive_pairs": 1,
+      "number_sum": 152,
+      "consecutive_pairs": 0,
       "recommendation_format": "6",
-      "strength_score": 0.521257,
-      "relative_strength_percent": 96,
-      "strength_label": "相對推薦強度 96%"
+      "strength_score": 0.524315,
+      "relative_strength_percent": 95,
+      "strength_label": "相對推薦強度 95%"
     },
     {
       "set_index": 5,
       "numbers": [
-        4,
+        11,
         16,
-        25,
-        30,
-        45,
-        46
+        33,
+        37,
+        38,
+        43
       ],
-      "odd_count": 2,
-      "number_sum": 166,
+      "odd_count": 4,
+      "number_sum": 178,
       "consecutive_pairs": 1,
       "recommendation_format": "6",
-      "strength_score": 0.511249,
-      "relative_strength_percent": 94,
-      "strength_label": "相對推薦強度 94%"
+      "strength_score": 0.509013,
+      "relative_strength_percent": 92,
+      "strength_label": "相對推薦強度 92%"
     }
-  ]
+  ],
+  "run_appended_to_history": true,
+  "prediction_log": {
+    "target_draw": 26094,
+    "target_date": "2026-08-27",
+    "logged": true
+  },
+  "blind_test_log": {
+    "target_draw": 26094,
+    "target_date": "2026-08-27",
+    "config_version": "2026-08-20-v1",
+    "locked": true
+  },
+  "four_config_brier_log": {
+    "target_draw": 26094,
+    "target_date": "2026-08-27",
+    "config_version": "2026-08-21-v1",
+    "locked": true,
+    "extended_history_records": 3421
+  }
 }
