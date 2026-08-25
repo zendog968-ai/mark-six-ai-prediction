@@ -1,13 +1,26 @@
 import unittest
+import tempfile
 from pathlib import Path
+from unittest.mock import patch
 
 from streamlit.testing.v1 import AppTest
+import ui_preferences
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
 class StreamlitApplicationTests(unittest.TestCase):
+    def setUp(self):
+        self.temporary_directory = tempfile.TemporaryDirectory()
+        self.preference_path = Path(self.temporary_directory.name) / "dashboard_preferences.json"
+        self.preference_patch = patch.object(ui_preferences, "DEFAULT_UI_PREFERENCES_PATH", self.preference_path)
+        self.preference_patch.start()
+
+    def tearDown(self):
+        self.preference_patch.stop()
+        self.temporary_directory.cleanup()
+
     def test_sidebar_exposes_csv_uploader_and_renders_the_default_source(self):
         app = AppTest.from_file(str(PROJECT_ROOT / "app.py"), default_timeout=30)
         app.run(timeout=30)
@@ -37,6 +50,16 @@ class StreamlitApplicationTests(unittest.TestCase):
         self.assertIn("Hover over a bar", english_captions)
         self.assertIn("Combination family", source)
         self.assertIn("Random expected score", source)
+        self.assertEqual(ui_preferences.load_window_research_language(self.preference_path), "en")
+
+        reopened = AppTest.from_file(str(PROJECT_ROOT / "app.py"), default_timeout=30)
+        reopened.run(timeout=30)
+        self.assertFalse(reopened.exception)
+        self.assertEqual(reopened.selectbox[0].value, "English")
+
+        reopened.selectbox[0].set_value("繁體中文").run(timeout=30)
+        self.assertFalse(reopened.exception)
+        self.assertEqual(ui_preferences.load_window_research_language(self.preference_path), "zh")
 
 
 if __name__ == "__main__":

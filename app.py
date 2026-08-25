@@ -48,6 +48,12 @@ from long_window_research import (
     localize_long_window_research,
     research_copy,
 )
+from ui_preferences import (
+    language_code_from_label,
+    language_label_from_code,
+    load_window_research_language,
+    save_window_research_language,
+)
 
 
 st.set_page_config(page_title="六合彩資料分析實驗室", page_icon="🎱", layout="wide")
@@ -349,13 +355,21 @@ with data_tab:
     st.code(", ".join(REQUIRED_COLUMNS), language=None)
 
 with window_research_tab:
+    language_widget_key = "window_research_language_choice"
+    if language_widget_key not in st.session_state:
+        st.session_state[language_widget_key] = language_label_from_code(load_window_research_language())
+
+    def persist_window_research_language() -> None:
+        save_window_research_language(language_code_from_label(st.session_state[language_widget_key]))
+
     language_choice = st.selectbox(
         "Language / 語言",
         options=["繁體中文", "English"],
-        index=0,
-        help="This selector changes only the 5/10-draw window research view.",
+        key=language_widget_key,
+        on_change=persist_window_research_language,
+        help="This selector changes only the 5/10-draw window research view and remembers the last selection on this dashboard.",
     )
-    language = "en" if language_choice == "English" else "zh"
+    language = language_code_from_label(language_choice)
     copy = research_copy(language)
     field = {
         "family": "Combination family" if language == "en" else "組合家族",
