@@ -45,11 +45,12 @@ class StreamlitApplicationTests(unittest.TestCase):
         self.assertIn("歷史報告歸檔", source)
         self.assertIn("search_daily_report_archive", source)
         self.assertIn("選擇要預覽的歸檔報告", source)
-        self.assertEqual(len(app.selectbox), 1)
-        self.assertEqual(app.selectbox[0].label, "Language / 語言")
+        language_selectors = [widget for widget in app.selectbox if widget.label == "Language / 語言"]
+        self.assertEqual(len(language_selectors), 1)
+        language_selector = language_selectors[0]
         self.assertEqual(len(app.toast), 0)
 
-        app.selectbox[0].set_value("English").run(timeout=30)
+        language_selector.set_value("English").run(timeout=30)
         self.assertFalse(app.exception)
         self.assertEqual(len(app.toast), 1)
         self.assertIn("Language preference saved: English", app.toast[0].value)
@@ -64,10 +65,11 @@ class StreamlitApplicationTests(unittest.TestCase):
         reopened = AppTest.from_file(str(PROJECT_ROOT / "app.py"), default_timeout=30)
         reopened.run(timeout=30)
         self.assertFalse(reopened.exception)
-        self.assertEqual(reopened.selectbox[0].value, "English")
+        reopened_language = next(widget for widget in reopened.selectbox if widget.label == "Language / 語言")
+        self.assertEqual(reopened_language.value, "English")
         self.assertEqual(len(reopened.toast), 0)
 
-        reopened.selectbox[0].set_value("繁體中文").run(timeout=30)
+        reopened_language.set_value("繁體中文").run(timeout=30)
         self.assertFalse(reopened.exception)
         self.assertEqual(len(reopened.toast), 1)
         self.assertIn("已儲存語言偏好：繁體中文", reopened.toast[0].value)
