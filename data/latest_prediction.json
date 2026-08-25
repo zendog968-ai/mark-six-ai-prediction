@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-08-22T14:52:46.336369+00:00",
+  "generated_at_utc": "2026-08-25T08:29:15.700821+00:00",
   "purpose": "僅供統計教育與實驗用途，無法可靠預測真實開獎結果。",
   "history_records": 226,
   "latest_draw": {
@@ -14,8 +14,8 @@
       40
     ],
     "special": 29,
-    "source_url": "https://www.lotteryextreme.com/marksix/results",
-    "appended_to_history": true
+    "source_url": "local-history-rebuild",
+    "appended_to_history": false
   },
   "model": {
     "name": "Random Forest + XGBoost Ensemble",
@@ -212,33 +212,25 @@
     {
       "set_index": 1,
       "numbers": [
+        1,
+        3,
+        7,
         11,
-        15,
-        16,
-        37,
-        45,
+        23,
         48
       ],
-      "odd_count": 4,
-      "number_sum": 172,
-      "consecutive_pairs": 1
+      "odd_count": 5,
+      "number_sum": 93,
+      "consecutive_pairs": 0,
+      "recommendation_format": "6+1",
+      "special_number": 13,
+      "special_number_note": "以同一主號模型排序選出的不重複研究用特別號碼",
+      "strength_score": 0.541985,
+      "relative_strength_percent": 100,
+      "strength_label": "相對推薦強度 100%"
     },
     {
       "set_index": 2,
-      "numbers": [
-        4,
-        16,
-        25,
-        30,
-        45,
-        46
-      ],
-      "odd_count": 2,
-      "number_sum": 166,
-      "consecutive_pairs": 1
-    },
-    {
-      "set_index": 3,
       "numbers": [
         4,
         7,
@@ -249,10 +241,14 @@
       ],
       "odd_count": 4,
       "number_sum": 78,
-      "consecutive_pairs": 0
+      "consecutive_pairs": 0,
+      "recommendation_format": "6",
+      "strength_score": 0.537714,
+      "relative_strength_percent": 99,
+      "strength_label": "相對推薦強度 99%"
     },
     {
-      "set_index": 4,
+      "set_index": 3,
       "numbers": [
         6,
         7,
@@ -263,40 +259,47 @@
       ],
       "odd_count": 4,
       "number_sum": 94,
-      "consecutive_pairs": 3
+      "consecutive_pairs": 3,
+      "recommendation_format": "6",
+      "strength_score": 0.531203,
+      "relative_strength_percent": 98,
+      "strength_label": "相對推薦強度 98%"
+    },
+    {
+      "set_index": 4,
+      "numbers": [
+        11,
+        15,
+        16,
+        37,
+        45,
+        48
+      ],
+      "odd_count": 4,
+      "number_sum": 172,
+      "consecutive_pairs": 1,
+      "recommendation_format": "6",
+      "strength_score": 0.521257,
+      "relative_strength_percent": 96,
+      "strength_label": "相對推薦強度 96%"
     },
     {
       "set_index": 5,
       "numbers": [
-        1,
-        3,
-        7,
-        11,
-        23,
-        48
+        4,
+        16,
+        25,
+        30,
+        45,
+        46
       ],
-      "odd_count": 5,
-      "number_sum": 93,
-      "consecutive_pairs": 0
+      "odd_count": 2,
+      "number_sum": 166,
+      "consecutive_pairs": 1,
+      "recommendation_format": "6",
+      "strength_score": 0.511249,
+      "relative_strength_percent": 94,
+      "strength_label": "相對推薦強度 94%"
     }
-  ],
-  "run_appended_to_history": false,
-  "prediction_log": {
-    "target_draw": 26093,
-    "target_date": "2026-08-25",
-    "logged": false
-  },
-  "blind_test_log": {
-    "target_draw": 26093,
-    "target_date": "2026-08-25",
-    "config_version": "2026-08-20-v1",
-    "locked": true
-  },
-  "four_config_brier_log": {
-    "target_draw": 26093,
-    "target_date": "2026-08-25",
-    "config_version": "2026-08-21-v1",
-    "locked": true,
-    "extended_history_records": 3421
-  }
+  ]
 }

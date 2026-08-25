@@ -539,6 +539,6 @@ with email_preview_tab:
         except (TypeError, ValueError):
             pass
     preview_c.metric("第一組相對強度", first_strength_value)
-    st.components.v1.html(render_daily_status_html(report_snapshot), height=1260, scrolling=True)
+    st.iframe(render_daily_status_html(report_snapshot), height=1260)
     with st.expander("檢視純文字後備內容"):
         st.code(render_daily_status_body(report_snapshot), language=None)
