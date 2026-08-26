@@ -302,11 +302,11 @@
       "strength_label": "相對推薦強度 92%"
     }
   ],
-  "run_appended_to_history": true,
+  "run_appended_to_history": false,
   "prediction_log": {
     "target_draw": 26094,
     "target_date": "2026-08-27",
-    "logged": true
+    "logged": false
   },
   "blind_test_log": {
     "target_draw": 26094,
