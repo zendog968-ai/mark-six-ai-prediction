@@ -23,6 +23,8 @@ from zoneinfo import ZoneInfo
 from ball_colours import COLOUR_HEX, COLOUR_LABELS, colour_composition_text, colour_for_number
 from weight_monitor import CONFIG_LABELS, DEFAULT_WEIGHT_HISTORY_PATH, load_weight_adjustment_history
 from recommendation_strengths import recommendation_strengths
+from report_themes import email_report_theme_tokens, normalise_email_report_theme
+from ui_preferences import load_email_report_theme
 from daily_report_archive import (
     DEFAULT_DAILY_REPORT_ARCHIVE_PATH,
     mark_daily_report_sent,
@@ -484,8 +486,9 @@ def _colour_summary_lines(colour_analysis: Any) -> list[str]:
     return lines or ["- 目前未提供可驗證的球色分析快照。"]
 
 
-def _recommendation_html(item: Any) -> str:
+def _recommendation_html(item: Any, theme_tokens: dict[str, Any] | None = None) -> str:
     """Render one recommendation with conservative inline styles for email clients."""
+    theme_tokens = theme_tokens or email_report_theme_tokens(None)
     if not isinstance(item, dict):
         return ""
     try:
@@ -504,8 +507,9 @@ def _recommendation_html(item: Any) -> str:
         )
     )
     strength_badge = (
-        '<span style="display:inline-block;margin-left:7px;padding:3px 7px;background:#e0f2fe;color:#075985;'
-        'border:1px solid #7dd3fc;border-radius:999px;font-size:12px;font-weight:700;">'
+        '<span class="strength-badge" style="display:inline-block;margin-left:7px;padding:3px 7px;'
+        f'background:{theme_tokens["strength_background"]};color:{theme_tokens["strength_text"]};'
+        f'border:1px solid {theme_tokens["strength_border"]};border-radius:999px;font-size:12px;font-weight:700;">'
         f'{strength_text}</span>'
     )
     if set_index == 1:
@@ -516,21 +520,21 @@ def _recommendation_html(item: Any) -> str:
         if special is not None and 1 <= special <= 49 and special not in numbers:
             special_colour = str(item.get("special_number_colour") or colour_for_number(special))
             return (
-                '<tr><td style="padding:12px 0;border-bottom:1px solid #e5e7eb;">'
-                f'<div style="font-weight:700;color:#111827;">6+1 推薦組合{strength_badge}</div>'
-                f'<div style="margin-top:5px;color:#1f2937;">{main_text} '
+                f'<tr><td style="padding:12px 0;border-bottom:1px solid {theme_tokens["border"]};">'
+                f'<div class="recommendation-heading" style="font-weight:700;color:{theme_tokens["heading"]};">6+1 推薦組合{strength_badge}</div>'
+                f'<div class="recommendation-detail" style="margin-top:5px;color:{theme_tokens["body_text"]};">{main_text} '
                 '<span style="display:inline-block;margin-left:5px;padding:4px 8px;'
                 f'background:{COLOUR_HEX[special_colour]};color:#ffffff;border:2px solid #f59e0b;border-radius:999px;'
                 'font-weight:700;box-shadow:0 0 0 1px #ffffff;">'
                 f'<strong>特別號碼：{special:02d}／{escape(COLOUR_LABELS[special_colour])}</strong></span>'
-                f'<div style="margin-top:6px;color:#6b7280;font-size:12px;">球色組成：{composition}</div></div></td></tr>'
+                f'<div style="margin-top:6px;color:{theme_tokens["muted_text"]};font-size:12px;">球色組成：{composition}</div></div></td></tr>'
             )
     label = escape(f"組合 {set_index if set_index else '？'}")
     return (
-        '<tr><td style="padding:10px 0;border-bottom:1px solid #e5e7eb;">'
-        f'<span style="font-weight:700;color:#374151;">{label}</span>{strength_badge}'
-        f'<span style="color:#1f2937;">：{main_text}</span>'
-        f'<div style="margin-top:6px;color:#6b7280;font-size:12px;">球色組成：{composition}</div></td></tr>'
+        f'<tr><td style="padding:10px 0;border-bottom:1px solid {theme_tokens["border"]};">'
+        f'<span class="recommendation-heading" style="font-weight:700;color:{theme_tokens["body_text"]};">{label}</span>{strength_badge}'
+        f'<span class="recommendation-detail" style="color:{theme_tokens["body_text"]};">：{main_text}</span>'
+        f'<div class="recommendation-detail" style="margin-top:6px;color:{theme_tokens["muted_text"]};font-size:12px;">球色組成：{composition}</div></td></tr>'
     )
 
 
@@ -558,16 +562,43 @@ def _recent_blind_summary_lines(summary: Any) -> list[str]:
     return rows or ["- 目前尚無可呈現的已結算盲測期數。"]
 
 
-def _html_section(title: str, content: str) -> str:
+def _html_section(title: str, content: str, theme_tokens: dict[str, Any]) -> str:
     return (
-        '<section style="margin:18px 0;padding:18px;background:#ffffff;border:1px solid #e5e7eb;border-radius:8px;">'
-        f'<h2 style="margin:0 0 12px;font-size:16px;line-height:1.35;color:#111827;">{escape(title)}</h2>'
+        f'<section class="report-section" style="margin:18px 0;padding:18px;background:{theme_tokens["card_background"]};border:1px solid {theme_tokens["border"]};border-radius:8px;">'
+        f'<h2 style="margin:0 0 12px;font-size:16px;line-height:1.35;color:{theme_tokens["heading"]};">{escape(title)}</h2>'
         f'{content}</section>'
     )
 
 
-def render_daily_status_html(snapshot: dict[str, Any], *, simulation: bool = False) -> str:
+def _ball_colour_legend_html(theme_tokens: dict[str, Any]) -> str:
+    """Explain the fixed red/blue/green labels at the bottom of each HTML report."""
+    legend_items = "".join(
+        f'<span style="display:inline-block;margin:3px 9px 3px 0;white-space:nowrap;font-size:12px;color:{theme_tokens["body_text"]};">'
+        f'<span style="display:inline-block;width:13px;height:13px;margin-right:5px;vertical-align:-2px;background:{COLOUR_HEX[colour]};border:1px solid #ffffff;border-radius:999px;"></span>'
+        f'{COLOUR_LABELS[colour]}：固定號碼球標籤</span>'
+        for colour in ("red", "blue", "green")
+    )
+    return (
+        f'<div class="report-legend" style="margin:20px 0 0;padding:14px 16px;background:{theme_tokens["card_background"]};'
+        f'border:1px solid {theme_tokens["border"]};border-radius:8px;page-break-inside:avoid;">'
+        f'<p style="margin:0 0 6px;font-size:13px;font-weight:700;color:{theme_tokens["heading"]};">六合彩球色圖例</p>'
+        f'{legend_items}'
+        f'<p style="margin:8px 0 0;font-size:12px;line-height:1.55;color:{theme_tokens["muted_text"]};">'
+        '紅、藍、綠僅代表各號碼的固定球色，並不表示較高機率或推薦強度；特別號的琥珀色外框只用作類型辨識。</p></div>'
+    )
+
+
+def render_daily_status_html(
+    snapshot: dict[str, Any],
+    *,
+    simulation: bool = False,
+    theme: str | None = None,
+    preview_mode: bool = False,
+) -> str:
     """Render a table-based, email-client-compatible daily status report."""
+    theme_tokens = email_report_theme_tokens(theme)
+    body_text = theme_tokens["body_text"]
+    muted_text = theme_tokens["muted_text"]
     latest = snapshot.get("latest_official_draw") or {}
     blind = snapshot.get("latest_blind") or {}
     brier = snapshot.get("latest_brier") or {}
@@ -579,31 +610,33 @@ def render_daily_status_html(snapshot: dict[str, Any], *, simulation: bool = Fal
     colour_analysis = latest_prediction.get("colour_analysis", {}) if isinstance(latest_prediction, dict) else {}
     weight_values = _weights(weights.get("proposed_weights")) if isinstance(weights, dict) else None
     official_content = (
-        f'<p style="margin:0 0 6px;color:#374151;">最新期數：<strong>{escape(str(latest.get("draw", "未知")))}</strong>；'
+        f'<p style="margin:0 0 6px;color:{body_text};">最新期數：<strong>{escape(str(latest.get("draw", "未知")))}</strong>；'
         f'日期：{escape(str(latest.get("date", "未知")))}</p>'
-        f'<p style="margin:0;color:#374151;">六個正選：{escape(_number_text(latest.get("numbers")))}</p>'
+        f'<p style="margin:0;color:{body_text};">六個正選：{escape(_number_text(latest.get("numbers")))}</p>'
     )
     recent_blind_content = (
-        f'<p style="margin:0 0 8px;color:#374151;">已結算期數：{escape(str(blind_summary.get("settled_draws", 0)))}；'
+        f'<p style="margin:0 0 8px;color:{body_text};">已結算期數：{escape(str(blind_summary.get("settled_draws", 0)))}；'
         f'近期平均最高命中：{escape(str(blind_summary.get("average_best_hits", 0.0)))}/6</p>'
-        '<ul style="margin:0;padding-left:20px;color:#374151;line-height:1.6;">'
+        f'<ul style="margin:0;padding-left:20px;color:{body_text};line-height:1.6;">'
         + "".join(f'<li>{escape(line.lstrip("- "))}</li>' for line in _recent_blind_summary_lines(blind_summary))
-        + '</ul><p style="margin:10px 0 0;font-size:12px;line-height:1.5;color:#6b7280;">'
+        + f'</ul><p style="margin:10px 0 0;font-size:12px;line-height:1.5;color:{muted_text};">'
         + escape(str(blind_summary.get("note", "只作已鎖定盲測的事後統計展示。")))
         + "</p>"
     )
-    recommendation_rows = "".join(_recommendation_html(item) for item in recommendations if isinstance(item, dict))
+    recommendation_rows = "".join(_recommendation_html(item, theme_tokens) for item in recommendations if isinstance(item, dict))
+    if not recommendation_rows:
+        recommendation_rows = f'<tr><td style="color:{muted_text};">目前沒有可呈現的最新研究組合</td></tr>'
     recommendation_content = (
         '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">'
-        f'{recommendation_rows or "<tr><td style=\"color:#6b7280;\">目前沒有可呈現的最新研究組合</td></tr>"}'
+        f'{recommendation_rows}'
         '</table>'
-        '<p style="margin:12px 0 0;font-size:12px;line-height:1.5;color:#6b7280;">'
+        f'<p style="margin:12px 0 0;font-size:12px;line-height:1.5;color:{muted_text};">'
         '第一組特別號碼沿用主號模型排序，只作不重複的研究展示；不計入六個正選命中統計。</p>'
     )
     colour_content = (
-        '<ul style="margin:0;padding-left:20px;color:#374151;line-height:1.6;">'
+        f'<ul style="margin:0;padding-left:20px;color:{body_text};line-height:1.6;">'
         + "".join(f"<li>{escape(line.lstrip('- '))}</li>" for line in _colour_summary_lines(colour_analysis))
-        + '</ul><p style="margin:10px 0 0;font-size:12px;line-height:1.5;color:#6b7280;">'
+        + f'</ul><p style="margin:10px 0 0;font-size:12px;line-height:1.5;color:{muted_text};">'
         '紅、藍、綠為號碼的固定標籤；本節只作描述性分析，不加入正式機率、盲測或權重治理。</p>'
     )
     variant_rows = "<br>".join(
@@ -612,48 +645,75 @@ def render_daily_status_html(snapshot: dict[str, Any], *, simulation: bool = Fal
         if isinstance(item, dict)
     ) or "目前沒有可呈現的三配置盲測記錄"
     blind_content = (
-        f'<p style="margin:0 0 6px;color:#374151;">目標期數：{escape(str(blind.get("target_draw", "尚未鎖定")))}；'
+        f'<p style="margin:0 0 6px;color:{body_text};">目標期數：{escape(str(blind.get("target_draw", "尚未鎖定")))}；'
         f'狀態：{escape(str(blind.get("status", "無記錄")))}</p>'
-        f'<p style="margin:0;color:#374151;">{variant_rows}</p>'
+        f'<p style="margin:0;color:{body_text};">{variant_rows}</p>'
     )
     brier_content = (
-        f'<p style="margin:0;color:#374151;">目標期數：{escape(str(brier.get("target_draw", "尚未鎖定")))}；'
+        f'<p style="margin:0;color:{body_text};">目標期數：{escape(str(brier.get("target_draw", "尚未鎖定")))}；'
         f'狀態：{escape(str(brier.get("status", "無記錄")))}<br>'
         f'共同已結算期數：{escape(str(snapshot.get("common_brier_draws", 0)))}；'
         f'正式閘門：{escape(str(snapshot.get("formal_gate", "")))}</p>'
     )
     weight_content = (
-        f'<p style="margin:0;color:#374151;">權重版本：{escape(str(weights.get("version", "baseline-equal-v1（觀察期）") if isinstance(weights, dict) else "baseline-equal-v1（觀察期）"))}<br>'
+        f'<p style="margin:0;color:{body_text};">權重版本：{escape(str(weights.get("version", "baseline-equal-v1（觀察期）") if isinstance(weights, dict) else "baseline-equal-v1（觀察期）"))}<br>'
         f'凍結進度：{escape(str(weights.get("freeze_completed_draws", 0) if isinstance(weights, dict) else 0))}/50 期<br>'
         f'權重：{escape(_format_weights(weight_values) if weight_values else "四配置等權重 25.0%／25.0%／25.0%／25.0%")}</p>'
     )
     simulation_note = (
-        '<div style="margin:0 0 18px;padding:12px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:6px;color:#1d4ed8;">'
+        f'<div class="report-notice" style="margin:0 0 18px;padding:12px;background:{theme_tokens["notice_background"]};border:1px solid {theme_tokens["notice_border"]};border-radius:6px;color:{theme_tokens["notice_text"]};">'
         '<strong>受控模擬通知</strong><br>本信只驗證格式，沒有建立、結算或改寫任何正式盲測與權重版本。</div>'
         if simulation
         else ""
     )
     sections = "".join(
         [
-            _html_section("近期盲測命中摘要", recent_blind_content),
-            _html_section("一、最新官方結果資料", official_content),
-            _html_section("二、號碼球顏色研究摘要", colour_content),
-            _html_section("三、最新模型研究組合", recommendation_content),
-            _html_section("四、三配置盲測狀態", blind_content),
-            _html_section("五、四配置 Brier 追蹤", brier_content),
-            _html_section("六、模型權重與凍結狀態", weight_content),
+            _html_section("近期盲測命中摘要", recent_blind_content, theme_tokens),
+            _html_section("一、最新官方結果資料", official_content, theme_tokens),
+            _html_section("二、號碼球顏色研究摘要", colour_content, theme_tokens),
+            _html_section("三、最新模型研究組合", recommendation_content, theme_tokens),
+            _html_section("四、三配置盲測狀態", blind_content, theme_tokens),
+            _html_section("五、四配置 Brier 追蹤", brier_content, theme_tokens),
+            _html_section("六、模型權重與凍結狀態", weight_content, theme_tokens),
         ]
     )
+    theme_style = (
+        '<style>'
+        f'.report-body .report-section,.report-body .report-legend{{background:{theme_tokens["card_background"]} !important;border-color:{theme_tokens["border"]} !important;}}'
+        f'.report-body .report-section h2,.report-body .report-legend p:first-child,.report-body .recommendation-heading{{color:{theme_tokens["heading"]} !important;}}'
+        f'.report-body p,.report-body li,.report-body .recommendation-detail,.report-body .report-legend span{{color:{theme_tokens["body_text"]} !important;}}'
+        f'.report-body .report-section p[style*="font-size:12px"],.report-body .recommendation-detail[style*="font-size:12px"],.report-body .report-legend p:last-child{{color:{theme_tokens["muted_text"]} !important;}}'
+        f'.report-body .strength-badge{{background:{theme_tokens["strength_background"]} !important;color:{theme_tokens["strength_text"]} !important;border-color:{theme_tokens["strength_border"]} !important;}}'
+        f'.report-body .report-notice{{background:{theme_tokens["notice_background"]} !important;color:{theme_tokens["notice_text"]} !important;border-color:{theme_tokens["notice_border"]} !important;}}'
+        '</style>'
+    )
+    preview_tools = (
+        '<div class="preview-tools" style="margin:16px 0 0;text-align:right;">'
+        '<button type="button" onclick="window.print()" style="padding:8px 12px;border:1px solid #475569;border-radius:6px;background:#ffffff;color:#111827;font-weight:700;cursor:pointer;">列印此報告</button>'
+        '</div>'
+        if preview_mode
+        else ""
+    )
+    print_style = (
+        '<style>@media print {body {background:#ffffff !important;color:#000000 !important;} .preview-tools {display:none !important;} '
+        '.report-shell,.report-body,.report-section,.report-legend {background:#ffffff !important;color:#000000 !important;border-color:#000000 !important;} '
+        '.report-section h2,.report-legend p,.report-section p,.report-section li,.recommendation-heading,.recommendation-detail {color:#000000 !important;} '
+        '.strength-badge {background:#fff200 !important;color:#000000 !important;border-color:#000000 !important;} '
+        '.report-shell {max-width:none !important;} .report-section,.report-legend {break-inside:avoid;page-break-inside:avoid;}}</style>'
+        if preview_mode
+        else ""
+    )
     return (
-        '<!doctype html><html><body style="margin:0;padding:0;background:#f3f4f6;font-family:Arial,\'Noto Sans TC\',sans-serif;">'
+        f'<!doctype html><html data-email-theme="{normalise_email_report_theme(theme)}">{theme_style}{print_style}<body style="margin:0;padding:0;background:{theme_tokens["page_background"]};font-family:Arial,\'Noto Sans TC\',sans-serif;">'
         '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"><tr><td align="center" style="padding:24px 12px;">'
-        '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:680px;">'
-        '<tr><td style="padding:24px;background:#111827;color:#ffffff;border-radius:10px 10px 0 0;">'
+        '<table class="report-shell" role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:680px;">'
+        f'<tr><td style="padding:24px;background:{theme_tokens["header_background"]};color:{theme_tokens["header_text"]};border-radius:10px 10px 0 0;">'
         '<h1 style="margin:0;font-size:21px;">Mark Six 每日盲測結果與模型權重狀態摘要</h1>'
-        f'<p style="margin:8px 0 0;color:#d1d5db;font-size:13px;">報告時間（香港）：{escape(str(snapshot.get("generated_at_hkt", "未知")))}</p>'
-        '</td></tr><tr><td style="padding:0 18px 18px;background:#f9fafb;border-radius:0 0 10px 10px;">'
+        f'<p style="margin:8px 0 0;color:{theme_tokens["header_muted"]};font-size:13px;">報告時間（香港）：{escape(str(snapshot.get("generated_at_hkt", "未知")))}</p>'
+        f'</td></tr><tr><td class="report-body" style="padding:0 18px 18px;background:{theme_tokens["shell_background"]};border-radius:0 0 10px 10px;">'
         f'{simulation_note}{sections}'
-        '<p style="margin:20px 0 0;font-size:12px;line-height:1.55;color:#6b7280;">'
+        f'{_ball_colour_legend_html(theme_tokens)}{preview_tools}'
+        f'<p style="margin:20px 0 0;font-size:12px;line-height:1.55;color:{theme_tokens["muted_text"]};">'
         '本報告僅供統計實驗、盲測治理與系統審計用途，不構成投注建議或中獎保證。</p>'
         '</td></tr></table></td></tr></table></body></html>'
     )
@@ -712,6 +772,9 @@ def render_daily_status_body(snapshot: dict[str, Any], *, simulation: bool = Fal
             f"凍結進度：{weights.get('freeze_completed_draws', 0) if isinstance(weights, dict) else 0}/50 期",
             f"權重：{_format_weights(weight_values) if weight_values else '四配置等權重 25.0%／25.0%／25.0%／25.0%'}",
             "",
+            "六合彩球色圖例",
+            "紅色、藍色、綠色只代表各號碼的固定球色，並不表示較高機率或推薦強度；特別號的琥珀色外框只用作類型辨識。",
+            "",
             "本報告僅供統計實驗、盲測治理與系統審計用途，不構成投注建議或中獎保證。",
         ]
     )
@@ -740,7 +803,7 @@ def dispatch_daily_status(
     try:
         subject = f"[Mark Six] 每日盲測與權重狀態 — {report_date}"
         plain_body = render_daily_status_body(snapshot)
-        html_body = render_daily_status_html(snapshot)
+        html_body = render_daily_status_html(snapshot, theme=load_email_report_theme())
         archived_report, _ = prepare_daily_report_archive(daily_event, snapshot, plain_body, html_body, path=archive_path)
         archived_plain = str(archived_report.get("plain_body", plain_body))
         archived_html = str(archived_report.get("html_body", html_body))
@@ -767,7 +830,7 @@ def send_simulated_daily_status(settings: dict[str, Any]) -> None:
         settings,
         f"[模擬] Mark Six 盲測與權重凍結狀態 — {snapshot['report_date_hkt']}",
         render_daily_status_body(snapshot, simulation=True),
-        html_body=render_daily_status_html(snapshot, simulation=True),
+        html_body=render_daily_status_html(snapshot, simulation=True, theme=load_email_report_theme()),
     )
 
 

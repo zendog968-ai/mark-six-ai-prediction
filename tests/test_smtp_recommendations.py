@@ -64,6 +64,9 @@ class SmtpRecommendationFormatTests(unittest.TestCase):
         self.assertIn("二、號碼球顏色研究摘要", html_body)
         self.assertIn("相對推薦強度 100%", html_body)
         self.assertIn("近期盲測命中摘要", html_body)
+        self.assertIn("六合彩球色圖例", html_body)
+        self.assertIn("固定號碼球標籤", html_body)
+        self.assertIn("六合彩球色圖例", plain_body)
         self.assertIn("26092：最高 2/6", plain_body)
         self.assertIn("組合 2", html_body)
         message = build_email_message(
@@ -78,6 +81,24 @@ class SmtpRecommendationFormatTests(unittest.TestCase):
         self.assertEqual(parts[1].get_content_type(), "text/html")
         self.assertIn("6+1 推薦組合", parts[0].get_content())
         self.assertIn("<strong>特別號碼：08／紅色</strong>", parts[1].get_content())
+
+    def test_html_report_themes_keep_inline_text_contrast_and_preview_print_controls(self):
+        snapshot = self.sample_snapshot()
+        high_contrast = render_daily_status_html(snapshot, theme="high_contrast")
+        dark = render_daily_status_html(snapshot, theme="dark", preview_mode=True)
+        self.assertIn('data-email-theme="high_contrast"', high_contrast)
+        self.assertIn("background:#ffffff", high_contrast)
+        self.assertIn("color:#000000", high_contrast)
+        self.assertIn('data-email-theme="dark"', dark)
+        self.assertIn("background:#020617", dark)
+        self.assertIn("background:#111827", dark)
+        self.assertIn("color:#e2e8f0", dark)
+        self.assertIn('font-weight:700;color:#f8fafc;">六合彩球色圖例</p>', dark)
+        self.assertIn('font-size:12px;color:#e2e8f0;">', dark)
+        self.assertIn('font-size:12px;line-height:1.55;color:#cbd5e1;">', dark)
+        self.assertIn("window.print()", dark)
+        self.assertIn("@media print", dark)
+        self.assertIn(".report-shell,.report-body,.report-section,.report-legend", dark)
 
     def test_recent_blind_summary_uses_only_draws_with_official_main_results(self):
         with tempfile.TemporaryDirectory() as temporary:

@@ -4,8 +4,10 @@ import unittest
 from pathlib import Path
 
 from ui_preferences import (
+    load_email_report_theme,
     language_code_from_label,
     language_label_from_code,
+    save_email_report_theme,
     load_window_research_language,
     save_window_research_language,
 )
@@ -39,3 +41,14 @@ class UiPreferenceTests(unittest.TestCase):
         self.assertEqual(language_label_from_code("invalid"), "繁體中文")
         with self.assertRaises(ValueError):
             save_window_research_language("invalid", self.preference_path)
+
+    def test_email_theme_round_trip_preserves_language_and_rejects_unknown_theme(self):
+        save_window_research_language("en", self.preference_path)
+        self.assertEqual(load_email_report_theme(self.preference_path), "standard")
+        save_email_report_theme("dark", self.preference_path)
+        self.assertEqual(load_email_report_theme(self.preference_path), "dark")
+        payload = json.loads(self.preference_path.read_text(encoding="utf-8"))
+        self.assertEqual(payload["window_research_language"], "en")
+        self.assertEqual(payload["email_report_theme"], "dark")
+        with self.assertRaises(ValueError):
+            save_email_report_theme("invalid", self.preference_path)

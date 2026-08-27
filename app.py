@@ -55,9 +55,12 @@ from long_window_research import (
 from ui_preferences import (
     language_code_from_label,
     language_label_from_code,
+    load_email_report_theme,
     load_window_research_language,
+    save_email_report_theme,
     save_window_research_language,
 )
+from report_themes import EMAIL_REPORT_THEME_OPTIONS, email_report_theme_code_from_label, email_report_theme_label
 from smtp_notifications import build_daily_status_snapshot, render_daily_status_body, render_daily_status_html
 from daily_report_archive import daily_report_archive_index, load_daily_report_archive, search_daily_report_archive
 
@@ -623,6 +626,25 @@ with email_preview_tab:
     st.subheader("HTML 每日報告預覽")
     st.caption("此頁以排程每日 Email 相同的唯讀快照渲染，只供預覽；不會寄送 Email、更新開獎資料或改寫任何盲測、Brier、權重帳本。")
     report_snapshot = build_daily_status_snapshot()
+    saved_email_theme = load_email_report_theme()
+    theme_labels = [values["label"] for values in EMAIL_REPORT_THEME_OPTIONS.values()]
+    saved_theme_label = email_report_theme_label(saved_email_theme)
+    preview_controls_left, preview_controls_right = st.columns([1.25, 1])
+    with preview_controls_left:
+        selected_theme_label = st.selectbox(
+            "Email 及預覽主題",
+            options=theme_labels,
+            index=theme_labels.index(saved_theme_label),
+            help="此顯示偏好會套用於每日 HTML Email；不影響預測、盲測或權重資料。",
+        )
+        selected_theme = email_report_theme_code_from_label(selected_theme_label)
+        if selected_theme != saved_email_theme:
+            save_email_report_theme(selected_theme)
+            st.toast(f"已保存 Email 主題：{selected_theme_label}", icon="🎨")
+    with preview_controls_right:
+        print_friendly = st.checkbox("列印友善版面（強制白底）", value=False)
+        st.caption("列印模式提供白底、高對比文字、避免分段切開及 iframe 內的列印按鈕。")
+    preview_theme = "high_contrast" if print_friendly else selected_theme
     blind_summary = report_snapshot.get("recent_blind_hit_summary") or {}
     latest_report_prediction = report_snapshot.get("latest_prediction") or {}
     preview_recommendations = latest_report_prediction.get("top_5_recommendations", []) if isinstance(latest_report_prediction, dict) else []
@@ -637,7 +659,7 @@ with email_preview_tab:
         except (TypeError, ValueError):
             pass
     preview_c.metric("第一組相對強度", first_strength_value)
-    st.iframe(render_daily_status_html(report_snapshot), height=1260)
+    st.iframe(render_daily_status_html(report_snapshot, theme=preview_theme, preview_mode=True), height=1320)
     with st.expander("檢視純文字後備內容"):
         st.code(render_daily_status_body(report_snapshot), language=None)
 
