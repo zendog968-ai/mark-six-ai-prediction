@@ -5,6 +5,7 @@ import altair as alt
 from ball_colours import COLOUR_HEX, COLOUR_KEYS, COLOUR_LABELS, COLOUR_SOURCE_URL, colour_composition_text, colour_for_number
 from colour_analysis import build_colour_analysis
 from lotto_data import (
+    build_colour_experiment_features,
     DEFAULT_REAL_HISTORY_PATH,
     REQUIRED_COLUMNS,
     filter_history,
@@ -181,6 +182,14 @@ with colour_tab:
 
     st.markdown("#### 最近期數球色紀錄")
     st.dataframe(colour_state["recent_draws"], width="stretch", hide_index=True, height=360)
+    st.markdown("#### 實驗室候選特徵：固定球色 One-hot 標籤")
+    st.caption(
+        "下表將每個候選號碼的固定紅／藍／綠屬性編碼為 is_red、is_blue、is_green，"
+        "並與 frequency_50、frequency_10、Gap 並列，供描述性實驗與審核。"
+        "為保護已鎖定的盲測可比性，這三個固定標籤目前不會加入正式融合模型訓練或權重治理。"
+    )
+    colour_feature_table = build_colour_experiment_features(draws)
+    st.dataframe(colour_feature_table, width="stretch", hide_index=True, height=320)
     st.markdown(f"固定球色對照來源：[香港賽馬會六合彩 50 週年資料]({COLOUR_SOURCE_URL})。")
     st.caption("顏色是號碼既定標籤，僅用於描述性分析與實驗展示，不加入正式盲測、Brier 或權重治理。")
 

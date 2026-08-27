@@ -13,6 +13,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
 from xgboost import XGBClassifier
 
+from ball_colours import COLOUR_KEYS, colour_for_number
+
 
 REQUIRED_COLUMNS = ("Draw", "Date", "N1", "N2", "N3", "N4", "N5", "N6", "Special")
 NUMBER_COLUMNS = ("N1", "N2", "N3", "N4", "N5", "N6", "Special")
@@ -23,6 +25,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 DEFAULT_REAL_HISTORY_PATH = PROJECT_ROOT / "data" / "lotto_history_real.csv"
 BASE_FEATURE_NAMES = ("frequency_50", "frequency_10", "gap")
 FUSION_FEATURE_NAMES = (*BASE_FEATURE_NAMES, "kmeans_cluster")
+COLOUR_EXPERIMENT_FEATURE_NAMES = (*BASE_FEATURE_NAMES, "is_red", "is_blue", "is_green")
 FUSION_MODEL_NAME = "Random Forest + XGBoost Ensemble"
 
 
@@ -145,6 +148,43 @@ def number_features(draws: pd.DataFrame, cutoff: int, number: int, window: int =
     if len(hits):
         gap = len(history) - int(hits[-1]) - 1
     return frequency_50, frequency_10, gap
+
+
+def build_colour_experiment_features(
+    draws: pd.DataFrame,
+    cutoff: int | None = None,
+    window: int = 50,
+) -> pd.DataFrame:
+    """Build colour-labelled candidate features for descriptive lab experiments.
+
+    The red/blue/green values are fixed properties of number labels, rather than
+    draw-time observations.  The returned table is deliberately separate from
+    ``build_training_data`` and the frozen fusion feature list, so it can be
+    inspected in the laboratory without retroactively changing blind tests.
+    """
+    effective_cutoff = len(draws) if cutoff is None else int(cutoff)
+    if effective_cutoff < 1 or effective_cutoff > len(draws):
+        raise ValueError("cutoff 必須介於 1 與資料期數之間。")
+    rows: list[dict[str, int | str]] = []
+    for number in range(NUMBER_MIN, NUMBER_MAX + 1):
+        frequency_50, frequency_10, gap = number_features(draws, effective_cutoff, number, window)
+        colour = colour_for_number(number)
+        rows.append(
+            {
+                "number": number,
+                "frequency_50": frequency_50,
+                "frequency_10": frequency_10,
+                "gap": gap,
+                "ball_colour": colour,
+                "is_red": int(colour == "red"),
+                "is_blue": int(colour == "blue"),
+                "is_green": int(colour == "green"),
+            }
+        )
+    frame = pd.DataFrame(rows)
+    if tuple(key.removeprefix("is_") for key in COLOUR_EXPERIMENT_FEATURE_NAMES[-3:]) != COLOUR_KEYS:
+        raise RuntimeError("球色實驗特徵定義與固定球色對照不一致。")
+    return frame
 
 
 def build_training_data(draws: pd.DataFrame, window: int = 50) -> tuple[np.ndarray, np.ndarray]:

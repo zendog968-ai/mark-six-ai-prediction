@@ -1,6 +1,7 @@
 import unittest
 
 from ball_colours import COLOUR_KEYS, COLOUR_NUMBERS, NUMBER_TO_COLOUR, colour_counts, colour_for_number
+from lotto_data import COLOUR_EXPERIMENT_FEATURE_NAMES, build_colour_experiment_features, generate_mock_data
 
 
 class BallColourTests(unittest.TestCase):
@@ -19,3 +20,11 @@ class BallColourTests(unittest.TestCase):
     def test_out_of_range_numbers_are_rejected(self) -> None:
         with self.assertRaises(ValueError):
             colour_for_number(50)
+
+    def test_colour_experiment_features_are_complete_and_isolated(self) -> None:
+        features = build_colour_experiment_features(generate_mock_data(60))
+        self.assertEqual(len(features), 49)
+        self.assertEqual(COLOUR_EXPERIMENT_FEATURE_NAMES[-3:], ("is_red", "is_blue", "is_green"))
+        self.assertTrue((features[["is_red", "is_blue", "is_green"]].sum(axis=1) == 1).all())
+        self.assertEqual(features.loc[features["number"] == 1, "ball_colour"].iloc[0], "red")
+        self.assertEqual(features.loc[features["number"] == 49, "ball_colour"].iloc[0], "green")
