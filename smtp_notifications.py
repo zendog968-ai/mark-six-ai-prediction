@@ -520,8 +520,8 @@ def _recommendation_html(item: Any) -> str:
                 f'<div style="font-weight:700;color:#111827;">6+1 推薦組合{strength_badge}</div>'
                 f'<div style="margin-top:5px;color:#1f2937;">{main_text} '
                 '<span style="display:inline-block;margin-left:5px;padding:4px 8px;'
-                'background:#fef3c7;color:#92400e;border:1px solid #f59e0b;border-radius:4px;'
-                'font-weight:700;">'
+                f'background:{COLOUR_HEX[special_colour]};color:#ffffff;border:2px solid #f59e0b;border-radius:999px;'
+                'font-weight:700;box-shadow:0 0 0 1px #ffffff;">'
                 f'<strong>特別號碼：{special:02d}／{escape(COLOUR_LABELS[special_colour])}</strong></span>'
                 f'<div style="margin-top:6px;color:#6b7280;font-size:12px;">球色組成：{composition}</div></div></td></tr>'
             )
