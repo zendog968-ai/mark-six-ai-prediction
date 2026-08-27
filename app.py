@@ -2,6 +2,8 @@ import streamlit as st
 
 import altair as alt
 
+from ball_colours import COLOUR_HEX, COLOUR_KEYS, COLOUR_LABELS, COLOUR_SOURCE_URL, colour_composition_text, colour_for_number
+from colour_analysis import build_colour_analysis
 from lotto_data import (
     DEFAULT_REAL_HISTORY_PATH,
     REQUIRED_COLUMNS,
@@ -89,8 +91,8 @@ if validated_upload is None and uploaded_file is not None:
     st.error("上傳檔案未通過驗證，因此系統不會用它訓練模型；目前會使用專案內真實歷史資料（如不可用才回退模擬資料）。")
 
 st.info(f"目前資料來源：**{source_label}**；共 {len(draws):,} 期紀錄。")
-overview_tab, model_tab, backtest_tab, hit_rate_tab, blind_test_tab, inference_tab, weight_tab, data_tab, window_research_tab, email_preview_tab, report_archive_tab = st.tabs(
-    ["資料概覽", "模型實驗", "模型回測", "命中率與回測分析", "三配置盲測追蹤", "Brier 統計檢定", "權重演變與凍結", "歷史資料預覽", "5／10期窗口研究", "HTML 每日報告預覽", "歷史報告歸檔"]
+overview_tab, colour_tab, model_tab, backtest_tab, hit_rate_tab, blind_test_tab, inference_tab, weight_tab, data_tab, window_research_tab, email_preview_tab, report_archive_tab = st.tabs(
+    ["資料概覽", "號碼球顏色分析", "模型實驗", "模型回測", "命中率與回測分析", "三配置盲測追蹤", "Brier 統計檢定", "權重演變與凍結", "歷史資料預覽", "5／10期窗口研究", "HTML 每日報告預覽", "歷史報告歸檔"]
 )
 
 with overview_tab:
@@ -100,6 +102,87 @@ with overview_tab:
     metric_b.metric("起始日期", draws["Date"].min().date().isoformat())
     metric_c.metric("最新日期", draws["Date"].max().date().isoformat())
     st.dataframe(draws.tail(20), width="stretch", hide_index=True)
+
+with colour_tab:
+    st.subheader("六合彩號碼球顏色分析")
+    st.caption(
+        "紅、藍、綠是 1–49 號碼球的固定展示屬性。香港賽馬會確認 49 個球分為三色，紅色 17 個、藍色與綠色各 16 個；"
+        "本頁以此固定對照展示歷史與近期分布，不把顏色差異解讀為未來攪珠的預測能力。"
+    )
+    colour_state = build_colour_analysis(draws)
+    colour_metric_a, colour_metric_b, colour_metric_c, colour_metric_d = st.columns(4)
+    colour_metric_a.metric("分析期數", f"{colour_state['draw_count']:,}")
+    colour_metric_b.metric("紅色球池", f"{colour_state['group_sizes']['紅色']} / 49")
+    colour_metric_c.metric("藍色球池", f"{colour_state['group_sizes']['藍色']} / 49")
+    colour_metric_d.metric("綠色球池", f"{colour_state['group_sizes']['綠色']} / 49")
+    latest_colour = colour_state["latest_draw"]
+    if latest_colour:
+        st.info(
+            f"最新期 {latest_colour['期數']}：正選球色組成為 **{latest_colour['正選球色組成']}**；"
+            f"特別號 {int(latest_colour['特別號']):02d} 為 **{latest_colour['特別號球色']}**。"
+        )
+
+    colour_scale = alt.Scale(
+        domain=[COLOUR_LABELS[colour] for colour in COLOUR_KEYS],
+        range=[COLOUR_HEX[colour] for colour in COLOUR_KEYS],
+    )
+    overall_colour_chart_data = colour_state["overall_table"].melt(
+        id_vars=["範圍", "球色", "球色鍵", "球色代碼", "實際比例", "固定球池比例", "與期望差異"],
+        value_vars=["正選實際球數", "隨機期望球數"],
+        var_name="數據系列",
+        value_name="球數",
+    )
+    st.markdown("#### 全期數正選球色：實際與隨機期望")
+    overall_colour_chart = (
+        alt.Chart(overall_colour_chart_data)
+        .mark_bar()
+        .encode(
+            x=alt.X("球色:N", sort=[COLOUR_LABELS[colour] for colour in COLOUR_KEYS], title=None),
+            xOffset="數據系列:N",
+            y=alt.Y("球數:Q", title="正選球數"),
+            color=alt.Color("球色:N", scale=colour_scale, legend=alt.Legend(title="球色")),
+            opacity=alt.Opacity("數據系列:N", scale=alt.Scale(domain=["正選實際球數", "隨機期望球數"], range=[1.0, 0.42]), legend=alt.Legend(title="數據系列")),
+            tooltip=[
+                alt.Tooltip("範圍:N"), alt.Tooltip("球色:N"), alt.Tooltip("數據系列:N"),
+                alt.Tooltip("球數:Q", format=".2f"), alt.Tooltip("實際比例:Q", format=".2%"),
+                alt.Tooltip("固定球池比例:Q", format=".2%"), alt.Tooltip("與期望差異:Q", format="+.2f"),
+            ],
+        )
+        .properties(height=300)
+        .interactive()
+    )
+    st.altair_chart(overall_colour_chart, width="stretch")
+    st.caption("隨機期望基準按固定球池紅 17、藍 16、綠 16 個，於每期均勻抽取六個正選計算。")
+
+    trend_left, trend_right = st.columns([1.2, 1])
+    with trend_left:
+        st.markdown("#### 最近 30 期正選球色組成")
+        recent_colour_chart = (
+            alt.Chart(colour_state["trend"])
+            .mark_line(point=True)
+            .encode(
+                x=alt.X("期數:O", title="期數"),
+                y=alt.Y("正選球數:Q", title="每期正選球數", scale=alt.Scale(domain=[0, 6])),
+                color=alt.Color("球色:N", scale=colour_scale, title="球色"),
+                tooltip=[alt.Tooltip("期數:O"), alt.Tooltip("球色:N"), alt.Tooltip("正選球數:Q")],
+            )
+            .properties(height=300)
+            .interactive()
+        )
+        st.altair_chart(recent_colour_chart, width="stretch")
+    with trend_right:
+        st.markdown("#### 最近 10／50 期顏色窗口")
+        st.dataframe(
+            colour_state["window_table"].loc[:, ["範圍", "球色", "正選實際球數", "隨機期望球數", "與期望差異"]],
+            width="stretch",
+            hide_index=True,
+            height=300,
+        )
+
+    st.markdown("#### 最近期數球色紀錄")
+    st.dataframe(colour_state["recent_draws"], width="stretch", hide_index=True, height=360)
+    st.markdown(f"固定球色對照來源：[香港賽馬會六合彩 50 週年資料]({COLOUR_SOURCE_URL})。")
+    st.caption("顏色是號碼既定標籤，僅用於描述性分析與實驗展示，不加入正式盲測、Brier 或權重治理。")
 
 with model_tab:
     st.subheader("特徵工程與融合模型實驗")
@@ -118,6 +201,7 @@ with model_tab:
                 "RF 分數": round(float(row.random_forest_score) * 100, 2),
                 "XGBoost 分數": round(float(row.xgboost_score) * 100, 2),
                 "K-Means 群組": int(row.kmeans_cluster),
+                "球色": COLOUR_LABELS[colour_for_number(int(row.number))],
             }
             for index, row in enumerate(model_details.head(15).itertuples(index=False))
         ]
@@ -133,10 +217,14 @@ with model_tab:
                 special_number = select_special_number(ranked_probabilities, combination)
                 st.write(
                     f"6+1 推薦組合：{' · '.join(f'{number:02d}' for number in combination)} "
-                    f"+ [特別號碼：{special_number:02d}]　|　{odd_count} 單 / {6 - odd_count} 雙　|　總和 {sum(combination)}"
+                    f"+ [特別號碼：{special_number:02d}／{COLOUR_LABELS[colour_for_number(special_number)]}]　|　"
+                    f"球色：{colour_composition_text(combination)}　|　{odd_count} 單 / {6 - odd_count} 雙　|　總和 {sum(combination)}"
                 )
             else:
-                st.write(f"組合 {index:02d}：{' · '.join(f'{number:02d}' for number in combination)}　|　{odd_count} 單 / {6 - odd_count} 雙　|　總和 {sum(combination)}")
+                st.write(
+                    f"組合 {index:02d}：{' · '.join(f'{number:02d}' for number in combination)}　|　"
+                    f"球色：{colour_composition_text(combination)}　|　{odd_count} 單 / {6 - odd_count} 雙　|　總和 {sum(combination)}"
+                )
 
 with backtest_tab:
     st.subheader("模型回測（滾動樣本外評估）")

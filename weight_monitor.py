@@ -107,6 +107,6 @@ def build_weight_monitor_state(
         "freeze_completed_draws": freeze_completed,
         "freeze_confirmation_draws": freeze_confirmation_draws,
         "weight_rows": pd.DataFrame(weight_rows),
-        "gate_rows": pd.DataFrame(gate_rows),
+        "gate_rows": pd.DataFrame(gate_rows, dtype=object),
         "history": pd.DataFrame(history_rows),
     }

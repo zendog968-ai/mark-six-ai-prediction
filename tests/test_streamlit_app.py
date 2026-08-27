@@ -45,6 +45,9 @@ class StreamlitApplicationTests(unittest.TestCase):
         self.assertIn("歷史報告歸檔", source)
         self.assertIn("search_daily_report_archive", source)
         self.assertIn("選擇要預覽的歸檔報告", source)
+        self.assertIn("號碼球顏色分析", source)
+        self.assertIn("固定球色對照來源", source)
+        self.assertIn("顏色是號碼既定標籤", source)
         language_selectors = [widget for widget in app.selectbox if widget.label == "Language / 語言"]
         self.assertEqual(len(language_selectors), 1)
         language_selector = language_selectors[0]

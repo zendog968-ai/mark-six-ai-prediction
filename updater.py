@@ -31,6 +31,8 @@ from lotto_data import (
     train_fusion_model,
     validate_lotto_dataframe,
 )
+from ball_colours import colour_for_number
+from colour_analysis import colour_analysis_payload, recommendation_colour_metadata
 from recommendation_strengths import recommendation_strengths, sort_recommendations_by_strength
 from blind_test_tracking import DEFAULT_BLIND_TEST_HISTORY_PATH, record_blind_test
 from four_config_tracking import DEFAULT_EXTENDED_HISTORY_PATH, DEFAULT_FOUR_CONFIG_HISTORY_PATH, record_four_config
@@ -204,6 +206,8 @@ def build_prediction_payload(history: pd.DataFrame, latest: DrawResult, appended
     raw_combinations = generate_filtered_combinations(ranked, n_groups=5)
     all_weights = {int(row.number): float(row.fused_score) for row in model_details.itertuples(index=False)}
     combinations = sort_recommendations_by_strength(raw_combinations, all_weights)
+    model_details = model_details.copy()
+    model_details["ball_colour"] = model_details["number"].map(colour_for_number)
     top_details = model_details.head(25)
     recommendations = []
     for index, combination in enumerate(combinations, start=1):
@@ -220,6 +224,12 @@ def build_prediction_payload(history: pd.DataFrame, latest: DrawResult, appended
             recommendation["special_number_note"] = "以同一主號模型排序選出的不重複研究用特別號碼"
         else:
             recommendation["recommendation_format"] = "6"
+        recommendation.update(
+            recommendation_colour_metadata(
+                combination,
+                recommendation.get("special_number"),
+            )
+        )
         recommendations.append(recommendation)
     recommendations = recommendation_strengths(recommendations, all_weights)
     return {
@@ -232,6 +242,9 @@ def build_prediction_payload(history: pd.DataFrame, latest: DrawResult, appended
             "features": list(FUSION_FEATURE_NAMES),
             "fusion": {"random_forest_weight": 0.5, "xgboost_weight": 0.5},
             "kmeans_clusters": int(model_details["kmeans_cluster"].nunique()),
+            "research_context": {
+                "ball_colours": "固定紅藍綠號碼標籤，只作描述性分析，不加入正式機率、盲測或權重治理。"
+            },
         },
         "top_weights": [
             {
@@ -240,10 +253,12 @@ def build_prediction_payload(history: pd.DataFrame, latest: DrawResult, appended
                 "random_forest_weight": round(float(row.random_forest_score), 6),
                 "xgboost_weight": round(float(row.xgboost_score), 6),
                 "kmeans_cluster": int(row.kmeans_cluster),
+                "ball_colour": str(row.ball_colour),
             }
             for row in top_details.itertuples(index=False)
         ],
         "top_5_recommendations": recommendations,
+        "colour_analysis": colour_analysis_payload(history),
     }
 
 
@@ -257,12 +272,28 @@ def cached_prediction_matches(history: pd.DataFrame, latest: DrawResult, payload
     first_recommendation = recommendations[0] if isinstance(recommendations, list) and recommendations else None
     if not isinstance(first_recommendation, dict):
         return False
+    colour_analysis = payload.get("colour_analysis")
+    if not isinstance(colour_analysis, dict) or colour_analysis.get("mapping_group_sizes") != {"紅色": 17, "藍色": 16, "綠色": 16}:
+        return False
+    if not isinstance(recommendations, list) or len(recommendations) != 5:
+        return False
+    for recommendation in recommendations:
+        if not isinstance(recommendation, dict):
+            return False
+        counts = recommendation.get("main_colour_counts")
+        number_colours = recommendation.get("number_colours")
+        if not isinstance(counts, dict) or sum(int(counts.get(colour, 0)) for colour in ("red", "blue", "green")) != 6:
+            return False
+        if not isinstance(number_colours, list) or len(number_colours) != 6:
+            return False
     try:
         special_number = int(first_recommendation.get("special_number"))
         first_numbers = {int(number) for number in first_recommendation.get("numbers", [])}
     except (TypeError, ValueError):
         return False
     if first_recommendation.get("recommendation_format") != "6+1" or special_number in first_numbers or not 1 <= special_number <= 49:
+        return False
+    if first_recommendation.get("special_number_colour") not in {"red", "blue", "green"}:
         return False
     try:
         return (

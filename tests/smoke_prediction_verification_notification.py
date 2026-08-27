@@ -26,7 +26,7 @@ def run() -> None:
         path = Path(temporary) / "report.json"
         path.write_text(json.dumps(report), encoding="utf-8")
         subject, body = render_prediction_verification_body(path)
-        assert "26092" in subject and "受控預測重建" in body and "6+1 推薦組合" in body and "[特別號碼：08]" in body
+        assert "26092" in subject and "受控預測重建" in body and "6+1 推薦組合" in body and "[特別號碼：08／紅色]" in body
 
 
 if __name__ == "__main__":

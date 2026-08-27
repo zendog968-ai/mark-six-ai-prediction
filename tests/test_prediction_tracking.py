@@ -49,6 +49,8 @@ class PredictionTrackingTests(unittest.TestCase):
             self.assertEqual(record["target_draw"], 26090)
             self.assertEqual(record["combinations"][0]["recommendation_format"], "6+1")
             self.assertEqual(record["combinations"][0]["special_number"], 7)
+            self.assertEqual(record["combinations"][0]["special_number_colour"], "red")
+            self.assertEqual(sum(record["combinations"][0]["main_colour_counts"].values()), 6)
             self.assertTrue(all("special_number" not in item for item in record["combinations"][1:]))
             self.assertEqual(record, duplicate)
             self.assertEqual(len(load_prediction_history(path)), 1)

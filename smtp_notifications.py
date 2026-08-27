@@ -20,6 +20,7 @@ from pathlib import Path
 from typing import Any, Callable
 from zoneinfo import ZoneInfo
 
+from ball_colours import COLOUR_HEX, COLOUR_LABELS, colour_composition_text, colour_for_number
 from weight_monitor import CONFIG_LABELS, DEFAULT_WEIGHT_HISTORY_PATH, load_weight_adjustment_history
 from recommendation_strengths import recommendation_strengths
 from daily_report_archive import (
@@ -429,6 +430,7 @@ def _recommendation_text(item: Any) -> str:
     except (TypeError, ValueError):
         return "- 未提供推薦組合"
     main_text = _number_text(numbers)
+    composition = str(item.get("main_colour_composition") or colour_composition_text(numbers))
     strength = item.get("strength_label") or (
         f"相對推薦強度 {int(item['relative_strength_percent'])}%"
         if item.get("relative_strength_percent") is not None
@@ -441,8 +443,45 @@ def _recommendation_text(item: Any) -> str:
         except (TypeError, ValueError):
             special = None
         if special is not None and 1 <= special <= 49 and special not in numbers:
-            return f"- 6+1 推薦組合：{main_text} + [特別號碼：{special:02d}]{strength_suffix}"
-    return f"- 組合 {set_index if set_index else '？'}：{main_text}{strength_suffix}"
+            special_colour = str(item.get("special_number_colour") or colour_for_number(special))
+            return (
+                f"- 6+1 推薦組合：{main_text} + [特別號碼：{special:02d}／{COLOUR_LABELS[special_colour]}]"
+                f"{strength_suffix}　[球色：{composition}]"
+            )
+    return f"- 組合 {set_index if set_index else '？'}：{main_text}{strength_suffix}　[球色：{composition}]"
+
+
+def _coloured_number_badges_html(numbers: list[int]) -> str:
+    """以保守 inline CSS 顯示固定球色；不涉及任何機率重新計算。"""
+    return "".join(
+        '<span style="display:inline-block;min-width:25px;margin:1px 2px;padding:4px 4px;'
+        f'background:{COLOUR_HEX[colour_for_number(number)]};color:#ffffff;border-radius:999px;text-align:center;font-weight:700;font-size:12px;">'
+        f'{number:02d}</span>'
+        for number in numbers
+    )
+
+
+def _colour_summary_lines(colour_analysis: Any) -> list[str]:
+    """格式化最新正選及近期窗口的固定球色描述性摘要。"""
+    if not isinstance(colour_analysis, dict):
+        return ["- 目前未提供可驗證的球色分析快照。"]
+    latest = colour_analysis.get("latest_official_draw", {})
+    lines: list[str] = []
+    if isinstance(latest, dict) and latest.get("main_colour_composition"):
+        lines.append(
+            f"- 最新期 {latest.get('draw', '未知')} 正選：{latest.get('main_colour_composition')}；"
+            f"特別號球色：{latest.get('special_colour', '未提供')}"
+        )
+    rows = colour_analysis.get("recent_windows", [])
+    if isinstance(rows, list):
+        for row in rows:
+            if not isinstance(row, dict) or row.get("球色") != "紅色":
+                continue
+            scope = row.get("範圍", "近期窗口")
+            same_scope = [item for item in rows if isinstance(item, dict) and item.get("範圍") == scope]
+            composition = "、".join(f"{item.get('球色')} {item.get('正選實際球數')}" for item in same_scope)
+            lines.append(f"- {scope} 正選球色總數：{composition}")
+    return lines or ["- 目前未提供可驗證的球色分析快照。"]
 
 
 def _recommendation_html(item: Any) -> str:
@@ -456,7 +495,8 @@ def _recommendation_html(item: Any) -> str:
         return ""
     if len(numbers) != 6 or any(number < 1 or number > 49 for number in numbers):
         return ""
-    main_text = escape(_number_text(numbers))
+    main_text = _coloured_number_badges_html(numbers)
+    composition = escape(str(item.get("main_colour_composition") or colour_composition_text(numbers)))
     strength_text = escape(
         str(
             item.get("strength_label")
@@ -474,6 +514,7 @@ def _recommendation_html(item: Any) -> str:
         except (TypeError, ValueError):
             special = None
         if special is not None and 1 <= special <= 49 and special not in numbers:
+            special_colour = str(item.get("special_number_colour") or colour_for_number(special))
             return (
                 '<tr><td style="padding:12px 0;border-bottom:1px solid #e5e7eb;">'
                 f'<div style="font-weight:700;color:#111827;">6+1 推薦組合{strength_badge}</div>'
@@ -481,13 +522,15 @@ def _recommendation_html(item: Any) -> str:
                 '<span style="display:inline-block;margin-left:5px;padding:4px 8px;'
                 'background:#fef3c7;color:#92400e;border:1px solid #f59e0b;border-radius:4px;'
                 'font-weight:700;">'
-                f'<strong>特別號碼：{special:02d}</strong></span></div></td></tr>'
+                f'<strong>特別號碼：{special:02d}／{escape(COLOUR_LABELS[special_colour])}</strong></span>'
+                f'<div style="margin-top:6px;color:#6b7280;font-size:12px;">球色組成：{composition}</div></div></td></tr>'
             )
     label = escape(f"組合 {set_index if set_index else '？'}")
     return (
         '<tr><td style="padding:10px 0;border-bottom:1px solid #e5e7eb;">'
         f'<span style="font-weight:700;color:#374151;">{label}</span>{strength_badge}'
-        f'<span style="color:#1f2937;">：{main_text}</span></td></tr>'
+        f'<span style="color:#1f2937;">：{main_text}</span>'
+        f'<div style="margin-top:6px;color:#6b7280;font-size:12px;">球色組成：{composition}</div></td></tr>'
     )
 
 
@@ -533,6 +576,7 @@ def render_daily_status_html(snapshot: dict[str, Any], *, simulation: bool = Fal
     variants = blind.get("variants", []) if isinstance(blind.get("variants"), list) else []
     recommendations = latest_prediction.get("top_5_recommendations", []) if isinstance(latest_prediction, dict) else []
     blind_summary = snapshot.get("recent_blind_hit_summary") or {}
+    colour_analysis = latest_prediction.get("colour_analysis", {}) if isinstance(latest_prediction, dict) else {}
     weight_values = _weights(weights.get("proposed_weights")) if isinstance(weights, dict) else None
     official_content = (
         f'<p style="margin:0 0 6px;color:#374151;">最新期數：<strong>{escape(str(latest.get("draw", "未知")))}</strong>；'
@@ -555,6 +599,12 @@ def render_daily_status_html(snapshot: dict[str, Any], *, simulation: bool = Fal
         '</table>'
         '<p style="margin:12px 0 0;font-size:12px;line-height:1.5;color:#6b7280;">'
         '第一組特別號碼沿用主號模型排序，只作不重複的研究展示；不計入六個正選命中統計。</p>'
+    )
+    colour_content = (
+        '<ul style="margin:0;padding-left:20px;color:#374151;line-height:1.6;">'
+        + "".join(f"<li>{escape(line.lstrip('- '))}</li>" for line in _colour_summary_lines(colour_analysis))
+        + '</ul><p style="margin:10px 0 0;font-size:12px;line-height:1.5;color:#6b7280;">'
+        '紅、藍、綠為號碼的固定標籤；本節只作描述性分析，不加入正式機率、盲測或權重治理。</p>'
     )
     variant_rows = "<br>".join(
         f"{escape(str(item.get('label', item.get('key', '未命名'))))}：{escape(_number_text(item.get('numbers')))}"
@@ -587,10 +637,11 @@ def render_daily_status_html(snapshot: dict[str, Any], *, simulation: bool = Fal
         [
             _html_section("近期盲測命中摘要", recent_blind_content),
             _html_section("一、最新官方結果資料", official_content),
-            _html_section("二、最新模型研究組合", recommendation_content),
-            _html_section("三、三配置盲測狀態", blind_content),
-            _html_section("四、四配置 Brier 追蹤", brier_content),
-            _html_section("五、模型權重與凍結狀態", weight_content),
+            _html_section("二、號碼球顏色研究摘要", colour_content),
+            _html_section("三、最新模型研究組合", recommendation_content),
+            _html_section("四、三配置盲測狀態", blind_content),
+            _html_section("五、四配置 Brier 追蹤", brier_content),
+            _html_section("六、模型權重與凍結狀態", weight_content),
         ]
     )
     return (
@@ -617,6 +668,7 @@ def render_daily_status_body(snapshot: dict[str, Any], *, simulation: bool = Fal
     variants = blind.get("variants", []) if isinstance(blind.get("variants"), list) else []
     recommendations = latest_prediction.get("top_5_recommendations", []) if isinstance(latest_prediction, dict) else []
     blind_summary = snapshot.get("recent_blind_hit_summary") or {}
+    colour_analysis = latest_prediction.get("colour_analysis", {}) if isinstance(latest_prediction, dict) else {}
     variant_lines = [
         f"- {item.get('label', item.get('key', '未命名'))}：{_number_text(item.get('numbers'))}"
         for item in variants
@@ -639,19 +691,23 @@ def render_daily_status_body(snapshot: dict[str, Any], *, simulation: bool = Fal
             f"最新期數：{latest.get('draw', '未知')}；日期：{latest.get('date', '未知')}",
             f"六個正選：{_number_text(latest.get('numbers'))}",
             "",
-            "二、最新模型研究組合",
+            "二、號碼球顏色研究摘要",
+            *_colour_summary_lines(colour_analysis),
+            "紅、藍、綠為號碼的固定標籤；本節只作描述性分析，不加入正式機率、盲測或權重治理。",
+            "",
+            "三、最新模型研究組合",
             *(recommendation_lines or ["- 目前沒有可呈現的最新研究組合"]),
             "第一組的特別號碼沿用主號模型排序，只作不重複的研究展示；不計入六個正選命中統計。",
             "",
-            "三、三配置盲測狀態",
+            "四、三配置盲測狀態",
             f"目標期數：{blind.get('target_draw', '尚未鎖定')}；狀態：{blind.get('status', '無記錄')}",
             *(variant_lines or ["- 目前沒有可呈現的三配置盲測記錄"]),
             "",
-            "四、四配置 Brier 追蹤",
+            "五、四配置 Brier 追蹤",
             f"目標期數：{brier.get('target_draw', '尚未鎖定')}；狀態：{brier.get('status', '無記錄')}",
             f"共同已結算期數：{snapshot.get('common_brier_draws', 0)}；正式閘門：{snapshot.get('formal_gate')}",
             "",
-            "五、模型權重與凍結狀態",
+            "六、模型權重與凍結狀態",
             f"權重版本：{weights.get('version', 'baseline-equal-v1（觀察期）') if isinstance(weights, dict) else 'baseline-equal-v1（觀察期）'}",
             f"凍結進度：{weights.get('freeze_completed_draws', 0) if isinstance(weights, dict) else 0}/50 期",
             f"權重：{_format_weights(weight_values) if weight_values else '四配置等權重 25.0%／25.0%／25.0%／25.0%'}",

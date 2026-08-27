@@ -9,6 +9,7 @@ from typing import Any
 
 import pandas as pd
 
+from colour_analysis import recommendation_colour_metadata
 from lotto_data import MAIN_COLUMNS, REQUIRED_COLUMNS, ValidationResult, validate_lotto_dataframe
 
 
@@ -98,6 +99,7 @@ def build_prediction_record(
             raise ValueError("只有第一組可以包含研究用特別號碼。")
         else:
             normalized["recommendation_format"] = "6"
+        normalized.update(recommendation_colour_metadata(numbers, normalized.get("special_number")))
         normalized_combinations.append(normalized)
     if len(normalized_combinations) != 5 or {item["set_index"] for item in normalized_combinations} != {1, 2, 3, 4, 5}:
         raise ValueError("每次預測必須保存 5 組組合。")
@@ -114,6 +116,7 @@ def build_prediction_record(
             "features": model.get("features", []),
             "fusion": model.get("fusion", {}),
             "kmeans_clusters": model.get("kmeans_clusters"),
+            "research_context": model.get("research_context", {}),
         },
         "combinations": normalized_combinations,
     }

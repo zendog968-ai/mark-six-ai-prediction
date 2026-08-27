@@ -64,7 +64,10 @@ class UpdaterTests(unittest.TestCase):
             self.assertEqual(first_recommendation["recommendation_format"], "6+1")
             self.assertNotIn(first_recommendation["special_number"], first_recommendation["numbers"])
             self.assertTrue(1 <= first_recommendation["special_number"] <= 49)
+            self.assertIn(first_recommendation["special_number_colour"], {"red", "blue", "green"})
+            self.assertEqual(sum(first_recommendation["main_colour_counts"].values()), 6)
             self.assertTrue(all(item["recommendation_format"] == "6" and "special_number" not in item for item in payload["top_5_recommendations"][1:]))
+            self.assertTrue(all(sum(item["main_colour_counts"].values()) == 6 for item in payload["top_5_recommendations"]))
             strengths = [item["relative_strength_percent"] for item in payload["top_5_recommendations"]]
             self.assertEqual(strengths[0], 100)
             self.assertTrue(all(isinstance(value, int) and 0 <= value <= 100 for value in strengths))
@@ -74,6 +77,11 @@ class UpdaterTests(unittest.TestCase):
             self.assertIn("kmeans_cluster", payload["model"]["features"])
             self.assertIn("xgboost_weight", payload["top_weights"][0])
             self.assertIn("kmeans_cluster", payload["top_weights"][0])
+            self.assertIn(payload["top_weights"][0]["ball_colour"], {"red", "blue", "green"})
+            self.assertIn("colour_analysis", payload)
+            self.assertEqual(payload["colour_analysis"]["mapping_group_sizes"], {"紅色": 17, "藍色": 16, "綠色": 16})
+            self.assertIn("紅藍綠", payload["model"]["research_context"]["ball_colours"])
+            self.assertNotIn("ball_colour", payload["model"]["features"])
             self.assertEqual(payload["blind_test_log"]["target_draw"], 26090)
             self.assertTrue(payload["blind_test_log"]["locked"])
             self.assertTrue(blind_path.exists())
@@ -86,10 +94,14 @@ class UpdaterTests(unittest.TestCase):
 
             stale = json.loads(first_json)
             stale["history_records"] = 1_000
+            stale.pop("colour_analysis")
+            stale["top_5_recommendations"][0].pop("special_number_colour")
             output_path.write_text(json.dumps(stale), encoding="utf-8")
             refreshed = update(history_path, output_path, fetcher=fake_fetcher, blind_test_history_path=blind_path)
             self.assertFalse(refreshed["run_appended_to_history"])
             self.assertEqual(refreshed["history_records"], 61)
+            self.assertIn("colour_analysis", refreshed)
+            self.assertIn("special_number_colour", refreshed["top_5_recommendations"][0])
             self.assertEqual(json.loads(output_path.read_text(encoding="utf-8"))["history_records"], 61)
 
 
