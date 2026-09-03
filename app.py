@@ -63,6 +63,7 @@ from ui_preferences import (
 from report_themes import EMAIL_REPORT_THEME_OPTIONS, email_report_theme_code_from_label, email_report_theme_label
 from smtp_notifications import build_daily_status_snapshot, render_daily_status_body, render_daily_status_html
 from daily_report_archive import daily_report_archive_index, load_daily_report_archive, search_daily_report_archive
+from schedule_health import load_schedule_health, schedule_health_index
 
 
 st.set_page_config(page_title="六合彩資料分析實驗室", page_icon="🎱", layout="wide")
@@ -95,8 +96,8 @@ if validated_upload is None and uploaded_file is not None:
     st.error("上傳檔案未通過驗證，因此系統不會用它訓練模型；目前會使用專案內真實歷史資料（如不可用才回退模擬資料）。")
 
 st.info(f"目前資料來源：**{source_label}**；共 {len(draws):,} 期紀錄。")
-overview_tab, colour_tab, model_tab, backtest_tab, hit_rate_tab, blind_test_tab, inference_tab, weight_tab, data_tab, window_research_tab, email_preview_tab, report_archive_tab = st.tabs(
-    ["資料概覽", "號碼球顏色分析", "模型實驗", "模型回測", "命中率與回測分析", "三配置盲測追蹤", "Brier 統計檢定", "權重演變與凍結", "歷史資料預覽", "5／10期窗口研究", "HTML 每日報告預覽", "歷史報告歸檔"]
+overview_tab, colour_tab, model_tab, backtest_tab, hit_rate_tab, blind_test_tab, inference_tab, weight_tab, data_tab, window_research_tab, email_preview_tab, report_archive_tab, schedule_health_tab = st.tabs(
+    ["資料概覽", "號碼球顏色分析", "模型實驗", "模型回測", "命中率與回測分析", "三配置盲測追蹤", "Brier 統計檢定", "權重演變與凍結", "歷史資料預覽", "5／10期窗口研究", "HTML 每日報告預覽", "歷史報告歸檔", "每日排程健康"]
 )
 
 with overview_tab:
@@ -698,3 +699,24 @@ with report_archive_tab:
         st.iframe(str(selected_archive.get("html_body", "<p>歸檔 HTML 不可用。</p>")), height=1260)
         with st.expander("檢視此份歸檔的純文字後備內容"):
             st.code(str(selected_archive.get("plain_body", "")), language=None)
+
+with schedule_health_tab:
+    st.subheader("每日排程健康摘要")
+    st.caption("本頁只讀取每日 22:00（香港時間）排程的開始、完成、資料變更與步驟狀態；不顯示 SMTP 憑證、不寄送 Email，亦不改寫任何正式研究帳本。")
+    schedule_health = load_schedule_health()
+    latest_schedule_run = schedule_health.get("latest") if isinstance(schedule_health.get("latest"), dict) else None
+    if latest_schedule_run is None:
+        st.info("尚未記錄排程健康資料。下一次既有每日排程完成後會自動建立摘要。")
+    else:
+        status_value = str(latest_schedule_run.get("status", "未知"))
+        data_changed_value = latest_schedule_run.get("data_changed")
+        data_changed_label = "已變更" if data_changed_value is True else "未變更" if data_changed_value is False else "未完成"
+        health_metric_a, health_metric_b, health_metric_c = st.columns(3)
+        health_metric_a.metric("最近整體狀態", status_value)
+        health_metric_b.metric("資料結果", data_changed_label)
+        health_metric_c.metric("最近排程時間（香港）", str(latest_schedule_run.get("scheduled_for_hkt", "—")))
+        steps = latest_schedule_run.get("steps", [])
+        st.markdown("#### 最近一次步驟結果")
+        st.dataframe(steps if isinstance(steps, list) else [], width="stretch", hide_index=True)
+        st.markdown("#### 最近 31 次排程摘要")
+        st.dataframe(schedule_health_index(schedule_health), width="stretch", hide_index=True, height=360)

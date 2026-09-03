@@ -3,7 +3,16 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from smtp_notifications import build_email_message, build_recent_blind_hit_summary, render_daily_status_body, render_daily_status_html, render_prediction_verification_body
+from smtp_notifications import (
+    build_email_message,
+    build_recent_blind_hit_summary,
+    dispatch_events,
+    load_event_ledger,
+    render_daily_status_body,
+    render_daily_status_html,
+    render_prediction_verification_body,
+)
+from weight_monitor import CONFIG_LABELS
 
 
 def six_plus_one_recommendation() -> dict:
@@ -131,6 +140,69 @@ class SmtpRecommendationFormatTests(unittest.TestCase):
             path.write_text(json.dumps(report), encoding="utf-8")
             _subject, body = render_prediction_verification_body(path)
         self.assertIn("6+1 推薦組合：12、23、28、34、41、45 + [特別號碼：08／紅色]", body)
+
+    def test_formal_weight_event_is_sent_once_then_deduplicated(self):
+        record = {
+            "version": "weights-v1",
+            "status": "frozen",
+            "formal_qualification_passed": True,
+            "locked_at": "2026-08-27T22:00:00+08:00",
+            "freeze_completed_draws": 0,
+            "proposed_weights": {key: 0.25 for key in CONFIG_LABELS},
+        }
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            history_path = root / "weight_adjustment_history.json"
+            ledger_path = root / "events.json"
+            history_path.write_text(json.dumps({"records": [record]}), encoding="utf-8")
+            delivered: list[tuple[str, str]] = []
+
+            def send_stub(_settings: dict, subject: str, body: str) -> None:
+                delivered.append((subject, body))
+
+            settings = {"sender": "a", "recipient": "b", "host": "x", "port": 465, "username": "a", "password": "p"}
+            first = dispatch_events(settings, weight_history_path=history_path, ledger_path=ledger_path, send_func=send_stub)
+            second = dispatch_events(settings, weight_history_path=history_path, ledger_path=ledger_path, send_func=send_stub)
+            ledger = load_event_ledger(ledger_path)
+        self.assertEqual(first, {"eligible": 1, "sent": 1, "skipped": 0, "failed": 0})
+        self.assertEqual(second, {"eligible": 1, "sent": 0, "skipped": 1, "failed": 0})
+        self.assertEqual(len(delivered), 1)
+        self.assertEqual(ledger["events"][0]["status"], "sent")
+        self.assertIn("權重凍結盲測已開始", delivered[0][0])
+
+    def test_failed_formal_weight_delivery_records_attempt_then_allows_retry(self):
+        record = {
+            "version": "weights-v1",
+            "status": "confirmed",
+            "formal_qualification_passed": True,
+            "locked_at": "2026-08-27T22:00:00+08:00",
+            "freeze_completed_draws": 0,
+            "proposed_weights": {key: 0.25 for key in CONFIG_LABELS},
+        }
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            history_path = root / "weight_adjustment_history.json"
+            ledger_path = root / "events.json"
+            history_path.write_text(json.dumps({"records": [record]}), encoding="utf-8")
+            settings = {"sender": "a", "recipient": "b", "host": "x", "port": 465, "username": "a", "password": "p"}
+
+            def failing_sender(_settings: dict, _subject: str, _body: str) -> None:
+                raise RuntimeError("network unavailable")
+
+            failed = dispatch_events(settings, weight_history_path=history_path, ledger_path=ledger_path, send_func=failing_sender)
+            delivered: list[str] = []
+            retried = dispatch_events(
+                settings,
+                weight_history_path=history_path,
+                ledger_path=ledger_path,
+                send_func=lambda _settings, subject, _body: delivered.append(subject),
+            )
+            ledger = load_event_ledger(ledger_path)
+        self.assertEqual(failed["failed"], 1)
+        self.assertEqual(retried["sent"], 1)
+        self.assertEqual(len(delivered), 1)
+        self.assertEqual(ledger["events"][0]["attempts"], 2)
+        self.assertEqual(ledger["events"][0]["status"], "sent")
 
 
 if __name__ == "__main__":

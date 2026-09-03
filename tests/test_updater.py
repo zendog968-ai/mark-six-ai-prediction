@@ -2,6 +2,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 import pandas as pd
 
@@ -103,6 +104,44 @@ class UpdaterTests(unittest.TestCase):
             self.assertIn("colour_analysis", refreshed)
             self.assertIn("special_number_colour", refreshed["top_5_recommendations"][0])
             self.assertEqual(json.loads(output_path.read_text(encoding="utf-8"))["history_records"], 61)
+
+    def test_update_records_four_configuration_lock_when_enabled(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            history = generate_mock_data(60)
+            history_path = root / "history.csv"
+            extended_history_path = root / "extended.csv"
+            output_path = root / "latest_prediction.json"
+            blind_path = root / "blind_test_history.json"
+            four_config_path = root / "brier_tracking_history.json"
+            history.to_csv(history_path, index=False)
+            history.to_csv(extended_history_path, index=False)
+
+            def fake_fetcher(url):
+                return FALLBACK_SAMPLE if url == FALLBACK_RESULTS_URL else "no parseable official result"
+
+            locked_record = {
+                "target_draw": 26090,
+                "target_date": "2026-08-18",
+                "config_version": "test-four-config-v1",
+                "status": "locked_pending_result",
+                "configuration_probabilities": {"fusion_top6": [6 / 49] * 49},
+            }
+            with patch("updater.record_four_config", return_value=(locked_record, True)) as recorder:
+                payload = update(
+                    history_path,
+                    output_path,
+                    fetcher=fake_fetcher,
+                    blind_test_history_path=blind_path,
+                    four_config_history_path=four_config_path,
+                    extended_history_path=extended_history_path,
+                    enable_four_config_tracking=True,
+                )
+            self.assertTrue(payload["four_config_brier_log"]["locked"])
+            self.assertEqual(payload["four_config_brier_log"]["target_draw"], 26090)
+            self.assertEqual(payload["four_config_brier_log"]["extended_history_records"], 61)
+            recorder.assert_called_once()
+            self.assertTrue(four_config_path.exists() is False)
 
 
 if __name__ == "__main__":

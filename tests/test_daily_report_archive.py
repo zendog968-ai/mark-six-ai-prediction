@@ -131,3 +131,32 @@ class DailyReportArchiveTests(unittest.TestCase):
             saved = load_daily_report_archive(archive_path)
             self.assertEqual(saved[0]["delivery_status"], "sent")
             self.assertIn("6+1", saved[0]["plain_body"])
+
+    def test_daily_summary_failed_delivery_is_retriable_and_not_marked_sent(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            archive_path = root / "daily_report_archive.json"
+            ledger_path = root / "daily_ledger.json"
+            settings = {"sender": "a", "recipient": "b", "host": "x", "port": 465, "username": "a", "password": "p"}
+
+            def failing_sender(_settings: dict, _subject: str, _body: str) -> None:
+                raise RuntimeError("SMTP unavailable")
+
+            failed = dispatch_daily_status(
+                settings, ledger_path=ledger_path, archive_path=archive_path, snapshot=_snapshot(), send_func=failing_sender
+            )
+            after_failure = load_daily_report_archive(archive_path)
+            delivered: list[str] = []
+            retried = dispatch_daily_status(
+                settings,
+                ledger_path=ledger_path,
+                archive_path=archive_path,
+                snapshot=_snapshot(),
+                send_func=lambda _settings, subject, _body: delivered.append(subject),
+            )
+            after_retry = load_daily_report_archive(archive_path)
+        self.assertEqual(failed["failed"], 1)
+        self.assertEqual(after_failure[0]["delivery_status"], "prepared")
+        self.assertEqual(retried["sent"], 1)
+        self.assertEqual(len(delivered), 1)
+        self.assertEqual(after_retry[0]["delivery_status"], "sent")

@@ -1,4 +1,7 @@
+import copy
+
 import numpy as np
+import pandas as pd
 
 from brier_dashboard import build_brier_by_draw, cumulative_brier, run_four_configuration_inference
 
@@ -49,3 +52,26 @@ def test_pending_locked_record_is_reported_as_waiting_for_official_result():
     frame, warnings = build_brier_by_draw([record])
     assert frame.empty
     assert "等待官方正選結果結算" in warnings[0]
+
+
+def test_pending_locked_record_settles_from_later_official_history_without_mutation():
+    record = {
+        "target_draw": 26092,
+        "target_date": "2026-08-22",
+        "status": "locked_pending_result",
+        "configuration_probabilities": {
+            "fusion_top6": _probabilities(1),
+            "frequency50_50": _probabilities(2),
+            "hot6": _probabilities(3),
+            "multiscale_calibrated": _probabilities(4),
+        },
+    }
+    original = copy.deepcopy(record)
+    official_history = pd.DataFrame(
+        [{"Draw": 26092, "N1": 1, "N2": 2, "N3": 3, "N4": 4, "N5": 5, "N6": 6}]
+    )
+    frame, warnings = build_brier_by_draw([record], settlement_history=official_history)
+    assert warnings == []
+    assert frame["Draw"].tolist() == [26092]
+    assert len(cumulative_brier(frame)) == 4
+    assert record == original

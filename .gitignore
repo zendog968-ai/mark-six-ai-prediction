@@ -119,6 +119,7 @@ data/weight_notification_events.json
 data/runtime_prediction_verification.json
 data/dashboard_preferences.json
 data/daily_report_archive.json
+data/schedule_health_summary.json
 
 # Local inspection artefacts
 .tmp-source/
