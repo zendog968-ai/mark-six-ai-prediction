@@ -1,6 +1,8 @@
 {
-  "generated_at_utc": "2026-08-29T14:07:58.280768+00:00",
+  "generated_at_utc": "2026-09-03T14:15:50.004055+00:00",
   "purpose": "僅供統計教育與實驗用途，無法可靠預測真實開獎結果。",
+  "target_draw": 26096,
+  "target_date": "2026-09-01",
   "history_records": 229,
   "latest_draw": {
     "draw": 26095,
@@ -15,7 +17,7 @@
     ],
     "special": 42,
     "source_url": "https://www.lotteryextreme.com/marksix/results",
-    "appended_to_history": true
+    "appended_to_history": false
   },
   "model": {
     "name": "Random Forest + XGBoost Ensemble",
