@@ -60,6 +60,8 @@ class UpdaterTests(unittest.TestCase):
             self.assertEqual(list(written.columns), list(REQUIRED_COLUMNS))
             self.assertEqual(len(written), 61)
             self.assertTrue(payload["latest_draw"]["appended_to_history"])
+            self.assertEqual(payload["target_draw"], 26090)
+            self.assertEqual(payload["target_date"], "2026-08-18")
             self.assertEqual(len(payload["top_5_recommendations"]), 5)
             first_recommendation = payload["top_5_recommendations"][0]
             self.assertEqual(first_recommendation["recommendation_format"], "6+1")
@@ -95,12 +97,16 @@ class UpdaterTests(unittest.TestCase):
 
             stale = json.loads(first_json)
             stale["history_records"] = 1_000
+            stale.pop("target_draw")
+            stale.pop("target_date")
             stale.pop("colour_analysis")
             stale["top_5_recommendations"][0].pop("special_number_colour")
             output_path.write_text(json.dumps(stale), encoding="utf-8")
             refreshed = update(history_path, output_path, fetcher=fake_fetcher, blind_test_history_path=blind_path)
             self.assertFalse(refreshed["run_appended_to_history"])
             self.assertEqual(refreshed["history_records"], 61)
+            self.assertEqual(refreshed["target_draw"], 26090)
+            self.assertEqual(refreshed["target_date"], "2026-08-18")
             self.assertIn("colour_analysis", refreshed)
             self.assertIn("special_number_colour", refreshed["top_5_recommendations"][0])
             self.assertEqual(json.loads(output_path.read_text(encoding="utf-8"))["history_records"], 61)

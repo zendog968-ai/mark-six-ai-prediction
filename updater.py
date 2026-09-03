@@ -34,7 +34,7 @@ from lotto_data import (
 from ball_colours import colour_for_number
 from colour_analysis import colour_analysis_payload, recommendation_colour_metadata
 from recommendation_strengths import recommendation_strengths, sort_recommendations_by_strength
-from blind_test_tracking import DEFAULT_BLIND_TEST_HISTORY_PATH, record_blind_test
+from blind_test_tracking import DEFAULT_BLIND_TEST_HISTORY_PATH, next_scheduled_draw_date, record_blind_test
 from four_config_tracking import DEFAULT_EXTENDED_HISTORY_PATH, DEFAULT_FOUR_CONFIG_HISTORY_PATH, record_four_config
 from prediction_tracking import DEFAULT_PREDICTION_HISTORY_PATH, record_prediction
 
@@ -235,6 +235,8 @@ def build_prediction_payload(history: pd.DataFrame, latest: DrawResult, appended
     return {
         "generated_at_utc": datetime.now(UTC).isoformat(),
         "purpose": "僅供統計教育與實驗用途，無法可靠預測真實開獎結果。",
+        "target_draw": int(latest.draw) + 1,
+        "target_date": next_scheduled_draw_date(latest.date),
         "history_records": len(history),
         "latest_draw": {**asdict(latest), "appended_to_history": appended},
         "model": {
@@ -297,7 +299,9 @@ def cached_prediction_matches(history: pd.DataFrame, latest: DrawResult, payload
         return False
     try:
         return (
-            int(payload.get("history_records", -1)) == len(history)
+            int(payload.get("target_draw", -1)) == latest.draw + 1
+            and bool(payload.get("target_date"))
+            and int(payload.get("history_records", -1)) == len(history)
             and int(cached_draw.get("draw", -1)) == latest.draw
             and cached_model.get("name") == FUSION_MODEL_NAME
         )
