@@ -509,11 +509,11 @@
       }
     ]
   },
-  "run_appended_to_history": true,
+  "run_appended_to_history": false,
   "prediction_log": {
     "target_draw": 26100,
     "target_date": "2026-09-15",
-    "logged": true
+    "logged": false
   },
   "blind_test_log": {
     "target_draw": 26100,
