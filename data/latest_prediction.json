@@ -1,21 +1,21 @@
 {
-  "generated_at_utc": "2026-10-03T17:51:11.031313+00:00",
+  "generated_at_utc": "2026-10-06T19:21:34.128651+00:00",
   "purpose": "僅供統計教育與實驗用途，無法可靠預測真實開獎結果。",
-  "target_draw": 26106,
-  "target_date": "2026-10-06",
-  "history_records": 239,
+  "target_draw": 26107,
+  "target_date": "2026-10-08",
+  "history_records": 240,
   "latest_draw": {
-    "draw": 26105,
-    "date": "2026-10-03",
+    "draw": 26106,
+    "date": "2026-10-06",
     "main_numbers": [
-      8,
-      23,
+      9,
       29,
       31,
       34,
-      43
+      36,
+      41
     ],
-    "special": 48,
+    "special": 28,
     "source_url": "https://www.lotteryextreme.com/marksix/results",
     "appended_to_history": true
   },
@@ -39,202 +39,202 @@
   "top_weights": [
     {
       "number": 31,
-      "relative_weight": 0.645281,
-      "random_forest_weight": 0.659498,
-      "xgboost_weight": 0.631065,
-      "kmeans_cluster": 3,
+      "relative_weight": 0.658963,
+      "random_forest_weight": 0.678089,
+      "xgboost_weight": 0.639837,
+      "kmeans_cluster": 2,
+      "ball_colour": "blue"
+    },
+    {
+      "number": 20,
+      "relative_weight": 0.550933,
+      "random_forest_weight": 0.549017,
+      "xgboost_weight": 0.552849,
+      "kmeans_cluster": 1,
       "ball_colour": "blue"
     },
     {
       "number": 35,
-      "relative_weight": 0.536162,
-      "random_forest_weight": 0.536796,
-      "xgboost_weight": 0.535528,
-      "kmeans_cluster": 3,
+      "relative_weight": 0.54474,
+      "random_forest_weight": 0.546935,
+      "xgboost_weight": 0.542546,
+      "kmeans_cluster": 2,
       "ball_colour": "red"
     },
     {
-      "number": 33,
-      "relative_weight": 0.535135,
-      "random_forest_weight": 0.524489,
-      "xgboost_weight": 0.54578,
-      "kmeans_cluster": 2,
-      "ball_colour": "green"
-    },
-    {
-      "number": 18,
-      "relative_weight": 0.533962,
-      "random_forest_weight": 0.525084,
-      "xgboost_weight": 0.542841,
-      "kmeans_cluster": 3,
+      "number": 45,
+      "relative_weight": 0.525439,
+      "random_forest_weight": 0.528276,
+      "xgboost_weight": 0.522602,
+      "kmeans_cluster": 0,
       "ball_colour": "red"
     },
     {
       "number": 47,
-      "relative_weight": 0.533325,
-      "random_forest_weight": 0.531122,
-      "xgboost_weight": 0.535528,
-      "kmeans_cluster": 3,
+      "relative_weight": 0.523188,
+      "random_forest_weight": 0.521754,
+      "xgboost_weight": 0.524622,
+      "kmeans_cluster": 2,
       "ball_colour": "blue"
     },
     {
-      "number": 45,
-      "relative_weight": 0.532719,
-      "random_forest_weight": 0.527235,
-      "xgboost_weight": 0.538204,
-      "kmeans_cluster": 3,
-      "ball_colour": "red"
-    },
-    {
-      "number": 30,
-      "relative_weight": 0.530184,
-      "random_forest_weight": 0.525937,
-      "xgboost_weight": 0.53443,
-      "kmeans_cluster": 3,
-      "ball_colour": "red"
-    },
-    {
-      "number": 7,
-      "relative_weight": 0.527796,
-      "random_forest_weight": 0.484199,
-      "xgboost_weight": 0.571393,
-      "kmeans_cluster": 0,
-      "ball_colour": "red"
-    },
-    {
-      "number": 43,
-      "relative_weight": 0.5223,
-      "random_forest_weight": 0.529534,
-      "xgboost_weight": 0.515065,
-      "kmeans_cluster": 2,
-      "ball_colour": "green"
+      "number": 25,
+      "relative_weight": 0.52293,
+      "random_forest_weight": 0.520916,
+      "xgboost_weight": 0.524944,
+      "kmeans_cluster": 1,
+      "ball_colour": "blue"
     },
     {
       "number": 48,
-      "relative_weight": 0.519218,
-      "random_forest_weight": 0.523776,
-      "xgboost_weight": 0.51466,
-      "kmeans_cluster": 2,
+      "relative_weight": 0.521162,
+      "random_forest_weight": 0.526817,
+      "xgboost_weight": 0.515507,
+      "kmeans_cluster": 0,
       "ball_colour": "blue"
     },
     {
       "number": 28,
-      "relative_weight": 0.519218,
-      "random_forest_weight": 0.523776,
-      "xgboost_weight": 0.51466,
-      "kmeans_cluster": 2,
+      "relative_weight": 0.521162,
+      "random_forest_weight": 0.526817,
+      "xgboost_weight": 0.515507,
+      "kmeans_cluster": 0,
       "ball_colour": "green"
     },
     {
+      "number": 43,
+      "relative_weight": 0.520169,
+      "random_forest_weight": 0.524832,
+      "xgboost_weight": 0.515507,
+      "kmeans_cluster": 0,
+      "ball_colour": "green"
+    },
+    {
+      "number": 21,
+      "relative_weight": 0.51404,
+      "random_forest_weight": 0.514115,
+      "xgboost_weight": 0.513966,
+      "kmeans_cluster": 1,
+      "ball_colour": "green"
+    },
+    {
+      "number": 2,
+      "relative_weight": 0.512239,
+      "random_forest_weight": 0.508923,
+      "xgboost_weight": 0.515556,
+      "kmeans_cluster": 0,
+      "ball_colour": "red"
+    },
+    {
+      "number": 33,
+      "relative_weight": 0.511799,
+      "random_forest_weight": 0.518463,
+      "xgboost_weight": 0.505135,
+      "kmeans_cluster": 0,
+      "ball_colour": "green"
+    },
+    {
+      "number": 18,
+      "relative_weight": 0.511799,
+      "random_forest_weight": 0.518463,
+      "xgboost_weight": 0.505135,
+      "kmeans_cluster": 0,
+      "ball_colour": "red"
+    },
+    {
+      "number": 7,
+      "relative_weight": 0.511598,
+      "random_forest_weight": 0.503862,
+      "xgboost_weight": 0.519333,
+      "kmeans_cluster": 3,
+      "ball_colour": "red"
+    },
+    {
       "number": 23,
-      "relative_weight": 0.513501,
-      "random_forest_weight": 0.483079,
-      "xgboost_weight": 0.543924,
-      "kmeans_cluster": 2,
+      "relative_weight": 0.510623,
+      "random_forest_weight": 0.497833,
+      "xgboost_weight": 0.523414,
+      "kmeans_cluster": 0,
       "ball_colour": "red"
     },
     {
       "number": 8,
-      "relative_weight": 0.511974,
-      "random_forest_weight": 0.515791,
-      "xgboost_weight": 0.508157,
-      "kmeans_cluster": 2,
+      "relative_weight": 0.506719,
+      "random_forest_weight": 0.504983,
+      "xgboost_weight": 0.508454,
+      "kmeans_cluster": 0,
       "ball_colour": "red"
     },
     {
-      "number": 2,
-      "relative_weight": 0.51072,
-      "random_forest_weight": 0.513689,
-      "xgboost_weight": 0.507752,
-      "kmeans_cluster": 2,
-      "ball_colour": "red"
-    },
-    {
-      "number": 21,
-      "relative_weight": 0.510281,
-      "random_forest_weight": 0.514953,
-      "xgboost_weight": 0.505609,
-      "kmeans_cluster": 1,
+      "number": 11,
+      "relative_weight": 0.5001,
+      "random_forest_weight": 0.503599,
+      "xgboost_weight": 0.496601,
+      "kmeans_cluster": 0,
       "ball_colour": "green"
     },
     {
       "number": 5,
-      "relative_weight": 0.508535,
-      "random_forest_weight": 0.505589,
-      "xgboost_weight": 0.511481,
-      "kmeans_cluster": 3,
+      "relative_weight": 0.498752,
+      "random_forest_weight": 0.490928,
+      "xgboost_weight": 0.506575,
+      "kmeans_cluster": 2,
       "ball_colour": "green"
     },
     {
-      "number": 20,
-      "relative_weight": 0.507728,
-      "random_forest_weight": 0.514989,
-      "xgboost_weight": 0.500467,
-      "kmeans_cluster": 1,
-      "ball_colour": "blue"
+      "number": 17,
+      "relative_weight": 0.497861,
+      "random_forest_weight": 0.497896,
+      "xgboost_weight": 0.497825,
+      "kmeans_cluster": 0,
+      "ball_colour": "green"
     },
     {
-      "number": 41,
-      "relative_weight": 0.504071,
-      "random_forest_weight": 0.502755,
-      "xgboost_weight": 0.505388,
-      "kmeans_cluster": 3,
+      "number": 10,
+      "relative_weight": 0.497535,
+      "random_forest_weight": 0.497239,
+      "xgboost_weight": 0.497831,
+      "kmeans_cluster": 1,
       "ball_colour": "blue"
     },
     {
       "number": 15,
-      "relative_weight": 0.502379,
-      "random_forest_weight": 0.502453,
-      "xgboost_weight": 0.502305,
+      "relative_weight": 0.497535,
+      "random_forest_weight": 0.497239,
+      "xgboost_weight": 0.497831,
       "kmeans_cluster": 1,
       "ball_colour": "blue"
     },
     {
-      "number": 9,
-      "relative_weight": 0.501089,
-      "random_forest_weight": 0.497809,
-      "xgboost_weight": 0.504369,
-      "kmeans_cluster": 3,
-      "ball_colour": "blue"
-    },
-    {
-      "number": 29,
-      "relative_weight": 0.498872,
-      "random_forest_weight": 0.494544,
-      "xgboost_weight": 0.5032,
-      "kmeans_cluster": 3,
-      "ball_colour": "red"
-    },
-    {
-      "number": 46,
-      "relative_weight": 0.497505,
-      "random_forest_weight": 0.502073,
-      "xgboost_weight": 0.492937,
-      "kmeans_cluster": 2,
-      "ball_colour": "red"
-    },
-    {
-      "number": 25,
-      "relative_weight": 0.496714,
-      "random_forest_weight": 0.489114,
-      "xgboost_weight": 0.504315,
-      "kmeans_cluster": 0,
-      "ball_colour": "blue"
-    },
-    {
       "number": 4,
-      "relative_weight": 0.495768,
-      "random_forest_weight": 0.490819,
-      "xgboost_weight": 0.500716,
-      "kmeans_cluster": 3,
+      "relative_weight": 0.496456,
+      "random_forest_weight": 0.495705,
+      "xgboost_weight": 0.497208,
+      "kmeans_cluster": 2,
       "ball_colour": "blue"
     },
     {
-      "number": 1,
-      "relative_weight": 0.495744,
-      "random_forest_weight": 0.499424,
-      "xgboost_weight": 0.492063,
+      "number": 16,
+      "relative_weight": 0.495852,
+      "random_forest_weight": 0.493152,
+      "xgboost_weight": 0.498552,
+      "kmeans_cluster": 1,
+      "ball_colour": "green"
+    },
+    {
+      "number": 6,
+      "relative_weight": 0.492816,
+      "random_forest_weight": 0.483226,
+      "xgboost_weight": 0.502407,
       "kmeans_cluster": 0,
+      "ball_colour": "green"
+    },
+    {
+      "number": 30,
+      "relative_weight": 0.492655,
+      "random_forest_weight": 0.48095,
+      "xgboost_weight": 0.50436,
+      "kmeans_cluster": 3,
       "ball_colour": "red"
     }
   ],
@@ -242,35 +242,35 @@
     {
       "set_index": 1,
       "numbers": [
-        4,
-        7,
-        20,
+        6,
+        11,
+        28,
         31,
-        33,
+        35,
         47
       ],
       "odd_count": 4,
-      "number_sum": 142,
+      "number_sum": 158,
       "consecutive_pairs": 0,
       "recommendation_format": "6+1",
-      "special_number": 35,
+      "special_number": 20,
       "special_number_note": "以同一主號模型排序選出的不重複研究用特別號碼",
       "number_colours": [
+        "green",
+        "green",
+        "green",
         "blue",
         "red",
-        "blue",
-        "blue",
-        "green",
         "blue"
       ],
       "main_colour_counts": {
         "red": 1,
-        "blue": 4,
-        "green": 1
+        "blue": 2,
+        "green": 3
       },
-      "main_colour_composition": "紅色 1、藍色 4、綠色 1",
-      "special_number_colour": "red",
-      "strength_score": 0.540839,
+      "main_colour_composition": "紅色 1、藍色 2、綠色 3",
+      "special_number_colour": "blue",
+      "strength_score": 0.540162,
       "relative_strength_percent": 100,
       "strength_label": "相對推薦強度 100%"
     },
@@ -278,129 +278,129 @@
       "set_index": 2,
       "numbers": [
         2,
-        5,
-        18,
+        8,
+        17,
         20,
-        25,
-        31
+        31,
+        33
       ],
       "odd_count": 3,
-      "number_sum": 101,
+      "number_sum": 111,
       "consecutive_pairs": 0,
       "recommendation_format": "6",
       "number_colours": [
         "red",
-        "green",
         "red",
+        "green",
         "blue",
         "blue",
-        "blue"
+        "green"
       ],
       "main_colour_counts": {
         "red": 2,
-        "blue": 3,
-        "green": 1
+        "blue": 2,
+        "green": 2
       },
-      "main_colour_composition": "紅色 2、藍色 3、綠色 1",
-      "strength_score": 0.533824,
-      "relative_strength_percent": 99,
-      "strength_label": "相對推薦強度 99%"
+      "main_colour_composition": "紅色 2、藍色 2、綠色 2",
+      "strength_score": 0.539752,
+      "relative_strength_percent": 100,
+      "strength_label": "相對推薦強度 100%"
     },
     {
       "set_index": 3,
       "numbers": [
-        15,
-        18,
-        33,
-        41,
-        46,
-        47
+        7,
+        8,
+        16,
+        23,
+        31,
+        45
       ],
       "odd_count": 4,
-      "number_sum": 200,
+      "number_sum": 130,
       "consecutive_pairs": 1,
       "recommendation_format": "6",
       "number_colours": [
-        "blue",
+        "red",
         "red",
         "green",
-        "blue",
         "red",
-        "blue"
+        "blue",
+        "red"
       ],
       "main_colour_counts": {
-        "red": 2,
-        "blue": 3,
+        "red": 4,
+        "blue": 1,
         "green": 1
       },
-      "main_colour_composition": "紅色 2、藍色 3、綠色 1",
-      "strength_score": 0.51773,
-      "relative_strength_percent": 96,
-      "strength_label": "相對推薦強度 96%"
+      "main_colour_composition": "紅色 4、藍色 1、綠色 1",
+      "strength_score": 0.534866,
+      "relative_strength_percent": 99,
+      "strength_label": "相對推薦強度 99%"
     },
     {
       "set_index": 4,
       "numbers": [
-        2,
+        4,
         5,
-        15,
         23,
-        28,
-        35
+        35,
+        45,
+        47
       ],
-      "odd_count": 4,
-      "number_sum": 108,
-      "consecutive_pairs": 0,
+      "odd_count": 5,
+      "number_sum": 159,
+      "consecutive_pairs": 1,
       "recommendation_format": "6",
       "number_colours": [
-        "red",
-        "green",
         "blue",
-        "red",
         "green",
-        "red"
+        "red",
+        "red",
+        "red",
+        "blue"
       ],
       "main_colour_counts": {
         "red": 3,
-        "blue": 1,
-        "green": 2
+        "blue": 2,
+        "green": 1
       },
-      "main_colour_composition": "紅色 3、藍色 1、綠色 2",
-      "strength_score": 0.515086,
-      "relative_strength_percent": 95,
-      "strength_label": "相對推薦強度 95%"
+      "main_colour_composition": "紅色 3、藍色 2、綠色 1",
+      "strength_score": 0.516533,
+      "relative_strength_percent": 96,
+      "strength_label": "相對推薦強度 96%"
     },
     {
       "set_index": 5,
       "numbers": [
-        1,
-        18,
-        21,
-        23,
-        28,
-        46
+        2,
+        4,
+        7,
+        30,
+        33,
+        45
       ],
       "odd_count": 3,
-      "number_sum": 137,
+      "number_sum": 121,
       "consecutive_pairs": 0,
       "recommendation_format": "6",
       "number_colours": [
         "red",
+        "blue",
         "red",
-        "green",
         "red",
         "green",
         "red"
       ],
       "main_colour_counts": {
         "red": 4,
-        "blue": 0,
-        "green": 2
+        "blue": 1,
+        "green": 1
       },
-      "main_colour_composition": "紅色 4、藍色 0、綠色 2",
-      "strength_score": 0.511702,
-      "relative_strength_percent": 95,
-      "strength_label": "相對推薦強度 95%"
+      "main_colour_composition": "紅色 4、藍色 1、綠色 1",
+      "strength_score": 0.508364,
+      "relative_strength_percent": 94,
+      "strength_label": "相對推薦強度 94%"
     }
   ],
   "colour_analysis": {
@@ -413,72 +413,72 @@
     },
     "interpretation": "球色是固定號碼標籤；此摘要只作描述性統計，不加入正式機率、盲測或權重治理。",
     "latest_official_draw": {
-      "draw": 26105,
-      "date": "2026-10-03",
+      "draw": 26106,
+      "date": "2026-10-06",
       "main_colour_counts": {
-        "red": 4,
-        "blue": 1,
-        "green": 1
+        "red": 2,
+        "blue": 4,
+        "green": 0
       },
-      "main_colour_composition": "紅色 4、藍色 1、綠色 1",
-      "special_colour": "藍色"
+      "main_colour_composition": "紅色 2、藍色 4、綠色 0",
+      "special_colour": "綠色"
     },
     "overall": [
       {
-        "範圍": "全期數（239 期）",
+        "範圍": "全期數（240 期）",
         "球色": "紅色",
-        "正選實際球數": 519,
-        "隨機期望球數": 497.51,
-        "實際比例": 0.361925,
+        "正選實際球數": 521,
+        "隨機期望球數": 499.59,
+        "實際比例": 0.361806,
         "固定球池比例": 0.346939,
-        "與期望差異": 21.49
+        "與期望差異": 21.41
       },
       {
-        "範圍": "全期數（239 期）",
+        "範圍": "全期數（240 期）",
         "球色": "藍色",
-        "正選實際球數": 445,
-        "隨機期望球數": 468.24,
-        "實際比例": 0.310321,
+        "正選實際球數": 449,
+        "隨機期望球數": 470.2,
+        "實際比例": 0.311806,
         "固定球池比例": 0.326531,
-        "與期望差異": -23.24
+        "與期望差異": -21.2
       },
       {
-        "範圍": "全期數（239 期）",
+        "範圍": "全期數（240 期）",
         "球色": "綠色",
         "正選實際球數": 470,
-        "隨機期望球數": 468.24,
-        "實際比例": 0.327755,
+        "隨機期望球數": 470.2,
+        "實際比例": 0.326389,
         "固定球池比例": 0.326531,
-        "與期望差異": 1.76
+        "與期望差異": -0.2
       }
     ],
     "recent_windows": [
       {
         "範圍": "最近 10 期",
         "球色": "紅色",
-        "正選實際球數": 26,
+        "正選實際球數": 25,
         "隨機期望球數": 20.82,
-        "實際比例": 0.433333,
+        "實際比例": 0.416667,
         "固定球池比例": 0.346939,
-        "與期望差異": 5.18
+        "與期望差異": 4.18
       },
       {
         "範圍": "最近 10 期",
         "球色": "藍色",
-        "正選實際球數": 20,
+        "正選實際球數": 22,
         "隨機期望球數": 19.59,
-        "實際比例": 0.333333,
+        "實際比例": 0.366667,
         "固定球池比例": 0.326531,
-        "與期望差異": 0.41
+        "與期望差異": 2.41
       },
       {
         "範圍": "最近 10 期",
         "球色": "綠色",
-        "正選實際球數": 14,
+        "正選實際球數": 13,
         "隨機期望球數": 19.59,
-        "實際比例": 0.233333,
+        "實際比例": 0.216667,
         "固定球池比例": 0.326531,
-        "與期望差異": -5.59
+        "與期望差異": -6.59
       },
       {
         "範圍": "最近 50 期",
@@ -492,38 +492,38 @@
       {
         "範圍": "最近 50 期",
         "球色": "藍色",
-        "正選實際球數": 103,
+        "正選實際球數": 105,
         "隨機期望球數": 97.96,
-        "實際比例": 0.343333,
+        "實際比例": 0.35,
         "固定球池比例": 0.326531,
-        "與期望差異": 5.04
+        "與期望差異": 7.04
       },
       {
         "範圍": "最近 50 期",
         "球色": "綠色",
-        "正選實際球數": 82,
+        "正選實際球數": 80,
         "隨機期望球數": 97.96,
-        "實際比例": 0.273333,
+        "實際比例": 0.266667,
         "固定球池比例": 0.326531,
-        "與期望差異": -15.96
+        "與期望差異": -17.96
       }
     ]
   },
-  "run_appended_to_history": false,
+  "run_appended_to_history": true,
   "prediction_log": {
-    "target_draw": 26106,
-    "target_date": "2026-10-06",
-    "logged": false
+    "target_draw": 26107,
+    "target_date": "2026-10-08",
+    "logged": true
   },
   "blind_test_log": {
-    "target_draw": 26106,
-    "target_date": "2026-10-06",
+    "target_draw": 26107,
+    "target_date": "2026-10-08",
     "config_version": "2026-08-20-v1",
     "locked": true
   },
   "four_config_brier_log": {
-    "target_draw": 26106,
-    "target_date": "2026-10-06",
+    "target_draw": 26107,
+    "target_date": "2026-10-08",
     "config_version": "2026-08-21-v1",
     "locked": true,
     "extended_history_records": 3421
