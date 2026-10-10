@@ -3138,6 +3138,195 @@
           "main_colour_composition": "紅色 4、藍色 1、綠色 1"
         }
       ]
+    },
+    {
+      "target_draw": 26109,
+      "target_date": "2026-10-13",
+      "generated_at_utc": "2026-10-10T18:20:37.939124+00:00",
+      "source_history_records": 242,
+      "source_latest_draw": 26108,
+      "source_latest_date": "2026-10-10",
+      "model": {
+        "name": "Random Forest + XGBoost Ensemble",
+        "features": [
+          "frequency_50",
+          "frequency_10",
+          "gap",
+          "kmeans_cluster"
+        ],
+        "fusion": {
+          "random_forest_weight": 0.5,
+          "xgboost_weight": 0.5
+        },
+        "kmeans_clusters": 4,
+        "research_context": {
+          "ball_colours": "固定紅藍綠號碼標籤，只作描述性分析，不加入正式機率、盲測或權重治理。"
+        }
+      },
+      "combinations": [
+        {
+          "set_index": 1,
+          "numbers": [
+            4,
+            7,
+            8,
+            31,
+            34,
+            43
+          ],
+          "odd_count": 3,
+          "number_sum": 127,
+          "consecutive_pairs": 1,
+          "strength_score": 0.548964,
+          "relative_strength_percent": 100,
+          "strength_label": "相對推薦強度 100%",
+          "recommendation_format": "6+1",
+          "special_number": 5,
+          "number_colours": [
+            "blue",
+            "red",
+            "red",
+            "blue",
+            "red",
+            "green"
+          ],
+          "main_colour_counts": {
+            "red": 3,
+            "blue": 2,
+            "green": 1
+          },
+          "main_colour_composition": "紅色 3、藍色 2、綠色 1",
+          "special_number_colour": "green"
+        },
+        {
+          "set_index": 2,
+          "numbers": [
+            5,
+            10,
+            20,
+            31,
+            40,
+            47
+          ],
+          "odd_count": 3,
+          "number_sum": 153,
+          "consecutive_pairs": 0,
+          "strength_score": 0.540116,
+          "relative_strength_percent": 98,
+          "strength_label": "相對推薦強度 98%",
+          "recommendation_format": "6",
+          "number_colours": [
+            "green",
+            "blue",
+            "blue",
+            "blue",
+            "red",
+            "blue"
+          ],
+          "main_colour_counts": {
+            "red": 1,
+            "blue": 4,
+            "green": 1
+          },
+          "main_colour_composition": "紅色 1、藍色 4、綠色 1"
+        },
+        {
+          "set_index": 3,
+          "numbers": [
+            18,
+            28,
+            29,
+            34,
+            37,
+            47
+          ],
+          "odd_count": 3,
+          "number_sum": 193,
+          "consecutive_pairs": 1,
+          "strength_score": 0.531083,
+          "relative_strength_percent": 97,
+          "strength_label": "相對推薦強度 97%",
+          "recommendation_format": "6",
+          "number_colours": [
+            "red",
+            "green",
+            "red",
+            "red",
+            "blue",
+            "blue"
+          ],
+          "main_colour_counts": {
+            "red": 3,
+            "blue": 2,
+            "green": 1
+          },
+          "main_colour_composition": "紅色 3、藍色 2、綠色 1"
+        },
+        {
+          "set_index": 4,
+          "numbers": [
+            7,
+            9,
+            29,
+            34,
+            37,
+            45
+          ],
+          "odd_count": 5,
+          "number_sum": 161,
+          "consecutive_pairs": 0,
+          "strength_score": 0.527448,
+          "relative_strength_percent": 96,
+          "strength_label": "相對推薦強度 96%",
+          "recommendation_format": "6",
+          "number_colours": [
+            "red",
+            "blue",
+            "red",
+            "red",
+            "blue",
+            "red"
+          ],
+          "main_colour_counts": {
+            "red": 4,
+            "blue": 2,
+            "green": 0
+          },
+          "main_colour_composition": "紅色 4、藍色 2、綠色 0"
+        },
+        {
+          "set_index": 5,
+          "numbers": [
+            5,
+            8,
+            11,
+            28,
+            32,
+            44
+          ],
+          "odd_count": 2,
+          "number_sum": 128,
+          "consecutive_pairs": 0,
+          "strength_score": 0.507761,
+          "relative_strength_percent": 92,
+          "strength_label": "相對推薦強度 92%",
+          "recommendation_format": "6",
+          "number_colours": [
+            "green",
+            "red",
+            "green",
+            "green",
+            "green",
+            "green"
+          ],
+          "main_colour_counts": {
+            "red": 1,
+            "blue": 0,
+            "green": 5
+          },
+          "main_colour_composition": "紅色 1、藍色 0、綠色 5"
+        }
+      ]
     }
   ]
 }
